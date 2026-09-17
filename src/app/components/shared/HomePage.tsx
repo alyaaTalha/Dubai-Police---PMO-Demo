@@ -218,7 +218,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   <div className="flex items-center gap-4">
                     <div
                       className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                      onClick={() => onNavigate('performance')}
+                      // onClick={() => onNavigate('performance')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
@@ -231,7 +231,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
                     <div
                       className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                      onClick={() => onNavigate('strategy')}
+                      // onClick={() => onNavigate('strategy')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
@@ -244,7 +244,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
                     <div
                       className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                      onClick={() => onNavigate('partnership')}
+                      // onClick={() => onNavigate('partnership')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
@@ -257,7 +257,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
                     <div
                       className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                      onClick={() => onNavigate('voc')}
+                      // onClick={() => onNavigate('voc')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />

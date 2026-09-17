@@ -214,7 +214,7 @@ function ChallengeCard({ challenge, onViewDetails }: ChallengeCardProps) {
         </div>
 
         {/* Title */}
-        <h3 className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-900 leading-snug line-clamp-2">
+        <h3 className="  text-sm text-gray-900 leading-snug line-clamp-2">
           {challenge.title}
         </h3>
 
@@ -352,7 +352,7 @@ function DetailView({ challenge, allChallenges, onBack, onViewDetails }: DetailV
                 </Badge>
               )}
             </div>
-            <h1 className="font-['Dubai:Medium',_sans-serif] text-xl text-gray-900 leading-snug">
+            <h1 className="  text-xl text-gray-900 leading-snug">
               {challenge.title}
             </h1>
             <div className="flex flex-wrap gap-4 text-sm text-gray-600">
@@ -375,7 +375,7 @@ function DetailView({ challenge, allChallenges, onBack, onViewDetails }: DetailV
 
           {/* Description */}
           <div>
-            <h2 className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-700 mb-2">
+            <h2 className="  text-sm text-gray-700 mb-2">
               Challenge Overview
             </h2>
             <p className="text-sm text-gray-600 leading-relaxed">{challenge.description}</p>
@@ -398,7 +398,7 @@ function DetailView({ challenge, allChallenges, onBack, onViewDetails }: DetailV
 
           {/* Evaluation criteria */}
           <div>
-            <h2 className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-700 mb-3">
+            <h2 className="  text-sm text-gray-700 mb-3">
               Evaluation Criteria
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -411,7 +411,7 @@ function DetailView({ challenge, allChallenges, onBack, onViewDetails }: DetailV
                     <div className="h-6 w-6 rounded-md bg-[#008755]/10 flex items-center justify-center flex-shrink-0">
                       <criterion.icon className="h-3.5 w-3.5 text-[#008755]" />
                     </div>
-                    <span className="font-['Dubai:Medium',_sans-serif] text-xs text-gray-800">
+                    <span className="  text-xs text-gray-800">
                       {criterion.label}
                     </span>
                   </div>
@@ -430,7 +430,7 @@ function DetailView({ challenge, allChallenges, onBack, onViewDetails }: DetailV
                 <Users className="h-5 w-5 text-[#008755]" />
               </div>
               <div>
-                <p className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-900">
+                <p className="  text-sm text-gray-900">
                   {challenge.submissions} Submissions
                 </p>
                 <p className="text-xs text-gray-500">
@@ -461,7 +461,7 @@ function DetailView({ challenge, allChallenges, onBack, onViewDetails }: DetailV
       {/* Related challenges */}
       {related.length > 0 && (
         <div>
-          <h2 className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-700 mb-3">
+          <h2 className="  text-sm text-gray-700 mb-3">
             Related Challenges
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -519,7 +519,7 @@ export function ChallengesPage({ user: _user, role: _role, onNavigate: _onNaviga
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="font-['Dubai:Medium',_sans-serif] text-xl text-gray-900">Challenges</h1>
+          <h1 className="  text-xl text-gray-900">Challenges</h1>
           <p className="text-sm text-gray-500 mt-0.5">
             <span className="text-[#008755] font-medium">{stats.active} Active</span>
             <span className="mx-1.5 text-gray-300">·</span>
@@ -598,7 +598,7 @@ export function ChallengesPage({ user: _user, role: _role, onNavigate: _onNaviga
             <div className="h-12 w-12 rounded-xl bg-gray-100 flex items-center justify-center">
               <Search className="h-5 w-5 text-gray-400" />
             </div>
-            <p className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-700">
+            <p className="  text-sm text-gray-700">
               No challenges found
             </p>
             <p className="text-xs text-gray-400 max-w-xs">

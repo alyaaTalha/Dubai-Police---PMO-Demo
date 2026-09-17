@@ -49,7 +49,7 @@ export function KPIVarianceChart() {
       const data = payload[0].payload;
       return (
         <div className="bg-white p-4 rounded-lg border border-[#e0e0e0] shadow-lg">
-          <p className="font-['Dubai:Medium',_sans-serif] text-[#1f2937] mb-2">
+          <p className="  text-[#1f2937] mb-2">
             {data.category}
           </p>
           <div className="space-y-1">
@@ -80,7 +80,7 @@ export function KPIVarianceChart() {
   return (
     <div className="bg-white rounded-lg border border-[#e0e0e0] p-6">
       <div className="mb-6">
-        <h3 className="font-['Dubai:Medium',_sans-serif] text-[#1f2937] mb-1">
+        <h3 className="  text-[#1f2937] mb-1">
           KPI Variance Analysis
         </h3>
         <p className="font-['Dubai:Regular',_sans-serif] text-[#6b7280]">

@@ -71,7 +71,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import dubaiLogo from "figma:asset/5fde750a0d4fbfd93bd0df25839acc9496a0a93d.png";
 import uaeFlag from "figma:asset/79a1cd1f9ca219d00f7f754679801fa65f033839.png";
 import { KPIGauge } from "./KPIGauge";
@@ -534,13 +534,12 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
     <div className="h-full overflow-auto bg-background">
       <div className="space-y-2 p-2">
         {/* Hero Banner */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/90 to-[#008755]/90" />
           <CardContent className="pt-3 pb-3 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -1825,56 +1824,56 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
             <div className="mt-6 space-y-6">
               {/* KPI Ownership & Classification */}
               <div className="space-y-4">
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">KPI Ownership & Classification</h3>
+                <h3 className="text-sm   text-gray-700">KPI Ownership & Classification</h3>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">KPI Owner (Division)</p>
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-gray-400" />
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif]">Finance Affairs & Admin</p>
+                      <p className="text-sm  ">Finance Affairs & Admin</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">KPI Owner (Department)</p>
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-gray-400" />
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif]">Corporate Communication</p>
+                      <p className="text-sm  ">Corporate Communication</p>
                     </div>
                   </div>
                   <div className="col-span-2">
                     <p className="text-xs text-gray-500 mb-1">Division Level KPI</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif]">International or regional awards received and positive media mentions</p>
+                    <p className="text-sm  ">International or regional awards received and positive media mentions</p>
                   </div>
                   <div className="col-span-2">
                     <p className="text-xs text-gray-500 mb-1">Department Level KPI</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif]">International or regional awards received and positive media mentions</p>
+                    <p className="text-sm  ">International or regional awards received and positive media mentions</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">KPI Code</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Not provided)</p>
+                    <p className="text-sm   text-gray-400">— (Not provided)</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">KPI Sources</p>
                     <div className="flex items-center gap-2">
                       <Globe className="h-4 w-4 text-gray-400" />
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif]">International</p>
+                      <p className="text-sm  ">International</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Cascading Type</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif]">As-Is</p>
+                    <p className="text-sm  ">As-Is</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Aggregation Method</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Not provided)</p>
+                    <p className="text-sm   text-gray-400">— (Not provided)</p>
                   </div>
                 </div>
               </div>
 
               {/* KPI Description */}
               <div className="space-y-2">
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">KPI Description</h3>
+                <h3 className="text-sm   text-gray-700">KPI Description</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   This KPI measures the visibility and reputation of Dubai Customs on the global stage by tracking the number of international or regional awards received and positive media mentions in reputable outlets. It reflects the organization's external recognition, credibility, and impact across global trade and customs communities. A strong global profile enhances institutional trust, positions Dubai Customs as a thought leader, and contributes to national brand equity.
                 </p>
@@ -1882,15 +1881,15 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
 
               {/* Calculation & Parameters */}
               <div className="space-y-4">
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">Calculation & Parameters</h3>
+                <h3 className="text-sm   text-gray-700">Calculation & Parameters</h3>
                 
                 <div>
                   <p className="text-xs text-gray-500 mb-2">Formula</p>
                   <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">
+                    <p className="text-sm   text-gray-700">
                       ((actual awards / targeted or applied for awards) × 50%)
                     </p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700 mt-1">
+                    <p className="text-sm   text-gray-700 mt-1">
                       + ((number of positive mentions / total number of mentions) × 50%)
                     </p>
                   </div>
@@ -1901,60 +1900,60 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                     <p className="text-xs text-gray-500 mb-1">Polarity</p>
                     <div className="flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-[#357743]" />
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif]">Increasing</p>
+                      <p className="text-sm  ">Increasing</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Frequency</p>
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-gray-400" />
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif]">Quarterly</p>
+                      <p className="text-sm  ">Quarterly</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Unit</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif]">%</p>
+                    <p className="text-sm  ">%</p>
                   </div>
                 </div>
               </div>
 
               {/* Data Sources */}
               <div className="space-y-4">
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">Data Sources</h3>
+                <h3 className="text-sm   text-gray-700">Data Sources</h3>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Data Required</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Blank)</p>
+                    <p className="text-sm   text-gray-400">— (Blank)</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Data Provider</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Blank)</p>
+                    <p className="text-sm   text-gray-400">— (Blank)</p>
                   </div>
                   <div className="col-span-2">
                     <p className="text-xs text-gray-500 mb-1">Data Sources / Systems</p>
-                    <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Blank)</p>
+                    <p className="text-sm   text-gray-400">— (Blank)</p>
                   </div>
                 </div>
               </div>
 
               {/* Baseline */}
               <div className="space-y-2">
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">Baseline</h3>
+                <h3 className="text-sm   text-gray-700">Baseline</h3>
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-gray-50">
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">Year</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2022</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2023</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2024</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2025 H1</TableHead>
+                        <TableHead className=" ">Year</TableHead>
+                        <TableHead className=" ">2022</TableHead>
+                        <TableHead className=" ">2023</TableHead>
+                        <TableHead className=" ">2024</TableHead>
+                        <TableHead className=" ">2025 H1</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       <TableRow>
-                        <TableCell className="font-['Dubai:Medium',_sans-serif]">Value</TableCell>
+                        <TableCell className=" ">Value</TableCell>
                         <TableCell className="text-gray-400">—</TableCell>
                         <TableCell className="text-gray-400">—</TableCell>
                         <TableCell className="text-gray-400">—</TableCell>
@@ -1967,22 +1966,22 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
 
               {/* Targets */}
               <div className="space-y-2">
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">Targets</h3>
+                <h3 className="text-sm   text-gray-700">Targets</h3>
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-gray-50">
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">Year</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2025 (Priority)</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2026 (Priority)</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2027</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2028</TableHead>
-                        <TableHead className="font-['Dubai:Medium',_sans-serif]">2029</TableHead>
+                        <TableHead className=" ">Year</TableHead>
+                        <TableHead className=" ">2025 (Priority)</TableHead>
+                        <TableHead className=" ">2026 (Priority)</TableHead>
+                        <TableHead className=" ">2027</TableHead>
+                        <TableHead className=" ">2028</TableHead>
+                        <TableHead className=" ">2029</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       <TableRow>
-                        <TableCell className="font-['Dubai:Medium',_sans-serif]">Value</TableCell>
+                        <TableCell className=" ">Value</TableCell>
                         <TableCell className="text-gray-400">—</TableCell>
                         <TableCell className="text-gray-400">—</TableCell>
                         <TableCell className="text-gray-400">—</TableCell>
@@ -2008,7 +2007,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
             <div className="p-6">
               <SheetHeader className="space-y-3">
                 <div>
-                  <SheetTitle className="text-xl font-['Dubai:Medium',_sans-serif]">
+                  <SheetTitle className="text-xl  ">
                     {selectedKPI.name}
                   </SheetTitle>
                   <SheetDescription className="mt-2">
@@ -2044,11 +2043,11 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
               <div className="px-6 pb-6 space-y-6">
                 {/* Performance Overview */}
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700 mb-4">Performance Overview</h3>
+                  <h3 className="text-sm   text-gray-700 mb-4">Performance Overview</h3>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-3xl font-['Dubai:Medium',_sans-serif]" style={{ color: getStatusColor(selectedKPI.status) }}>
+                        <span className="text-3xl  " style={{ color: getStatusColor(selectedKPI.status) }}>
                           {selectedKPI.actual}
                         </span>
                         <span className="text-lg text-gray-500">/ {selectedKPI.target} {selectedKPI.unit}</span>
@@ -2056,7 +2055,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-600">Achievement:</span>
                         <span 
-                          className="text-lg font-['Dubai:Medium',_sans-serif]" 
+                          className="text-lg  " 
                           style={{ color: getStatusColor(selectedKPI.status) }}
                         >
                           {selectedKPI.achievement}%
@@ -2076,26 +2075,26 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
 
                 {/* KPI Details */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">KPI Information</h3>
+                  <h3 className="text-sm   text-gray-700">KPI Information</h3>
                   
                   <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
                     {/* Primary Information Grid */}
                     <div className="grid grid-cols-2 gap-4 pb-4 border-b">
                       <div>
                         <p className="text-xs text-gray-500 mb-1">KPI Owner (Division)</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] font-[Dubai]">Policy & Legislation</p>
+                        <p className="text-sm   font-[Dubai]">Policy & Legislation</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">KPI Owner (Department)</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] font-[Dubai]">Corporate Communication</p>
+                        <p className="text-sm   font-[Dubai]">Corporate Communication</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Division Level KPI</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] font-[Dubai]">% of 4 indicators in the top 5</p>
+                        <p className="text-sm   font-[Dubai]">% of 4 indicators in the top 5</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Department Level KPI</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] font-[Dubai]">% of 4 indicators ranked in the top 5</p>
+                        <p className="text-sm   font-[Dubai]">% of 4 indicators ranked in the top 5</p>
                       </div>
                     </div>
 
@@ -2103,19 +2102,19 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                     <div className="grid grid-cols-2 gap-4 pb-4 border-b">
                       <div>
                         <p className="text-xs text-gray-500 mb-1">KPI Code</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">1</p>
+                        <p className="text-sm  ">1</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">KPI Sources</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">International</p>
+                        <p className="text-sm  ">International</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Cascading Type</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">As-Is</p>
+                        <p className="text-sm  ">As-Is</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Aggregation Method</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Not provided)</p>
+                        <p className="text-sm   text-gray-400">— (Not provided)</p>
                       </div>
                     </div>
 
@@ -2149,19 +2148,19 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                         <p className="text-xs text-gray-500 mb-1">Polarity</p>
                         <div className="flex items-center gap-2">
                           <TrendingUp className="h-4 w-4 text-green-600" />
-                          <p className="text-sm font-['Dubai:Medium',_sans-serif]">Increasing</p>
+                          <p className="text-sm  ">Increasing</p>
                         </div>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Frequency</p>
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-gray-400" />
-                          <p className="text-sm font-['Dubai:Medium',_sans-serif]">Annual</p>
+                          <p className="text-sm  ">Annual</p>
                         </div>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Unit</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">%</p>
+                        <p className="text-sm  ">%</p>
                       </div>
                     </div>
 
@@ -2169,15 +2168,15 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                     <div className="grid grid-cols-2 gap-4 pb-4 border-b">
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Data Required</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Blank)</p>
+                        <p className="text-sm   text-gray-400">— (Blank)</p>
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 mb-1">Data Provider</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Blank)</p>
+                        <p className="text-sm   text-gray-400">— (Blank)</p>
                       </div>
                       <div className="col-span-2">
                         <p className="text-xs text-gray-500 mb-1">Data Sources / Systems</p>
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-400">— (Blank)</p>
+                        <p className="text-sm   text-gray-400">— (Blank)</p>
                       </div>
                     </div>
 
@@ -2197,7 +2196,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                           </TableHeader>
                           <TableBody>
                             <TableRow>
-                              <TableCell className="text-xs font-['Dubai:Medium',_sans-serif]">Value</TableCell>
+                              <TableCell className="text-xs  ">Value</TableCell>
                               <TableCell className="text-xs text-center text-gray-400">—</TableCell>
                               <TableCell className="text-xs text-center text-gray-400">—</TableCell>
                               <TableCell className="text-xs text-center text-gray-400">—</TableCell>
@@ -2225,7 +2224,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                           </TableHeader>
                           <TableBody>
                             <TableRow>
-                              <TableCell className="text-xs font-['Dubai:Medium',_sans-serif]">Value</TableCell>
+                              <TableCell className="text-xs  ">Value</TableCell>
                               <TableCell className="text-xs text-center text-gray-400">—</TableCell>
                               <TableCell className="text-xs text-center text-gray-400">—</TableCell>
                               <TableCell className="text-xs text-center text-gray-400">—</TableCell>
@@ -2251,7 +2250,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                   <TabsContent value="trend" className="mt-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Performance Trend Analysis</CardTitle>
+                        <CardTitle className="text-sm  ">Performance Trend Analysis</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <ResponsiveContainer width="100%" height={300}>
@@ -2324,7 +2323,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                   <TabsContent value="evidence" className="mt-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Reading and Evidence</CardTitle>
+                        <CardTitle className="text-sm  ">Reading and Evidence</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <Table>
@@ -2338,12 +2337,12 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                           </TableHeader>
                           <TableBody>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q1 2025</TableCell>
+                              <TableCell className=" ">Q1 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.target} {selectedKPI.unit}</span>
+                                <span className="text-sm  ">{selectedKPI.target} {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   50 {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -2355,12 +2354,12 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q2 2025</TableCell>
+                              <TableCell className=" ">Q2 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.target} {selectedKPI.unit}</span>
+                                <span className="text-sm  ">{selectedKPI.target} {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   30 {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -2372,12 +2371,12 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q3 2025</TableCell>
+                              <TableCell className=" ">Q3 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.target} {selectedKPI.unit}</span>
+                                <span className="text-sm  ">{selectedKPI.target} {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   60 {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -2389,12 +2388,12 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q4 2025</TableCell>
+                              <TableCell className=" ">Q4 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.target} {selectedKPI.unit}</span>
+                                <span className="text-sm  ">{selectedKPI.target} {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   {selectedKPI.actual} {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -2414,7 +2413,7 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                   <TabsContent value="cascading" className="mt-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">KPI Cascading Hierarchy</CardTitle>
+                        <CardTitle className="text-sm  ">KPI Cascading Hierarchy</CardTitle>
                         <CardDescription>View how this KPI cascades from corporate level to divisions and departments</CardDescription>
                       </CardHeader>
                       <CardContent>
@@ -2437,13 +2436,13 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                                     Corporate Level
                                   </Badge>
                                 </div>
-                                <p className="font-['Dubai:Medium',_sans-serif] text-sm mb-2">{selectedKPI.name}</p>
+                                <p className="  text-sm mb-2">{selectedKPI.name}</p>
                                 <div className="flex items-center gap-4">
                                   <div className="text-xs text-gray-600">
-                                    Target: <span className="font-['Dubai:Medium',_sans-serif]">{selectedKPI.target}{selectedKPI.unit}</span>
+                                    Target: <span className=" ">{selectedKPI.target}{selectedKPI.unit}</span>
                                   </div>
                                   <div className="text-xs text-gray-600">
-                                    Actual: <span className="font-['Dubai:Medium',_sans-serif]" style={{ color: getStatusColor(selectedKPI.status) }}>{selectedKPI.actual}{selectedKPI.unit}</span>
+                                    Actual: <span className=" " style={{ color: getStatusColor(selectedKPI.status) }}>{selectedKPI.actual}{selectedKPI.unit}</span>
                                   </div>
                                 </div>
                               </div>
@@ -2471,13 +2470,13 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                                       Policy and Legislation
                                     </Badge>
                                   </div>
-                                  <p className="font-['Dubai:Medium',_sans-serif] text-sm mb-2">% of 4 indicators in the top 5</p>
+                                  <p className="  text-sm mb-2">% of 4 indicators in the top 5</p>
                                   <div className="flex items-center gap-4">
                                     <div className="text-xs font-['Dubai',_sans-serif] text-gray-600">
-                                      Target: <span className="font-['Dubai:Medium',_sans-serif]">75%</span>
+                                      Target: <span className=" ">75%</span>
                                     </div>
                                     <div className="text-xs font-['Dubai',_sans-serif] text-gray-600">
-                                      Actual: <span className="font-['Dubai:Medium',_sans-serif] text-green-600">82%</span>
+                                      Actual: <span className="  text-green-600">82%</span>
                                     </div>
                                   </div>
                                 </div>
@@ -2503,13 +2502,13 @@ export function CorporateDashboard({ onBack, onNavigateToDivision }: CorporateDa
                                         Department Level
                                       </Badge>
                                     </div>
-                                    <p className="font-['Dubai:Medium',_sans-serif] text-sm mb-2">% of 4 indicators ranked in the top 5</p>
+                                    <p className="  text-sm mb-2">% of 4 indicators ranked in the top 5</p>
                                     <div className="flex items-center gap-4">
                                       <div className="text-xs text-gray-600">
-                                        Target: <span className="font-['Dubai:Medium',_sans-serif]">75%</span>
+                                        Target: <span className=" ">75%</span>
                                       </div>
                                       <div className="text-xs text-gray-600">
-                                        Actual: <span className="font-['Dubai:Medium',_sans-serif] text-green-600">78%</span>
+                                        Actual: <span className="  text-green-600">78%</span>
                                       </div>
                                     </div>
                                   </div>

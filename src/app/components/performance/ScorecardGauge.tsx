@@ -24,7 +24,7 @@ export function ScorecardGauge({
   return (
     <div className="bg-white rounded-lg border border-[#e0e0e0] p-6">
       <div className="mb-4">
-        <h3 className="font-['Dubai:Medium',_sans-serif] text-[#1f2937] mb-1">
+        <h3 className="  text-[#1f2937] mb-1">
           Scorecard Progress
         </h3>
         <p className="font-['Dubai:Regular',_sans-serif] text-[#6b7280]">
@@ -82,7 +82,7 @@ export function ScorecardGauge({
             Status
           </p>
           <p
-            className="font-['Dubai:Medium',_sans-serif]"
+            className=" "
             style={{ color: statusColor }}
           >
             {status}
@@ -92,7 +92,7 @@ export function ScorecardGauge({
           <p className="font-['Dubai:Regular',_sans-serif] text-[#6b7280] mb-1">
             Completion
           </p>
-          <p className="font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+          <p className="  text-[#1f2937]">
             {percentage.toFixed(1)}%
           </p>
         </div>

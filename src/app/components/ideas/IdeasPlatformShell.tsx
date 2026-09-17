@@ -158,7 +158,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
             <Lightbulb className="h-4 w-4 text-white" />
           </div>
           <div>
-            <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground leading-tight">Ideas Platform</p>
+            <p className="text-sm   text-foreground leading-tight">Ideas Platform</p>
             <p className="text-[11px] text-muted-foreground leading-tight">Innovation System</p>
           </div>
         </div>
@@ -168,18 +168,18 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
       <div className="mx-3 mt-3 rounded-lg border border-border bg-muted/40 p-3">
         <div className="flex items-center gap-2.5">
           <Avatar className="h-8 w-8 flex-shrink-0">
-            <AvatarFallback className="bg-[#008755] text-white text-[11px] font-['Dubai:Medium',_sans-serif]">
+            <AvatarFallback className="bg-[#008755] text-white text-[11px]  ">
               {user.initials}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground truncate">{user.name}</p>
+            <p className="text-xs   text-foreground truncate">{user.name}</p>
             <p className="text-[11px] text-muted-foreground truncate">{user.role}</p>
           </div>
         </div>
         <div className="mt-2 flex items-center gap-1.5">
           <Star className="h-3 w-3 text-amber-400 fill-amber-400 flex-shrink-0" />
-          <span className="text-[11px] font-['Dubai:Medium',_sans-serif] text-[#008755]">
+          <span className="text-[11px]   text-[#008755]">
             {user.xp.toLocaleString()} XP
           </span>
         </div>
@@ -189,7 +189,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
       <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-3">
         {visibleSections.map(section => (
           <div key={section.id}>
-            <p className="text-[10px] font-['Dubai:Medium',_sans-serif] text-muted-foreground tracking-widest px-2 py-1 uppercase">
+            <p className="text-[10px]   text-muted-foreground tracking-widest px-2 py-1 uppercase">
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -231,7 +231,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
 
       {/* Submit callout — matches PMO banner card gradient */}
       <div className="mx-3 mb-3 rounded-lg bg-gradient-to-br from-[#008755] to-[#005844] p-3 text-white">
-        <p className="text-xs font-['Dubai:Medium',_sans-serif] leading-snug mb-2">
+        <p className="text-xs   leading-snug mb-2">
           Have a great idea? Share it with the team.
         </p>
         <button
@@ -244,7 +244,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
 
       {/* Demo role selector — matches PMO's Select style */}
       <div className="px-3 pb-3 pt-2 border-t border-border">
-        <p className="text-[10px] text-muted-foreground mb-1.5 font-['Dubai:Medium',_sans-serif] uppercase tracking-wider">
+        <p className="text-[10px] text-muted-foreground mb-1.5   uppercase tracking-wider">
           Demo Role
         </p>
         <Select value={role} onValueChange={v => onRoleChange(v as IdeasRole)}>
@@ -271,7 +271,7 @@ function PlaceholderPage({ pageId }: { pageId: string }) {
       <div className="h-14 w-14 rounded-2xl bg-[#008755]/10 flex items-center justify-center mb-4">
         <Lightbulb className="h-7 w-7 text-[#008755]" />
       </div>
-      <h2 className="font-['Dubai:Medium',_sans-serif] text-lg text-foreground mb-1">{label}</h2>
+      <h2 className="  text-lg text-foreground mb-1">{label}</h2>
       <p className="text-sm text-muted-foreground max-w-xs">
         This page will be built in the next prompt.
       </p>

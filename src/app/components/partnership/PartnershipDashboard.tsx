@@ -27,7 +27,7 @@ import { Badge } from "../ui/badge";
 import { Progress } from "../ui/progress";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import { PartnerListPage } from "./PartnerListPage";
 import { PartnershipListPage } from "./PartnershipListPage";
 import { PartnershipDashboardPage } from "./PartnershipDashboardPage";
@@ -175,13 +175,12 @@ export function PartnershipDashboard({ onNavigate }: PartnershipDashboardProps) 
     <div className="h-full overflow-auto">
       <div className="space-y-3 p-3">
         {/* Hero CTA Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-3 pb-3 relative z-10">
             <div className="flex items-center justify-between">
               <div>
@@ -190,7 +189,7 @@ export function PartnershipDashboard({ onNavigate }: PartnershipDashboardProps) 
                     <Handshake className="h-6 w-6" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-1">
+                    <h1 className="text-xl   mb-1">
                       Partnership Management
                     </h1>
                     <p className="text-white/90 text-sm">

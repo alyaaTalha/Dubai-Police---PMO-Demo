@@ -122,21 +122,21 @@ export function DepartmentLeaderboard({
   return (
     <div className="bg-white rounded-lg border border-[#e0e0e0] overflow-hidden">
       <div className="p-6 border-b border-[#e5e7eb]">
-        <h3 className="font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+        <h3 className="  text-[#1f2937]">
           Department Performance Leaderboard
         </h3>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="font-['Dubai:Medium',_sans-serif]">
+            <TableHead className=" ">
               Rank
             </TableHead>
-            <TableHead className="font-['Dubai:Medium',_sans-serif]">
+            <TableHead className=" ">
               Department
             </TableHead>
             <TableHead
-              className="font-['Dubai:Medium',_sans-serif] cursor-pointer"
+              className="  cursor-pointer"
               onClick={() => handleSort("score")}
             >
               <div className="flex items-center gap-2">
@@ -144,13 +144,13 @@ export function DepartmentLeaderboard({
                 <ArrowUpDown className="w-4 h-4" />
               </div>
             </TableHead>
-            <TableHead className="font-['Dubai:Medium',_sans-serif]">
+            <TableHead className=" ">
               KPIs Completed
             </TableHead>
-            <TableHead className="font-['Dubai:Medium',_sans-serif]">
+            <TableHead className=" ">
               Trend
             </TableHead>
-            <TableHead className="font-['Dubai:Medium',_sans-serif]">
+            <TableHead className=" ">
               Status
             </TableHead>
           </TableRow>
@@ -162,7 +162,7 @@ export function DepartmentLeaderboard({
               className="cursor-pointer hover:bg-[#f9fafb] transition-colors"
               onClick={() => onDepartmentClick(dept.id)}
             >
-              <TableCell className="font-['Dubai:Medium',_sans-serif] text-[#008755]">
+              <TableCell className="  text-[#008755]">
                 #{index + 1}
               </TableCell>
               <TableCell className="font-['Dubai:Regular',_sans-serif]">
@@ -185,14 +185,14 @@ export function DepartmentLeaderboard({
                   ) : (
                     <TrendingDown className="w-4 h-4" />
                   )}
-                  <span className="font-['Dubai:Medium',_sans-serif]">
+                  <span className=" ">
                     {Math.abs(dept.trend)}%
                   </span>
                 </div>
               </TableCell>
               <TableCell>
                 <div
-                  className="inline-flex items-center px-3 py-1 rounded-full font-['Dubai:Medium',_sans-serif]"
+                  className="inline-flex items-center px-3 py-1 rounded-full  "
                   style={{
                     color: getStatusColor(dept.status),
                     backgroundColor: getStatusBgColor(dept.status),

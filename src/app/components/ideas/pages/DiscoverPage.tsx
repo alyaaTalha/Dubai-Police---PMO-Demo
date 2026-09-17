@@ -261,7 +261,7 @@ function AskMode() {
       <div className="rounded-xl bg-gradient-to-r from-[#005844] to-[#008755] px-6 py-5 text-white">
         <div className="flex items-center gap-3 mb-1">
           <Sparkles className="size-6 opacity-90" />
-          <h2 className="text-xl font-semibold font-['Dubai:Medium',_sans-serif]">Ask Anything About Your Pipeline</h2>
+          <h2 className="text-xl font-semibold  ">Ask Anything About Your Pipeline</h2>
         </div>
         <p className="text-sm text-white/80 ml-9">Powered by Dubai Police Innovation AI</p>
       </div>
@@ -501,7 +501,7 @@ function DecideMode() {
           <Zap className="size-10 text-[#008755]" />
         </div>
         <div className="text-center space-y-1">
-          <h3 className="text-xl font-semibold text-[#005844] font-['Dubai:Medium',_sans-serif]">All done!</h3>
+          <h3 className="text-xl font-semibold text-[#005844]  ">All done!</h3>
           <p className="text-muted-foreground text-sm">You've worked through all {DECIDE_QUEUE.length} ideas in the queue.</p>
         </div>
         <div className="flex gap-3 text-sm">
@@ -530,7 +530,7 @@ function DecideMode() {
     <div className="flex flex-col items-center gap-6">
       {/* Header */}
       <div className="w-full text-center space-y-1">
-        <h2 className="text-lg font-semibold text-[#005844] font-['Dubai:Medium',_sans-serif]">Fast-Track Decisions</h2>
+        <h2 className="text-lg font-semibold text-[#005844]  ">Fast-Track Decisions</h2>
         <p className="text-sm text-muted-foreground">Work through ideas that need your input, one at a time.</p>
       </div>
 
@@ -564,7 +564,7 @@ function DecideMode() {
           </div>
 
           {/* Title */}
-          <h3 className="text-xl font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">{idea.title}</h3>
+          <h3 className="text-xl font-semibold text-gray-900  ">{idea.title}</h3>
 
           {/* Description */}
           <p className="text-sm text-muted-foreground leading-relaxed">{idea.desc}</p>

@@ -209,10 +209,10 @@ function StatCard({
           {icon}
         </div>
         <div>
-          <p className="text-2xl font-bold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+          <p className="text-2xl font-bold text-gray-900  ">
             {value}
           </p>
-          <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] leading-tight">
+          <p className="text-xs text-gray-500   leading-tight">
             {label}
           </p>
         </div>
@@ -253,13 +253,13 @@ function VaultIdeaCard({
             {idea.reason}
           </span>
           {idea.feasible && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 font-['Dubai:Medium',_sans-serif]">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700  ">
               <CheckCircle2 className="h-3 w-3" />
               Now Feasible
             </span>
           )}
           {isRecommended && (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#008755]/10 text-[#008755] font-['Dubai:Medium',_sans-serif]">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#008755]/10 text-[#008755]  ">
               <CheckCircle2 className="h-3 w-3" />
               Recommended
             </span>
@@ -267,7 +267,7 @@ function VaultIdeaCard({
         </div>
 
         {/* Title */}
-        <h3 className="text-sm font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif] leading-snug">
+        <h3 className="text-sm font-semibold text-gray-900   leading-snug">
           {idea.title}
         </h3>
 
@@ -291,7 +291,7 @@ function VaultIdeaCard({
         {/* Action row */}
         <div className="flex items-center justify-between pt-1 mt-auto">
           {isRecommended ? (
-            <span className="text-xs text-[#008755] font-medium font-['Dubai:Medium',_sans-serif] inline-flex items-center gap-1">
+            <span className="text-xs text-[#008755] font-medium   inline-flex items-center gap-1">
               <CheckCircle2 className="h-3.5 w-3.5" />
               Added to queue
             </span>
@@ -299,7 +299,7 @@ function VaultIdeaCard({
             <Button
               size="sm"
               variant="outline"
-              className="h-7 px-3 text-xs border-[#008755] text-[#008755] hover:bg-[#008755]/10 font-['Dubai:Medium',_sans-serif]"
+              className="h-7 px-3 text-xs border-[#008755] text-[#008755] hover:bg-[#008755]/10  "
               onClick={() => onRecommend(idea.id)}
             >
               Recommend Reconsideration
@@ -344,7 +344,7 @@ function QueueEntry({
     >
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-sm font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+          <p className="text-sm font-semibold text-gray-900  ">
             {idea.title}
           </p>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -362,14 +362,14 @@ function QueueEntry({
       </div>
 
       {submitted ? (
-        <div className="flex items-center gap-2 text-sm text-[#008755] font-['Dubai:Medium',_sans-serif]">
+        <div className="flex items-center gap-2 text-sm text-[#008755]  ">
           <CheckCircle2 className="h-4 w-4" />
           Submitted to Director for review
         </div>
       ) : (
         <>
           <textarea
-            className="w-full rounded-lg border border-border bg-gray-50 px-3 py-2 text-xs text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-[#008755]/30 font-['Dubai:Medium',_sans-serif]"
+            className="w-full rounded-lg border border-border bg-gray-50 px-3 py-2 text-xs text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-[#008755]/30  "
             rows={2}
             value={note}
             onChange={(e) => onNoteChange(e.target.value)}
@@ -378,7 +378,7 @@ function QueueEntry({
           <div className="flex justify-end">
             <Button
               size="sm"
-              className="h-8 px-4 bg-[#008755] hover:bg-[#005844] text-white text-xs gap-1.5 font-['Dubai:Medium',_sans-serif]"
+              className="h-8 px-4 bg-[#008755] hover:bg-[#005844] text-white text-xs gap-1.5  "
               onClick={onSubmit}
             >
               <Send className="h-3.5 w-3.5" />
@@ -463,10 +463,10 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
             <Archive className="h-5 w-5 text-[#008755]" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900 font-['Dubai:Medium',_sans-serif] leading-tight">
+            <h1 className="text-xl font-bold text-gray-900   leading-tight">
               Idea Vault
             </h1>
-            <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif]">
+            <p className="text-xs text-gray-500  ">
               Previously rejected or archived ideas — revisit when the time is right.
             </p>
           </div>
@@ -576,7 +576,7 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-gray-400 gap-2">
           <Archive className="h-10 w-10 opacity-30" />
-          <p className="text-sm font-['Dubai:Medium',_sans-serif]">No archived ideas match your filters.</p>
+          <p className="text-sm  ">No archived ideas match your filters.</p>
           <Button
             variant="ghost"
             size="sm"
@@ -615,10 +615,10 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
               <Send className="h-4 w-4 text-[#008755]" />
             </div>
             <div className="text-left">
-              <p className="text-sm font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+              <p className="text-sm font-semibold text-gray-900  ">
                 Reconsideration Queue
               </p>
-              <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif]">
+              <p className="text-xs text-gray-500  ">
                 {recommendedList.length === 0
                   ? 'No ideas recommended yet — use the cards above to add.'
                   : `${recommendedList.length} idea${recommendedList.length !== 1 ? 's' : ''} pending review`}
@@ -627,7 +627,7 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
           </div>
           <div className="flex items-center gap-2">
             {recommendedList.length > 0 && (
-              <span className="h-5 min-w-5 px-1.5 rounded-full bg-[#008755] text-white text-xs font-bold flex items-center justify-center font-['Dubai:Medium',_sans-serif]">
+              <span className="h-5 min-w-5 px-1.5 rounded-full bg-[#008755] text-white text-xs font-bold flex items-center justify-center  ">
                 {recommendedList.length}
               </span>
             )}
@@ -644,7 +644,7 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
             {recommendedList.length === 0 ? (
               <div className="flex flex-col items-center py-8 text-gray-400 gap-2">
                 <CheckCircle2 className="h-8 w-8 opacity-30" />
-                <p className="text-sm font-['Dubai:Medium',_sans-serif]">
+                <p className="text-sm  ">
                   The queue is empty. Click "Recommend Reconsideration" on any archived idea above.
                 </p>
               </div>

@@ -299,7 +299,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
       {/* ── 1. Top Bar ─────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900">
+          <h1 className="text-2xl   font-semibold text-gray-900">
             Director Dashboard
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
@@ -328,7 +328,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide">Decisions Made</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">Decisions Made</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{stats.decisions}</p>
                 <p className="text-xs text-emerald-600 mt-1">+3 from last month</p>
               </div>
@@ -345,7 +345,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide">Ideas in Pipeline</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">Ideas in Pipeline</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{stats.pipeline}</p>
                 <p className="text-xs text-blue-600 mt-1">2 converted to project</p>
               </div>
@@ -362,7 +362,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide">Avg Decision Time</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">Avg Decision Time</p>
                 <p className={cn('text-3xl font-bold mt-1', stats.avgDays > 3 ? 'text-amber-600' : 'text-gray-900')}>
                   {stats.avgDays}d
                 </p>
@@ -383,7 +383,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide">Pending Decisions</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">Pending Decisions</p>
                 <div className="flex items-center gap-2 mt-1">
                   <p className="text-3xl font-bold text-gray-900">{stats.pending}</p>
                   {stats.overdue > 0 && (
@@ -428,7 +428,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2 pt-3 px-3">
           <div className="flex items-center gap-2">
-            <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900">
+            <CardTitle className="text-sm   font-semibold text-gray-900">
               Needs Your Decision
             </CardTitle>
             <span className="text-xs font-bold bg-[#008755] text-white px-2 py-0.5 rounded-full">
@@ -572,7 +572,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
       {/* ── 5. High-Potential Ideas ────────────────────────────────────────── */}
       <div>
         <div className="mb-2">
-          <h2 className="text-sm font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900 flex items-center gap-2">
+          <h2 className="text-sm   font-semibold text-gray-900 flex items-center gap-2">
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
             Flagged High-Potential
           </h2>
@@ -610,7 +610,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
       {/* ── 6. Department Funnel ───────────────────────────────────────────── */}
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2 pt-3 px-3">
-          <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900">
+          <CardTitle className="text-sm   font-semibold text-gray-900">
             Innovation Funnel — {dept}
           </CardTitle>
         </CardHeader>
@@ -678,7 +678,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         {/* Recent Ideas Table (60%) */}
         <Card className="rounded-xl border border-border bg-white shadow-sm lg:col-span-3">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900">
+            <CardTitle className="text-sm   font-semibold text-gray-900">
               Recent Ideas by Status
             </CardTitle>
           </CardHeader>
@@ -732,7 +732,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         {/* Impact Area Distribution (40%) */}
         <Card className="rounded-xl border border-border bg-white shadow-sm lg:col-span-2">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900">
+            <CardTitle className="text-sm   font-semibold text-gray-900">
               Impact Area Distribution
             </CardTitle>
           </CardHeader>
@@ -772,7 +772,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
               <div className="w-7 h-7 rounded-lg bg-[#008755]/10 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-[#008755]" />
               </div>
-              <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] font-semibold text-gray-900">
+              <CardTitle className="text-sm   font-semibold text-gray-900">
                 Ask about your pipeline
               </CardTitle>
             </div>

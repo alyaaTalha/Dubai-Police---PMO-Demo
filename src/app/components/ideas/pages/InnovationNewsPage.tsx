@@ -152,7 +152,7 @@ function NewsCard({ article }: { article: NewsArticle }) {
     <Card className="rounded-xl bg-white hover:shadow-md transition-shadow flex flex-col">
       <CardContent className="pt-4 pb-4 flex flex-col gap-2.5 flex-1">
         <CategoryChip category={article.category} />
-        <h3 className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-900 leading-snug line-clamp-2">
+        <h3 className="  text-sm text-gray-900 leading-snug line-clamp-2">
           {article.title}
         </h3>
         <div className="flex items-center gap-1.5 text-[11px] text-gray-400">
@@ -192,7 +192,7 @@ function FeaturedStory() {
 
         {/* Right — content */}
         <div className="flex-1 p-6 flex flex-col gap-3 justify-center">
-          <h2 className="font-['Dubai:Medium',_sans-serif] text-lg text-gray-900 leading-snug">
+          <h2 className="  text-lg text-gray-900 leading-snug">
             Dubai Police Launches AI-Powered Crime Prediction Platform
           </h2>
           <p className="text-sm text-gray-600 leading-relaxed">
@@ -233,7 +233,7 @@ export function InnovationNewsPage({
     <div className="p-6 flex flex-col gap-5">
       {/* Page header */}
       <div>
-        <h1 className="font-['Dubai:Medium',_sans-serif] text-xl text-gray-900">
+        <h1 className="  text-xl text-gray-900">
           Innovation News
         </h1>
         <p className="text-sm text-gray-500 mt-0.5">
@@ -270,7 +270,7 @@ export function InnovationNewsPage({
 
       {/* Section label */}
       <div className="flex items-center justify-between">
-        <h2 className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-700">
+        <h2 className="  text-sm text-gray-700">
           {activeCategory === 'All' ? 'Latest Stories' : activeCategory}
           <span className="ml-2 text-xs font-normal text-gray-400">
             {filtered.length} {filtered.length === 1 ? 'article' : 'articles'}
@@ -291,7 +291,7 @@ export function InnovationNewsPage({
             <div className="h-12 w-12 rounded-xl bg-gray-100 flex items-center justify-center">
               <CalendarDays className="h-5 w-5 text-gray-400" />
             </div>
-            <p className="font-['Dubai:Medium',_sans-serif] text-sm text-gray-700">
+            <p className="  text-sm text-gray-700">
               No articles in this category
             </p>
             <p className="text-xs text-gray-400 max-w-xs">

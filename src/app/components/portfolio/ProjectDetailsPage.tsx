@@ -737,7 +737,7 @@ export function ProjectDetailsPage({
                 </Button>
                 <div className="h-6 w-px bg-white/30" />
                 <div>
-                  <h1 className="text-xl font-['Dubai:Medium',_sans-serif]">
+                  <h1 className="text-xl  ">
                     {project.name}
                   </h1>
                   <p className="text-white/90 text-sm">

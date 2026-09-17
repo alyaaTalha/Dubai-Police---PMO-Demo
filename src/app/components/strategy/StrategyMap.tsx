@@ -39,7 +39,7 @@ function ObjectiveCard({ title, code, perspective, color, status }: ObjectiveCar
             {statusLabels[status]}
           </Badge>
         </div>
-        <h4 className="text-sm font-['Dubai:Medium',_sans-serif] text-[#1f2937] leading-snug">
+        <h4 className="text-sm   text-[#1f2937] leading-snug">
           {title}
         </h4>
       </CardContent>
@@ -67,7 +67,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
               Back to Dashboard
             </Button>
             <div>
-              <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+              <h1 className="text-xl   text-[#1f2937]">
                 Strategy Map
               </h1>
               <p className="text-sm text-muted-foreground">
@@ -85,18 +85,18 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] mb-2 text-white/80">
+                <h3 className="text-sm   mb-2 text-white/80">
                   Vision
                 </h3>
-                <p className="text-base font-['Dubai:Medium',_sans-serif]">
+                <p className="text-base  ">
                   To be a leading customs administration globally recognized for excellence, innovation, and seamless trade facilitation
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-['Dubai:Medium',_sans-serif] mb-2 text-white/80">
+                <h3 className="text-sm   mb-2 text-white/80">
                   Mission
                 </h3>
-                <p className="text-base font-['Dubai:Medium',_sans-serif]">
+                <p className="text-base  ">
                   Protecting society and facilitating trade through smart customs solutions, while ensuring compliance and enhancing customer experience
                 </p>
               </div>
@@ -116,7 +116,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
           ].map((theme, idx) => (
             <Card key={idx} className="text-white border-none" style={{ background: theme.color }}>
               <CardContent className="p-4 text-center">
-                <p className="text-sm font-['Dubai:Medium',_sans-serif]">{theme.theme}</p>
+                <p className="text-sm  ">{theme.theme}</p>
               </CardContent>
             </Card>
           ))}
@@ -133,7 +133,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
                 <TrendingUp className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+                <h2 className="text-lg   text-[#1f2937]">
                   Financial Perspective
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -175,7 +175,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
                 <Users className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+                <h2 className="text-lg   text-[#1f2937]">
                   Customer Perspective
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -231,7 +231,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
                 <Activity className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+                <h2 className="text-lg   text-[#1f2937]">
                   Internal Process Perspective
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -294,7 +294,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
                 <Award className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+                <h2 className="text-lg   text-[#1f2937]">
                   Learning & Growth Perspective
                 </h2>
                 <p className="text-xs text-muted-foreground">
@@ -347,7 +347,7 @@ export function StrategyMap({ onBack }: StrategyMapProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+                <span className="text-sm   text-[#1f2937]">
                   Status Legend:
                 </span>
                 <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">

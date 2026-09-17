@@ -15,7 +15,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import { CorporateScorecard } from "./CorporateScorecard";
 import { DivisionScorecard } from "./DivisionScorecard";
 
@@ -610,7 +610,7 @@ export function ScorecardsPage({ divisionId }: { divisionId?: string }) {
                     <ChevronRight className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                   </Button>
                 )}
-                <h4 className="font-['Dubai:Medium',_sans-serif] font-[Dubai]">{node.name.replace(/\s*Division(s)?\s*/gi, ' ').trim()}</h4>
+                <h4 className="  font-[Dubai]">{node.name.replace(/\s*Division(s)?\s*/gi, ' ').trim()}</h4>
               </div>
               
               <div className="flex items-center gap-4">
@@ -624,7 +624,7 @@ export function ScorecardsPage({ divisionId }: { divisionId?: string }) {
                     </TooltipTrigger>
                     <TooltipContent>
                       <div className="space-y-1">
-                        <p className="font-['Dubai:Medium',_sans-serif]">Performance Breakdown:</p>
+                        <p className=" ">Performance Breakdown:</p>
                         <p>Outcome: {node.perspectives.outcome}%</p>
                         <p>Process: {node.perspectives.process}%</p>
                         <p>Enabler: {node.perspectives.enabler}%</p>
@@ -692,7 +692,7 @@ export function ScorecardsPage({ divisionId }: { divisionId?: string }) {
             <CardContent className="p-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h4 className="font-['Dubai:Medium',_sans-serif] mb-3">{corporateData.name}</h4>
+                  <h4 className="  mb-3">{corporateData.name}</h4>
                   <div className="flex items-center gap-4">
                     <TooltipProvider>
                       <Tooltip>
@@ -704,7 +704,7 @@ export function ScorecardsPage({ divisionId }: { divisionId?: string }) {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="space-y-1">
-                            <p className="font-['Dubai:Medium',_sans-serif]">Performance Breakdown:</p>
+                            <p className=" ">Performance Breakdown:</p>
                             <p>Outcome: {corporateData.perspectives.outcome}%</p>
                             <p>Process: {corporateData.perspectives.process}%</p>
                             <p>Enabler: {corporateData.perspectives.enabler}%</p>
@@ -753,13 +753,12 @@ export function ScorecardsPage({ divisionId }: { divisionId?: string }) {
     <div className="h-full overflow-auto">
       <div className="space-y-2 p-2">
         {/* Banner Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-3 pb-3 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -768,7 +767,7 @@ export function ScorecardsPage({ divisionId }: { divisionId?: string }) {
                     <Network className="h-5 w-5" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-0.5">
+                    <h1 className="text-xl   mb-0.5">
                       Scorecard Overview
                     </h1>
                     <p className="text-white/90 text-sm">

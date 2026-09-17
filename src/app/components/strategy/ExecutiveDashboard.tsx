@@ -50,7 +50,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { KPIGauge } from "../performance/KPIGauge";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 
 interface ExecutiveDashboardProps {
   onBack: () => void;
@@ -197,13 +197,12 @@ export function ExecutiveDashboard({ onBack, onNavigateToIdeas }: ExecutiveDashb
     <div className="h-full overflow-auto">
       <div className="space-y-4 p-4">
         {/* Hero Banner */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-4 pb-4 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -610,7 +609,7 @@ export function ExecutiveDashboard({ onBack, onNavigateToIdeas }: ExecutiveDashb
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
-                    <p className="font-['Dubai:Medium',_sans-serif] text-sm text-foreground">Innovation Pulse</p>
+                    <p className="  text-sm text-foreground">Innovation Pulse</p>
                     <span className="flex items-center gap-1 text-[10px] bg-[#26D07C]/15 text-[#005844] rounded-full px-2 py-0.5">
                       <Sparkles className="h-3 w-3" /> Live
                     </span>
@@ -620,19 +619,19 @@ export function ExecutiveDashboard({ onBack, onNavigateToIdeas }: ExecutiveDashb
               </div>
               <div className="flex items-center gap-6 flex-wrap">
                 <div className="text-center">
-                  <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-[#008755]">77</p>
+                  <p className="text-2xl   text-[#008755]">77</p>
                   <p className="text-[11px] text-muted-foreground">Ideas Submitted</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-[#008755]">3</p>
+                  <p className="text-2xl   text-[#008755]">3</p>
                   <p className="text-[11px] text-muted-foreground">Implemented</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-foreground">94</p>
+                  <p className="text-2xl   text-foreground">94</p>
                   <p className="text-[11px] text-muted-foreground">Top Dept Score</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">Digital Transformation</p>
+                  <p className="text-sm   text-foreground">Digital Transformation</p>
                   <p className="text-[11px] text-muted-foreground">Leading Department</p>
                 </div>
                 {onNavigateToIdeas && (

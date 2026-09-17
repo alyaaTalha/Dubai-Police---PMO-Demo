@@ -30,7 +30,7 @@ import {
   X,
   ChevronLeft
 } from "lucide-react";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import { KPIGauge } from "./KPIGauge";
 import PrimitiveDiv from "../../imports/PrimitiveDiv";
 import {
@@ -526,13 +526,12 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
     <div className="h-full overflow-auto">
       <div className="space-y-3 p-3">
         {/* Hero Banner Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-3 pb-3 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -541,7 +540,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                     <Target className="h-5 w-5" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-0.5">
+                    <h1 className="text-xl   mb-0.5">
                       Key Performance Indicators
                     </h1>
                     <p className="text-white/90 text-sm">
@@ -638,7 +637,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
         {/* Results Count */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-600">
-            Showing <span className="font-['Dubai:Medium',_sans-serif]">{filteredKPIs.length}</span> of <span className="font-['Dubai:Medium',_sans-serif]">{mockKPIs.length}</span> KPIs
+            Showing <span className=" ">{filteredKPIs.length}</span> of <span className=" ">{mockKPIs.length}</span> KPIs
           </p>
         </div>
 
@@ -654,7 +653,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                 <CardContent className="pt-4">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-900 mb-1 line-clamp-2">
+                      <h3 className="text-sm   text-gray-900 mb-1 line-clamp-2">
                         {kpi.name}
                       </h3>
                       <div className="flex items-center gap-2 mb-2">
@@ -691,14 +690,14 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-baseline gap-2 mb-1">
-                        <span className="text-2xl font-['Dubai:Medium',_sans-serif]" style={{ color: getStatusColor(kpi.status) }}>
+                        <span className="text-2xl  " style={{ color: getStatusColor(kpi.status) }}>
                           {kpi.actual}
                         </span>
                         <span className="text-sm text-gray-500">/ {kpi.target} {kpi.unit}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-600">Achievement:</span>
-                        <span className="text-xs font-['Dubai:Medium',_sans-serif]" style={{ color: getStatusColor(kpi.status) }}>
+                        <span className="text-xs  " style={{ color: getStatusColor(kpi.status) }}>
                           {kpi.achievement}%
                         </span>
                         {kpi.trend === "up" && <TrendingUp className="h-3 w-3 text-green-600" />}
@@ -752,7 +751,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                     >
                       <TableCell>
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif] text-sm">{kpi.name}</p>
+                          <p className="  text-sm">{kpi.name}</p>
                           <p className="text-xs text-gray-500">{kpi.perspective}</p>
                         </div>
                       </TableCell>
@@ -778,12 +777,12 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <span className="text-sm font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-sm  ">
                           {kpi.target} {kpi.unit}
                         </span>
                       </TableCell>
                       <TableCell className="text-center">
-                        <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: kpi.divisionColor }}>
+                        <span className="text-sm  " style={{ color: kpi.divisionColor }}>
                           {kpi.actual} {kpi.unit}
                         </span>
                       </TableCell>
@@ -860,7 +859,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
             <CardContent className="pt-4 pb-4">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600">
-                  Page <span className="font-['Dubai:Medium',_sans-serif]">{currentPage}</span> of <span className="font-['Dubai:Medium',_sans-serif]">{totalPages}</span>
+                  Page <span className=" ">{currentPage}</span> of <span className=" ">{totalPages}</span>
                 </p>
                 <div className="flex items-center gap-2">
                   <Button
@@ -933,7 +932,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
             <div className="p-6">
               <SheetHeader className="space-y-3">
                 <div>
-                  <SheetTitle className="text-xl font-['Dubai:Medium',_sans-serif]">
+                  <SheetTitle className="text-xl  ">
                     {selectedKPI.name}
                   </SheetTitle>
                   <SheetDescription className="mt-2">
@@ -968,11 +967,11 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
               <div className="px-6 pb-6 space-y-6">
                 {/* Performance Overview */}
                 <div className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700 mb-4">Performance Overview</h3>
+                  <h3 className="text-sm   text-gray-700 mb-4">Performance Overview</h3>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-baseline gap-2 mb-2">
-                        <span className="text-3xl font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                        <span className="text-3xl  " style={{ color: selectedKPI.divisionColor }}>
                           {selectedKPI.actual}
                         </span>
                         <span className="text-lg text-gray-500">/ {selectedKPI.target} {selectedKPI.unit}</span>
@@ -980,7 +979,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-600">Achievement:</span>
                         <span 
-                          className="text-lg font-['Dubai:Medium',_sans-serif]" 
+                          className="text-lg  " 
                           style={{ color: getStatusColor(selectedKPI.status) }}
                         >
                           {selectedKPI.achievement}%
@@ -1000,42 +999,42 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
 
                 {/* KPI Details */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-gray-700">KPI Information</h3>
+                  <h3 className="text-sm   text-gray-700">KPI Information</h3>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-gray-500 mb-1">KPI Owner</p>
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-gray-400" />
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.owner}</p>
+                        <p className="text-sm  ">{selectedKPI.owner}</p>
                       </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Department</p>
                       <div className="flex items-center gap-2">
                         <Building2 className="h-4 w-4 text-gray-400" />
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.department}</p>
+                        <p className="text-sm  ">{selectedKPI.department}</p>
                       </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Frequency</p>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-gray-400" />
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.frequency}</p>
+                        <p className="text-sm  ">{selectedKPI.frequency}</p>
                       </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Last Updated</p>
                       <div className="flex items-center gap-2">
                         <Clock className="h-4 w-4 text-gray-400" />
-                        <p className="text-sm font-['Dubai:Medium',_sans-serif]">
+                        <p className="text-sm  ">
                           {new Date(selectedKPI.lastUpdated).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Perspective</p>
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif]">{selectedKPI.perspective}</p>
+                      <p className="text-sm  ">{selectedKPI.perspective}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Trend</p>
@@ -1073,7 +1072,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                   <TabsContent value="trend" className="mt-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Performance Trend Analysis</CardTitle>
+                        <CardTitle className="text-sm  ">Performance Trend Analysis</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <ResponsiveContainer width="100%" height={300}>
@@ -1146,7 +1145,7 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                   <TabsContent value="evidence" className="mt-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Reading and Evidence</CardTitle>
+                        <CardTitle className="text-sm  ">Reading and Evidence</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <Table>
@@ -1160,12 +1159,12 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                           </TableHeader>
                           <TableBody>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q1 2025</TableCell>
+                              <TableCell className=" ">Q1 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">80 {selectedKPI.unit}</span>
+                                <span className="text-sm  ">80 {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   50 {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -1177,12 +1176,12 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q2 2025</TableCell>
+                              <TableCell className=" ">Q2 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">80 {selectedKPI.unit}</span>
+                                <span className="text-sm  ">80 {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   30 {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -1194,12 +1193,12 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q3 2025</TableCell>
+                              <TableCell className=" ">Q3 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">80 {selectedKPI.unit}</span>
+                                <span className="text-sm  ">80 {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   60 {selectedKPI.unit}
                                 </span>
                               </TableCell>
@@ -1211,12 +1210,12 @@ export function KPIsPage({ onBack }: KPIsPageProps) {
                               </TableCell>
                             </TableRow>
                             <TableRow>
-                              <TableCell className="font-['Dubai:Medium',_sans-serif]">Q4 2025</TableCell>
+                              <TableCell className=" ">Q4 2025</TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]">80 {selectedKPI.unit}</span>
+                                <span className="text-sm  ">80 {selectedKPI.unit}</span>
                               </TableCell>
                               <TableCell className="text-center">
-                                <span className="text-sm font-['Dubai:Medium',_sans-serif]" style={{ color: selectedKPI.divisionColor }}>
+                                <span className="text-sm  " style={{ color: selectedKPI.divisionColor }}>
                                   75 {selectedKPI.unit}
                                 </span>
                               </TableCell>

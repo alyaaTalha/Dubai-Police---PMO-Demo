@@ -637,7 +637,7 @@ export function EditWorkflowPage({ workflowId, onBack }: EditWorkflowPageProps) 
                 Back to Workflows
               </Button>
               <div>
-                <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+                <h1 className="text-xl   text-[#1f2937]">
                   Edit Workflow
                 </h1>
                 <p className="text-sm text-muted-foreground">

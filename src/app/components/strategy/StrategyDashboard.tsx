@@ -25,7 +25,7 @@ import { Badge } from "../ui/badge";
 import { Progress } from "../ui/progress";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import { ExecutiveDashboard } from "./ExecutiveDashboard";
 
 interface StatCardProps {
@@ -43,7 +43,7 @@ function StatCard({ title, value, change, isPositive, icon }: StatCardProps) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-muted-foreground mb-1">{title}</p>
-            <p className="text-2xl font-['Dubai:Medium',_sans-serif]">{value}</p>
+            <p className="text-2xl  ">{value}</p>
           </div>
           <div className="h-10 w-10 rounded-lg bg-[#008755]/10 flex items-center justify-center text-[#008755]">
             {icon}
@@ -75,9 +75,9 @@ function QuickAccessCard({ title, description, icon, badge, badgeVariant = "seco
             <Badge variant={badgeVariant}>{badge}</Badge>
           )}
         </div>
-        <h3 className="font-['Dubai:Medium',_sans-serif] text-[#1f2937] mb-2">{title}</h3>
+        <h3 className="  text-[#1f2937] mb-2">{title}</h3>
         <p className="text-sm text-muted-foreground mb-4">{description}</p>
-        <div className="flex items-center text-[#008755] text-sm font-['Dubai:Medium',_sans-serif]">
+        <div className="flex items-center text-[#008755] text-sm  ">
           <span>View Details</span>
           <ChevronRight className="h-4 w-4 ml-1" />
         </div>
@@ -108,7 +108,7 @@ function AlertItem({ title, description, time, severity, kpi }: AlertItemProps) 
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <p className="text-sm font-['Dubai:Medium',_sans-serif] text-[#1f2937]">{title}</p>
+          <p className="text-sm   text-[#1f2937]">{title}</p>
           {kpi && (
             <Badge variant="outline" className="text-xs">{kpi}</Badge>
           )}
@@ -141,13 +141,12 @@ export function StrategyDashboard({ onNavigate, onNavigateToIdeas }: StrategyDas
     <div className="h-full overflow-auto">
       <div className="space-y-3 p-3">
         {/* Hero CTA Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-4 pb-4 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">

@@ -746,7 +746,7 @@ export function ProjectsListPage({
                     <FolderKanban className="h-5 w-5" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-0.5">
+                    <h1 className="text-xl   mb-0.5">
                       Project Portfolio
                     </h1>
                     <p className="text-white/90 text-sm">
@@ -1215,7 +1215,7 @@ export function ProjectsListPage({
                   <div className="h-6 w-6 rounded bg-[#008755]/15 flex items-center justify-center">
                     <span className="text-[#008755] text-xs">💡</span>
                   </div>
-                  <span className="text-sm font-['Dubai:Medium',_sans-serif] text-[#005844]">
+                  <span className="text-sm   text-[#005844]">
                     From Innovation Platform — {convertedFromIdeas.length} idea{convertedFromIdeas.length > 1 ? 's' : ''} converted to project{convertedFromIdeas.length > 1 ? 's' : ''}
                   </span>
                 </div>
@@ -1232,10 +1232,10 @@ export function ProjectsListPage({
                 {convertedFromIdeas.map(p => (
                   <div key={p.id} className="flex items-center justify-between bg-white rounded-lg border border-[#008755]/20 px-3 py-2">
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="text-[10px] bg-[#008755] text-white rounded px-1.5 py-0.5 font-['Dubai:Medium',_sans-serif] flex-shrink-0">
+                      <span className="text-[10px] bg-[#008755] text-white rounded px-1.5 py-0.5   flex-shrink-0">
                         {p.type.toUpperCase()}
                       </span>
-                      <span className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground truncate">{p.title}</span>
+                      <span className="text-sm   text-foreground truncate">{p.title}</span>
                       <span className="text-xs text-muted-foreground flex-shrink-0">· {p.department}</span>
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0 ml-4">

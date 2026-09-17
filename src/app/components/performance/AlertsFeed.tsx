@@ -95,7 +95,7 @@ export function AlertsFeed() {
             <Bell className="w-5 h-5 text-[#ef4444]" />
           </div>
           <div>
-            <h3 className="font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+            <h3 className="  text-[#1f2937]">
               Recent Alerts
             </h3>
             <p className="font-['Dubai:Regular',_sans-serif] text-[#6b7280]">
@@ -131,7 +131,7 @@ export function AlertsFeed() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <h4
-                        className="font-['Dubai:Medium',_sans-serif]"
+                        className=" "
                         style={{ color: getSeverityColor(alert.severity) }}
                       >
                         {alert.title}

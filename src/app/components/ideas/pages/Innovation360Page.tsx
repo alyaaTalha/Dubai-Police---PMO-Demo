@@ -11,6 +11,7 @@ import { Badge } from '../../ui/badge';
 import { Progress } from '../../ui/progress';
 import { Avatar, AvatarFallback } from '../../ui/avatar';
 import { cn } from '../../ui/utils';
+import heroDecoration from '../../../../assets/sandbox-hero-decoration.png';
 
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
 
@@ -156,15 +157,18 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
     <div className="flex flex-col gap-5 p-5">
 
       {/* ── 1. Level & Tier Hero Card ───────────────────────────────────────── */}
-      <div className="rounded-xl bg-gradient-to-br from-[#005844] to-[#008755] p-6 text-white relative overflow-hidden">
-        <div className="absolute -bottom-10 -right-10 h-48 w-48 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute -bottom-4 -right-4 h-28 w-28 rounded-full bg-white/5 pointer-events-none" />
+      <div className="rounded-xl bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869] p-6 text-white relative overflow-hidden">
+        <img
+          src={heroDecoration}
+          alt=""
+          className="absolute -top-16 -right-16 h-140 w-140 rounded-full object-cover opacity-50 pointer-events-none select-none"
+        />
 
         <div className="relative z-10 flex flex-col md:flex-row gap-5 md:items-center">
 
           {/* Avatar */}
           <Avatar className="h-16 w-16 flex-shrink-0 border-2 border-white/30">
-            <AvatarFallback className="bg-white/20 text-white text-xl font-['Dubai:Medium',_sans-serif]">
+            <AvatarFallback className="bg-white/20 text-white text-xl  ">
               {user.initials}
             </AvatarFallback>
           </Avatar>
@@ -180,7 +184,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                 {lv.label}
               </Badge>
             </div>
-            <h2 className="text-xl font-['Dubai:Medium',_sans-serif] leading-tight">{user.name}</h2>
+            <h2 className="text-xl   leading-tight">{user.name}</h2>
             <p className="text-white/70 text-sm">{user.subtitle}</p>
           </div>
 
@@ -189,7 +193,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-1">
                 <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
-                <span className="text-sm font-['Dubai:Medium',_sans-serif]">
+                <span className="text-sm  ">
                   {user.xp.toLocaleString()} XP
                 </span>
               </div>
@@ -229,7 +233,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                   <Icon className="text-[#008755]" style={{ height: 15, width: 15 }} />
                 </div>
                 <div>
-                  <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-foreground leading-none mb-0.5">{value}</p>
+                  <p className="text-2xl   text-foreground leading-none mb-0.5">{value}</p>
                   <p className="text-[11px] text-muted-foreground leading-snug">{label}</p>
                 </div>
               </div>
@@ -244,7 +248,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
         {/* 6-month Contribution Chart */}
         <Card className="rounded-xl lg:col-span-2">
           <CardHeader className="px-4 pt-4 pb-0 gap-0">
-            <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground flex items-center gap-1.5">
+            <CardTitle className="text-sm   text-foreground flex items-center gap-1.5">
               <TrendingUp className="h-4 w-4 text-[#008755]" />
               6-Month Contribution
             </CardTitle>
@@ -284,7 +288,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
         {/* Active Innovation Initiatives */}
         <Card className="rounded-xl lg:col-span-3">
           <CardHeader className="px-4 pt-4 pb-0 gap-0">
-            <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground flex items-center gap-1.5">
+            <CardTitle className="text-sm   text-foreground flex items-center gap-1.5">
               <Zap className="h-4 w-4 text-[#008755]" />
               Active Innovation Initiatives
             </CardTitle>
@@ -294,7 +298,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
               {initiatives.map((init) => (
                 <div key={init.name} className="border border-border rounded-lg p-3">
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <p className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground leading-snug flex-1 min-w-0">
+                    <p className="text-xs   text-foreground leading-snug flex-1 min-w-0">
                       {init.name}
                     </p>
                     <StatusBadge status={init.status} />
@@ -324,7 +328,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
       {/* ── 5. Badges Earned ────────────────────────────────────────────────── */}
       <Card className="rounded-xl">
         <CardHeader className="px-4 pt-4 pb-0 gap-0">
-          <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground flex items-center gap-1.5">
+          <CardTitle className="text-sm   text-foreground flex items-center gap-1.5">
             <Award className="h-4 w-4 text-[#008755]" />
             Achievement Badges
           </CardTitle>

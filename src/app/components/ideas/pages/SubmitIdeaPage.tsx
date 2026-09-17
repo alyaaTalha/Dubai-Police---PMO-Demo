@@ -94,7 +94,7 @@ function CircularScore({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-['Dubai:Medium',_sans-serif] text-[#008755] leading-none">{score}%</span>
+        <span className="text-2xl   text-[#008755] leading-none">{score}%</span>
       </div>
     </div>
   );
@@ -142,7 +142,7 @@ function DuplicateCheckTag({ title }: { title: string }) {
       <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5 space-y-1">
         <div className="flex items-center gap-1.5">
           <AlertTriangle className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" />
-          <span className="text-[11px] font-['Dubai:Medium',_sans-serif] text-amber-700">Similar idea found</span>
+          <span className="text-[11px]   text-amber-700">Similar idea found</span>
         </div>
         <p className="text-[11px] text-amber-700 pl-5 leading-snug">
           "{similar.title}" — {similar.submitter}, {similar.year}
@@ -155,7 +155,7 @@ function DuplicateCheckTag({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-1.5 rounded-lg bg-[#008755]/5 border border-[#008755]/20 px-3 py-2">
       <CheckCircle2 className="h-3.5 w-3.5 text-[#008755] flex-shrink-0" />
-      <span className="text-[11px] text-[#008755] font-['Dubai:Medium',_sans-serif]">No duplicates detected</span>
+      <span className="text-[11px] text-[#008755]  ">No duplicates detected</span>
     </div>
   );
 }
@@ -193,7 +193,7 @@ function RightSidebar({
             {/* Circular completeness score */}
             <div className="flex flex-col items-center py-4 border-b border-border mb-4">
               <CircularScore score={completenessScore} />
-              <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground mt-3">Idea Completeness</p>
+              <p className="text-sm   text-foreground mt-3">Idea Completeness</p>
               <p className="text-xs text-muted-foreground mt-0.5 text-center">
                 Fill in all fields to maximise your score
               </p>
@@ -223,7 +223,7 @@ function RightSidebar({
               <div className="border-t border-border pt-4 mb-4 space-y-3">
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5 text-[#008755]" />
-                  <p className="text-xs font-['Dubai:Medium',_sans-serif] text-[#008755]">AI Suggestions</p>
+                  <p className="text-xs   text-[#008755]">AI Suggestions</p>
                 </div>
                 <div>
                   <p className="text-[11px] text-muted-foreground mb-1.5">Suggested Department</p>
@@ -257,7 +257,7 @@ function RightSidebar({
             {/* XP Preview */}
             <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
               <Star className="h-4 w-4 text-amber-500 fill-amber-400 flex-shrink-0" />
-              <span className="text-xs font-['Dubai:Medium',_sans-serif] text-amber-700">
+              <span className="text-xs   text-amber-700">
                 Submitting earns you +150 XP
               </span>
             </div>
@@ -350,13 +350,13 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
         <div className="h-16 w-16 rounded-2xl bg-[#008755]/10 flex items-center justify-center mb-4">
           <Check className="h-8 w-8 text-[#008755]" />
         </div>
-        <h2 className="font-['Dubai:Medium',_sans-serif] text-xl text-foreground mb-2">Idea Submitted!</h2>
+        <h2 className="  text-xl text-foreground mb-2">Idea Submitted!</h2>
         <p className="text-sm text-muted-foreground max-w-xs mb-3">
           Your idea has been submitted for review. You'll be notified when it moves forward.
         </p>
         <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-4 py-2 mb-6">
           <Star className="h-4 w-4 text-amber-500 fill-amber-400" />
-          <span className="text-sm font-['Dubai:Medium',_sans-serif] text-amber-700">+150 XP Earned!</span>
+          <span className="text-sm   text-amber-700">+150 XP Earned!</span>
         </div>
         <Button onClick={() => onNavigate('my-ideas')} className="bg-[#008755] hover:bg-[#005844] text-white gap-1.5">
           View My Ideas <ChevronRight className="h-4 w-4" />
@@ -378,7 +378,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             Back to Home
           </button>
 
-          <h1 className="text-2xl font-['Dubai:Medium',_sans-serif] text-foreground mb-1">Submit an Idea</h1>
+          <h1 className="text-2xl   text-foreground mb-1">Submit an Idea</h1>
           <p className="text-sm text-muted-foreground mb-8">
             How would you like to build your submission?
           </p>
@@ -393,13 +393,13 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 <MessageSquare className="h-5 w-5 text-[#008755]" />
               </div>
               <div className="flex items-center gap-2 mb-1.5">
-                <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">Guide me with AI</p>
+                <p className="text-sm   text-foreground">Guide me with AI</p>
                 <span className="text-[10px] bg-[#008755]/10 text-[#008755] rounded-full px-2 py-0.5 font-medium">Recommended</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Answer a few short questions. AI will shape your idea step by step and suggest department & category.
               </p>
-              <div className="mt-4 flex items-center gap-1 text-xs text-[#008755] font-['Dubai:Medium',_sans-serif] opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-4 flex items-center gap-1 text-xs text-[#008755]   opacity-0 group-hover:opacity-100 transition-opacity">
                 Let's start <ChevronRight className="h-3.5 w-3.5" />
               </div>
             </button>
@@ -412,11 +412,11 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
               <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
                 <FileText className="h-5 w-5 text-gray-600" />
               </div>
-              <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground mb-1.5">Fill in the form myself</p>
+              <p className="text-sm   text-foreground mb-1.5">Fill in the form myself</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 Prefer to write directly? See all fields at once and fill them in your own time.
               </p>
-              <div className="mt-4 flex items-center gap-1 text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-4 flex items-center gap-1 text-xs text-gray-500   opacity-0 group-hover:opacity-100 transition-opacity">
                 Open form <ChevronRight className="h-3.5 w-3.5" />
               </div>
             </button>
@@ -431,7 +431,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
               <CardContent className="pt-4 pb-4">
                 <div className="flex flex-col items-center py-4 border-b border-border mb-4">
                   <CircularScore score={0} />
-                  <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground mt-3">Idea Completeness</p>
+                  <p className="text-sm   text-foreground mt-3">Idea Completeness</p>
                   <p className="text-xs text-muted-foreground mt-0.5 text-center">Choose a path to get started</p>
                 </div>
                 <div className="space-y-2.5 mb-4">
@@ -446,7 +446,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 </div>
                 <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                   <Star className="h-4 w-4 text-amber-500 fill-amber-400 flex-shrink-0" />
-                  <span className="text-xs font-['Dubai:Medium',_sans-serif] text-amber-700">Submitting earns you +150 XP</span>
+                  <span className="text-xs   text-amber-700">Submitting earns you +150 XP</span>
                 </div>
               </CardContent>
             </Card>
@@ -475,7 +475,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
               <div className="h-6 w-6 rounded-lg bg-gray-100 flex items-center justify-center">
                 <FileText className="h-3.5 w-3.5 text-gray-600" />
               </div>
-              <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-foreground">Submit an Idea</h1>
+              <h1 className="text-xl   text-foreground">Submit an Idea</h1>
             </div>
             <p className="text-sm text-muted-foreground mb-5">Fill in all fields below at your own pace.</p>
           </div>
@@ -485,7 +485,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">
+              <label className="text-xs   text-foreground">
                 Idea Title <span className="text-red-500">*</span>
               </label>
               <Input
@@ -498,7 +498,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             {/* Problem Statement */}
             <div className="space-y-1.5">
-              <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">
+              <label className="text-xs   text-foreground">
                 Problem Statement <span className="text-red-500">*</span>
               </label>
               <p className="text-[11px] text-muted-foreground">What challenge or gap does this idea address?</p>
@@ -512,7 +512,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             {/* Proposed Solution */}
             <div className="space-y-1.5">
-              <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">
+              <label className="text-xs   text-foreground">
                 Proposed Solution <span className="text-red-500">*</span>
               </label>
               <p className="text-[11px] text-muted-foreground">How exactly would your solution work?</p>
@@ -526,7 +526,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             {/* Beneficiaries */}
             <div className="space-y-1.5">
-              <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">
+              <label className="text-xs   text-foreground">
                 Beneficiaries <span className="text-red-500">*</span>
               </label>
               <p className="text-[11px] text-muted-foreground">Who would benefit — citizens, officers, departments?</p>
@@ -540,7 +540,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             {/* Expected Benefits */}
             <div className="space-y-1.5">
-              <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">
+              <label className="text-xs   text-foreground">
                 Expected Benefits <span className="text-red-500">*</span>
               </label>
               <p className="text-[11px] text-muted-foreground">What measurable impact do you expect?</p>
@@ -554,7 +554,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             {/* Area of Expertise */}
             <div className="space-y-1.5">
-              <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">
+              <label className="text-xs   text-foreground">
                 Area of Expertise <span className="text-red-500">*</span>
               </label>
               <p className="text-[11px] text-muted-foreground">Your relevant background for this idea</p>
@@ -569,7 +569,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Department + Category */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">Department</label>
+                <label className="text-xs   text-foreground">Department</label>
                 <Select value={department} onValueChange={setDepartment}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
@@ -580,7 +580,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">Category</label>
+                <label className="text-xs   text-foreground">Category</label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
@@ -638,7 +638,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             <div className="h-6 w-6 rounded-lg bg-[#008755]/10 flex items-center justify-center">
               <MessageSquare className="h-3.5 w-3.5 text-[#008755]" />
             </div>
-            <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-foreground">Submit an Idea</h1>
+            <h1 className="text-xl   text-foreground">Submit an Idea</h1>
           </div>
           <p className="text-sm text-muted-foreground mb-5">
             AI will guide you step by step.
@@ -646,10 +646,10 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
           <div className="mb-4">
             <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-['Dubai:Medium',_sans-serif] text-muted-foreground">
+              <span className="text-xs   text-muted-foreground">
                 Step {stepIndex} of 7 — {STEP_LABELS[step]}
               </span>
-              <span className="text-xs font-['Dubai:Medium',_sans-serif] text-[#008755]">
+              <span className="text-xs   text-[#008755]">
                 {Math.round(progress)}% complete
               </span>
             </div>
@@ -741,7 +741,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 { label: 'Area of Expertise', value: answers.expertise },
               ].map(({ label, value }) => (
                 <div key={label} className="px-4 py-3">
-                  <p className="text-[11px] font-['Dubai:Medium',_sans-serif] text-muted-foreground mb-0.5">{label}</p>
+                  <p className="text-[11px]   text-muted-foreground mb-0.5">{label}</p>
                   <p className="text-sm text-foreground leading-relaxed">{value || '—'}</p>
                 </div>
               ))}
@@ -749,7 +749,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <p className="text-xs font-['Dubai:Medium',_sans-serif] text-muted-foreground mb-1.5">Department</p>
+                <p className="text-xs   text-muted-foreground mb-1.5">Department</p>
                 <Select value={department} onValueChange={setDepartment}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
@@ -760,7 +760,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 </Select>
               </div>
               <div>
-                <p className="text-xs font-['Dubai:Medium',_sans-serif] text-muted-foreground mb-1.5">Category</p>
+                <p className="text-xs   text-muted-foreground mb-1.5">Category</p>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />

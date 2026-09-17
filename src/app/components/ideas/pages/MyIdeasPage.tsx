@@ -184,7 +184,7 @@ function IdeaListCard({ idea, onNavigate }: { idea: IdeaCard; onNavigate: (id: s
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">{idea.title}</h3>
+              <h3 className="text-sm   text-foreground">{idea.title}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES[idea.status])}>
                 {idea.status}
               </Badge>
@@ -203,7 +203,7 @@ function IdeaListCard({ idea, onNavigate }: { idea: IdeaCard; onNavigate: (id: s
           </div>
           <button
             onClick={() => onNavigate('idea-detail-' + idea.id)}
-            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844] font-['Dubai:Medium',_sans-serif] transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
+            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
             View Details <ArrowRight className="h-3.5 w-3.5" />
           </button>
@@ -220,7 +220,7 @@ function DraftListCard({ draft, onNavigate }: { draft: DraftCard; onNavigate: (i
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">{draft.title}</h3>
+              <h3 className="text-sm   text-foreground">{draft.title}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Draft'])}>
                 Draft
               </Badge>
@@ -239,7 +239,7 @@ function DraftListCard({ draft, onNavigate }: { draft: DraftCard; onNavigate: (i
           </div>
           <button
             onClick={() => onNavigate('submit-idea')}
-            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844] font-['Dubai:Medium',_sans-serif] transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
+            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
             Continue <ArrowRight className="h-3.5 w-3.5" />
           </button>
@@ -256,7 +256,7 @@ function NeedsInfoListCard({ item, onNavigate }: { item: NeedsInfoCard; onNaviga
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">{item.title}</h3>
+              <h3 className="text-sm   text-foreground">{item.title}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Needs More Info'])}>
                 Needs More Info
               </Badge>
@@ -266,7 +266,7 @@ function NeedsInfoListCard({ item, onNavigate }: { item: NeedsInfoCard; onNaviga
             <div className="flex items-start gap-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 mb-2">
               <MessageSquare className="h-3.5 w-3.5 text-orange-500 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-orange-700">
-                <span className="font-['Dubai:Medium',_sans-serif]">Reviewer: </span>
+                <span className=" ">Reviewer: </span>
                 {item.reviewerMessage}
               </p>
             </div>
@@ -283,7 +283,7 @@ function NeedsInfoListCard({ item, onNavigate }: { item: NeedsInfoCard; onNaviga
           </div>
           <button
             onClick={() => onNavigate('idea-detail-' + item.id)}
-            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844] font-['Dubai:Medium',_sans-serif] transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
+            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
             View Details <ArrowRight className="h-3.5 w-3.5" />
           </button>
@@ -300,7 +300,7 @@ function GrievanceListCard({ item, onNavigate }: { item: GrievanceCard; onNaviga
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">{item.title}</h3>
+              <h3 className="text-sm   text-foreground">{item.title}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Grievance Filed'])}>
                 Grievance Filed
               </Badge>
@@ -318,7 +318,7 @@ function GrievanceListCard({ item, onNavigate }: { item: GrievanceCard; onNaviga
           </div>
           <button
             onClick={() => onNavigate('grievance-detail-' + item.id)}
-            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844] font-['Dubai:Medium',_sans-serif] transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
+            className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
             View Details <ArrowRight className="h-3.5 w-3.5" />
           </button>
@@ -335,7 +335,7 @@ function EmptyState({ label, action, onAction }: { label: string; action?: strin
       <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center mb-3">
         <FileEdit className="h-5 w-5 text-muted-foreground" />
       </div>
-      <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground mb-1">{label}</p>
+      <p className="text-sm   text-foreground mb-1">{label}</p>
       {action && onAction && (
         <button
           onClick={onAction}
@@ -379,7 +379,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
         {/* ── Page header ─────────────────────────────────────────────────── */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-foreground mb-0.5">My Ideas</h1>
+            <h1 className="text-xl   text-foreground mb-0.5">My Ideas</h1>
             <p className="text-sm text-muted-foreground leading-snug">
               Track and manage all ideas you've submitted on the platform.
             </p>
@@ -408,7 +408,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
             <TabsTrigger value="my-ideas" className="text-xs py-1.5">
               My Ideas
               {myIdeas.length > 0 && (
-                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/15 px-1 text-[10px] font-['Dubai:Medium',_sans-serif] text-[#008755]">
+                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/15 px-1 text-[10px]   text-[#008755]">
                   {myIdeas.length}
                 </span>
               )}
@@ -416,7 +416,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
             <TabsTrigger value="drafts" className="text-xs py-1.5">
               Drafts
               {DRAFTS.length > 0 && (
-                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-blue-100 px-1 text-[10px] font-['Dubai:Medium',_sans-serif] text-blue-700">
+                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-blue-100 px-1 text-[10px]   text-blue-700">
                   {DRAFTS.length}
                 </span>
               )}
@@ -424,7 +424,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
             <TabsTrigger value="needs-info" className="text-xs py-1.5">
               Needs More Info
               {NEEDS_INFO.length > 0 && (
-                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-100 px-1 text-[10px] font-['Dubai:Medium',_sans-serif] text-orange-700">
+                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-100 px-1 text-[10px]   text-orange-700">
                   {NEEDS_INFO.length}
                 </span>
               )}
@@ -483,7 +483,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
             {/* File new grievance CTA */}
             <div className="border border-dashed border-border rounded-xl p-3 flex items-center justify-between">
               <div>
-                <p className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground mb-0.5">
+                <p className="text-sm   text-foreground mb-0.5">
                   Have a concern about an idea?
                 </p>
                 <p className="text-xs text-muted-foreground">

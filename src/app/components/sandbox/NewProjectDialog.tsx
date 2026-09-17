@@ -54,7 +54,7 @@ export function NewProjectDialog({ open, onOpenChange, store, defaultType }: New
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-['Dubai:Medium',_sans-serif]">Register New Project</DialogTitle>
+          <DialogTitle className=" ">Register New Project</DialogTitle>
           <DialogDescription>Add an R&amp;D, Innovation or Knowledge project to the portfolio</DialogDescription>
         </DialogHeader>
 

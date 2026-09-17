@@ -171,7 +171,7 @@ function RankingsTab() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+        <h2 className="text-lg font-semibold text-gray-900  ">
           Department Innovation Rankings
         </h2>
         <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
@@ -610,7 +610,7 @@ export function InsightsPage({ user, role, onNavigate }: PageProps) {
   const [activeTab, setActiveTab] = useState<Tab>('Rankings');
 
   return (
-    <div className="p-4 space-y-4 font-['Dubai:Medium',_sans-serif]">
+    <div className="p-4 space-y-4  ">
       {/* Page header */}
       <div>
         <h1 className="text-lg font-semibold text-gray-900">Insights</h1>

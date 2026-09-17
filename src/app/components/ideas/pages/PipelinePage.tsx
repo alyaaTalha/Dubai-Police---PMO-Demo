@@ -215,7 +215,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-semibold text-gray-900 text-sm font-['Dubai:Medium',_sans-serif]">
+            <span className="font-semibold text-gray-900 text-sm  ">
               {opp.cluster}
             </span>
             {status === 'validated' && (
@@ -491,7 +491,7 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
               <CheckCircle2 className="w-6 h-6 text-[#008755]" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[#008755] font-['Dubai:Medium',_sans-serif]">
+              <p className="text-sm font-semibold text-[#008755]  ">
                 Converted to {converted === 'project' ? 'Project' : 'Initiative'}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">{idea.title}</p>
@@ -503,7 +503,7 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
             <div className="flex gap-4">
               {/* Left: idea info */}
               <div className="flex-1 min-w-0 space-y-2">
-                <h3 className="text-sm font-semibold text-gray-900 leading-snug font-['Dubai:Medium',_sans-serif]">
+                <h3 className="text-sm font-semibold text-gray-900 leading-snug  ">
                   {idea.title}
                 </h3>
                 <div className="text-xs text-gray-500 space-y-0.5">
@@ -634,7 +634,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
     <div className="p-4 space-y-6">
       {/* ── Header ── */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+        <h1 className="text-2xl font-bold text-gray-900  ">
           Innovation Pipeline
         </h1>
         <p className="text-sm text-gray-500 mt-0.5">
@@ -719,7 +719,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
       {/* ── Section 2: Opportunities to Validate ── */}
       <section className="space-y-3">
         <div className="flex items-center gap-2">
-          <h2 className="text-base font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+          <h2 className="text-base font-semibold text-gray-900  ">
             Coordinator-Flagged Opportunities
           </h2>
           <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">5</Badge>
@@ -734,7 +734,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
       {/* ── Section 3: Approved Ideas — Hero Section ── */}
       <section className="space-y-3">
         <div className="flex items-center gap-2 flex-wrap">
-          <h2 className="text-base font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+          <h2 className="text-base font-semibold text-gray-900  ">
             Approved Ideas — Ready to Convert to PMO
           </h2>
           <Badge className="bg-amber-100 text-amber-800 border-amber-300 text-xs font-semibold">
@@ -764,7 +764,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
 
       {/* ── Section 4: Recently Converted (audit trail) ── */}
       <section className="space-y-3">
-        <h2 className="text-base font-semibold text-gray-900 font-['Dubai:Medium',_sans-serif]">
+        <h2 className="text-base font-semibold text-gray-900  ">
           Recently Converted
         </h2>
         <Card className="rounded-xl border border-border bg-white shadow-sm">

@@ -92,7 +92,7 @@ export function ApprovalWorkflowsPage({
               <Workflow className="h-6 w-6 text-[#008755]" />
             </div>
             <div>
-              <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+              <h1 className="text-xl   text-[#1f2937]">
                 Approval Workflows
               </h1>
               <p className="text-sm text-muted-foreground">

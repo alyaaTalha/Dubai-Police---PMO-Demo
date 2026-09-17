@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Badge } from '../../ui/badge';
 import { cn } from '../../ui/utils';
+import heroDecoration from '../../../../assets/sandbox-hero-decoration.png';
 
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
 
@@ -77,11 +78,12 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
     <div className="flex flex-col gap-6 p-6 mx-auto w-full">
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <div className="rounded-2xl bg-gradient-to-br from-[#00613c] via-[#008755] to-[#00a86b] p-8 text-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-white/[0.04]" />
-          <div className="absolute bottom-0 right-24 h-32 w-32 rounded-full bg-white/[0.04]" />
-        </div>
+      <div className="rounded-2xl bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869] p-8 text-white relative overflow-hidden">
+        <img
+          src={heroDecoration}
+          alt=""
+          className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
+        />
 
         <div className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
@@ -89,7 +91,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
               <Zap className="h-3 w-3 fill-amber-300 text-amber-300" />
               {user.xp.toLocaleString()} XP · {user.chip}
             </div>
-            <h1 className="text-3xl font-['Dubai:Medium',_sans-serif] tracking-tight">
+            <h1 className="text-3xl   tracking-tight">
               Good morning, {user.name.split(' ')[0]}
             </h1>
             <p className="text-white/65 text-sm">{user.subtitle}</p>
@@ -98,7 +100,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
           <div className="flex flex-col gap-2 sm:items-end">
             <button
               onClick={() => onNavigate('submit-idea')}
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-['Dubai:Medium',_sans-serif] text-[#008755] hover:bg-white/90 transition-colors shadow-sm"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm   text-[#008755] hover:bg-white/90 transition-colors shadow-sm"
             >
               <Send className="h-4 w-4" />
               Submit an Idea
@@ -139,7 +141,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
               <Icon className="text-[#008755]" style={{ height: 18, width: 18 }} />
             </div>
             <div>
-              <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-foreground leading-none">{value}</p>
+              <p className="text-2xl   text-foreground leading-none">{value}</p>
               <p className="text-[11px] text-muted-foreground mt-0.5">{label}</p>
             </div>
           </div>
@@ -152,7 +154,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
         {/* Active Challenges */}
         <div className="lg:col-span-2 bg-card border border-border rounded-xl overflow-hidden">
           <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-border">
-            <h2 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">Active Challenges</h2>
+            <h2 className="text-sm   text-foreground">Active Challenges</h2>
             <button
               onClick={() => onNavigate('challenges')}
               className="inline-flex items-center gap-0.5 text-xs text-[#008755] hover:underline"
@@ -169,7 +171,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
               >
                 <div className="flex-1 min-w-0 space-y-1.5">
                   <div className="flex items-start gap-2">
-                    <p className="text-sm text-foreground leading-snug font-['Dubai:Medium',_sans-serif] flex-1">
+                    <p className="text-sm text-foreground leading-snug   flex-1">
                       {ch.title}
                     </p>
                     <span className={cn('text-[10px] rounded-full px-2 py-0.5 flex-shrink-0 font-medium', ch.tagColor)}>
@@ -200,17 +202,17 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
           {/* Upcoming Events */}
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border">
-              <h2 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">Upcoming Events</h2>
+              <h2 className="text-sm   text-foreground">Upcoming Events</h2>
             </div>
             <div className="divide-y divide-border">
               {EVENTS.map((ev) => (
                 <div key={ev.title} className="flex items-center gap-3 px-4 py-3">
                   <div className="flex flex-col items-center justify-center bg-[#008755]/10 rounded-lg w-10 h-10 flex-shrink-0">
-                    <span className="text-[9px] font-['Dubai:Medium',_sans-serif] text-[#008755] uppercase leading-none">{ev.month}</span>
-                    <span className="text-base font-['Dubai:Medium',_sans-serif] text-[#008755] leading-tight">{ev.day}</span>
+                    <span className="text-[9px]   text-[#008755] uppercase leading-none">{ev.month}</span>
+                    <span className="text-base   text-[#008755] leading-tight">{ev.day}</span>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground leading-snug truncate">{ev.title}</p>
+                    <p className="text-xs   text-foreground leading-snug truncate">{ev.title}</p>
                     <div className="flex items-center gap-2.5 mt-0.5 text-[11px] text-muted-foreground">
                       <span className="flex items-center gap-0.5">
                         <MapPin className="h-2.5 w-2.5" /> {ev.location}
@@ -226,7 +228,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
           {/* News */}
           <div className="bg-card border border-border rounded-xl overflow-hidden">
             <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border">
-              <h2 className="text-sm font-['Dubai:Medium',_sans-serif] text-foreground">Innovation News</h2>
+              <h2 className="text-sm   text-foreground">Innovation News</h2>
               <button
                 onClick={() => onNavigate('innovation-news')}
                 className="text-xs text-[#008755] hover:underline flex items-center gap-0.5"

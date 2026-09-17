@@ -177,7 +177,7 @@ export function Header({ breadcrumbs, onNavigate }: HeaderProps) {
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b">
                 <div>
-                  <h3 className="font-['Dubai:Medium',_sans-serif] text-[#1f2937]">Notifications</h3>
+                  <h3 className="  text-[#1f2937]">Notifications</h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All caught up!'}
                   </p>
@@ -217,7 +217,7 @@ export function Header({ breadcrumbs, onNavigate }: HeaderProps) {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2 mb-1">
-                              <h4 className={`text-sm ${!notification.isRead ? "font-['Dubai:Medium',_sans-serif]" : ""}`}>
+                              <h4 className={`text-sm ${!notification.isRead ? " " : ""}`}>
                                 {notification.title}
                               </h4>
                               <Button

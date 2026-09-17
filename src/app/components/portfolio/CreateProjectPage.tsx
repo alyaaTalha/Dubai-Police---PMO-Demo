@@ -455,7 +455,7 @@ const frameworkRef = useRef<HTMLDivElement | null>(null);
                     <FolderKanban className="h-5 w-5" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-0.5">
+                    <h1 className="text-xl   mb-0.5">
                       Create New Project
                     </h1>
                     <p className="text-white/90 text-sm">

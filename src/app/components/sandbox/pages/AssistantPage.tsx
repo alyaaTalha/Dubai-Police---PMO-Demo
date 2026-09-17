@@ -51,26 +51,26 @@ export function AssistantPage(_props: PageProps) {
   };
 
   return (
-    <div className="p-5 max-w-[1000px] mx-auto h-full">
+    <div className="p-5 max-w-[1400px] mx-auto h-full">
       <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm flex flex-col h-[75vh] min-h-[480px]">
         <div className="bg-gradient-to-r from-[#005844] via-[#008755] to-[#00a869] px-6 py-5 flex items-center gap-4 text-white flex-shrink-0">
           <div className="h-11 w-11 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
             <Sparkles className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-base font-['Dubai:Medium',_sans-serif]">Sandbox Intelligence Assistant</h3>
-            <p className="text-xs text-white/85 mt-0.5">Ask anything about projects, patents, partners or evaluations — answers are grounded in platform data.</p>
+            <h3 className="text-base  ">Sandbox Intelligence Assistant</h3>
+            <p className="text-sm text-white/85 mt-0.5">Ask anything about projects, patents, partners or evaluations — answers are grounded in platform data.</p>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4 bg-[#fbfcfc]">
           {messages.map((m, i) => (
             <div key={i} className={cn('flex gap-2.5 max-w-[78%]', m.role === 'user' ? 'ml-auto flex-row-reverse' : '')}>
-              <div className={cn('h-8 w-8 rounded-lg flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white',
+              <div className={cn('h-8 w-8 rounded-lg flex-shrink-0 flex items-center justify-center text-sm font-bold text-white',
                 m.role === 'user' ? 'bg-foreground' : 'bg-gradient-to-br from-[#00a869] to-[#005844]')}>
                 {m.role === 'user' ? 'MH' : 'AI'}
               </div>
-              <div className={cn('rounded-2xl px-4 py-3 text-xs leading-relaxed whitespace-pre-line shadow-sm',
+              <div className={cn('rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-line shadow-sm',
                 m.role === 'user' ? 'bg-[#008755] text-white rounded-tr-sm' : 'bg-white border border-border rounded-tl-sm')}>
                 {m.content}
               </div>
@@ -81,7 +81,7 @@ export function AssistantPage(_props: PageProps) {
 
         <div className="flex flex-wrap gap-2 px-6 pt-3 bg-[#fbfcfc] flex-shrink-0">
           {CHIPS.map(c => (
-            <button key={c} onClick={() => send(c)} className="text-[11px] font-medium px-3 py-1.5 rounded-full border border-border hover:border-[#008755] hover:text-[#008755] hover:bg-[#008755]/5 transition-colors">
+            <button key={c} onClick={() => send(c)} className="text-sm font-medium px-3 py-1.5 rounded-full border border-border hover:border-[#008755] hover:text-[#008755] hover:bg-[#008755]/5 transition-colors">
               {c}
             </button>
           ))}

@@ -4,6 +4,7 @@ import { Badge } from '../../ui/badge';
 import { cn } from '../../ui/utils';
 import { AUDIT_KIND_CLASSES, type AuditKind } from '../sandboxData';
 import type { SandboxStore } from '../SandboxStore';
+import heroDecoration from '../../../../assets/sandbox-hero-decoration.png';
 
 interface PageProps { store: SandboxStore; }
 
@@ -32,36 +33,36 @@ export function ReportsPage({ store }: PageProps) {
   return (
     <div className="p-5 mx-auto space-y-5">
       <div className="rounded-2xl bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869] p-7 text-white relative overflow-hidden">
-        <div className="absolute -top-10 -right-10 h-56 w-56 rounded-full bg-white/[0.05] pointer-events-none" />
+        <img src={heroDecoration} alt="" className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none" />
         <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex gap-3.5">
             <div className="h-12 w-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center flex-shrink-0">
               <FileText className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl font-['Dubai:Medium',_sans-serif] tracking-tight">Reports</h1>
+              <h1 className="text-2xl   tracking-tight">Reports</h1>
               <p className="text-white/80 text-sm mt-1 max-w-md">Generate institutional reports for leadership review, audits and national index submissions.</p>
             </div>
           </div>
-          <button onClick={() => toast.info('Report schedule settings opened')} className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 border border-white/30 px-3.5 py-2 text-xs font-['Dubai:Medium',_sans-serif] hover:bg-white/25 transition-colors flex-shrink-0">
+          <button onClick={() => toast.info('Report schedule settings opened')} className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 border border-white/30 px-3.5 py-2 text-sm   hover:bg-white/25 transition-colors flex-shrink-0">
             <Clock className="h-3.5 w-3.5" /> Schedule
           </button>
         </div>
       </div>
 
       <div>
-        <h2 className="text-sm font-['Dubai:Medium',_sans-serif] mb-3">Available Reports</h2>
+        <h2 className="font-medium mb-3">Available Reports</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {reports.map(r => (
             <div key={r.key} className="bg-card border border-border rounded-xl p-4 flex flex-col">
               <div className="h-9 w-9 rounded-lg bg-[#008755]/10 flex items-center justify-center mb-3.5">
                 <FileText className="h-4 w-4 text-[#008755]" />
               </div>
-              <h4 className="text-sm font-['Dubai:Medium',_sans-serif]">{r.title}</h4>
-              <p className="text-[10.5px] text-muted-foreground mt-0.5">Last generated {r.last}</p>
-              <p className="text-xs text-muted-foreground my-3 leading-relaxed flex-1">{r.desc}</p>
+              <h4 className="  ">{r.title}</h4>
+              <p className="text-sm text-muted-foreground mt-0.5">Last generated {r.last}</p>
+              <p className="text-sm text-muted-foreground my-3 leading-relaxed flex-1">{r.desc}</p>
               <div className="flex gap-2">
-                <button onClick={() => generate(r.key)} className="flex-1 rounded-lg bg-[#008755] hover:bg-[#005844] text-white text-xs font-['Dubai:Medium',_sans-serif] py-2 flex items-center justify-center gap-1.5 transition-colors">
+                <button onClick={() => generate(r.key)} className="flex-1 rounded-lg bg-[#008755] hover:bg-[#005844] text-white text-sm   py-2 flex items-center justify-center gap-1.5 transition-colors">
                   <FileText className="h-3 w-3" /> Generate
                 </button>
                 <button onClick={() => toast.success('Report downloaded')} className="rounded-lg border border-border px-3 hover:bg-muted/40 transition-colors">
@@ -75,15 +76,15 @@ export function ReportsPage({ store }: PageProps) {
 
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-sm font-['Dubai:Medium',_sans-serif]">Recent Report History</h2>
-          <button onClick={exportHistoryCsv} className="ml-auto text-xs text-[#008755] hover:underline flex items-center gap-1">
+          <h2 className="font-medium ">Recent Report History</h2>
+          <button onClick={exportHistoryCsv} className="ml-auto text-sm text-[#008755] hover:underline flex items-center gap-1">
             Export CSV <Download className="h-3 w-3" />
           </button>
         </div>
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-[10px] uppercase tracking-wide text-muted-foreground bg-muted/30">
+              <tr className="border-b border-border text-left text-sm uppercase tracking-wide text-muted-foreground bg-muted/30">
                 <th className="px-4 py-2.5 font-semibold">Report</th>
                 <th className="px-4 py-2.5 font-semibold">Generated By</th>
                 <th className="px-4 py-2.5 font-semibold">Date</th>
@@ -94,12 +95,12 @@ export function ReportsPage({ store }: PageProps) {
             <tbody>
               {history.map((h, i) => (
                 <tr key={i} onClick={() => toast.info(`Opening ${h.report}`)} className="border-b border-border last:border-0 hover:bg-muted/30 cursor-pointer transition-colors">
-                  <td className="px-4 py-3 font-['Dubai:Medium',_sans-serif]">{h.report}</td>
-                  <td className="px-4 py-3 text-xs">{h.by}</td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{h.date}</td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{h.period}</td>
+                  <td className="px-4 py-3  ">{h.report}</td>
+                  <td className="px-4 py-3 text-sm">{h.by}</td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">{h.date}</td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">{h.period}</td>
                   <td className="px-4 py-3">
-                    <Badge className={cn('border-0 text-[10px]', h.format === 'PDF' ? 'bg-blue-50 text-blue-700' : 'bg-[#008755]/10 text-[#008755]')}>{h.format}</Badge>
+                    <Badge className={cn('border-0 text-sm', h.format === 'PDF' ? 'bg-blue-50 text-blue-700' : 'bg-[#008755]/10 text-[#008755]')}>{h.format}</Badge>
                   </td>
                 </tr>
               ))}
@@ -110,15 +111,15 @@ export function ReportsPage({ store }: PageProps) {
 
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-sm font-['Dubai:Medium',_sans-serif]">Audit Trail</h2>
-          <Badge className="bg-[#008755]/10 text-[#008755] border-0 text-[10px]">IMMUTABLE LOG</Badge>
-          <button onClick={exportAuditCsv} className="ml-auto text-xs text-[#008755] hover:underline flex items-center gap-1">
+          <h2 className="font-medium ">Audit Trail</h2>
+          <Badge className="bg-[#008755]/10 text-[#008755] border-0 text-sm">IMMUTABLE LOG</Badge>
+          <button onClick={exportAuditCsv} className="ml-auto text-sm text-[#008755] hover:underline flex items-center gap-1">
             Export audit log <Download className="h-3 w-3" />
           </button>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
-          <h3 className="text-sm font-['Dubai:Medium',_sans-serif]">System Activity</h3>
-          <p className="text-xs text-muted-foreground mb-3.5">Every material action is recorded with actor and timestamp — actions you take in this session are logged live</p>
+          <h3 className="text-sm  ">System Activity</h3>
+          <p className="text-sm text-muted-foreground mb-3.5">Every material action is recorded with actor and timestamp — actions you take in this session are logged live</p>
           <div className="divide-y divide-border">
             {audit.slice(0, 14).map((a, i) => {
               const Icon = AUDIT_ICON[a.kind];
@@ -129,10 +130,10 @@ export function ReportsPage({ store }: PageProps) {
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-['Dubai:Medium',_sans-serif]">{a.title}</p>
+                    <p className="text-sm  ">{a.title}</p>
                     <p className="text-[11.5px] text-muted-foreground mt-0.5 leading-relaxed">{a.detail}</p>
                   </div>
-                  <span className="text-[10.5px] text-muted-foreground flex-shrink-0 whitespace-nowrap pt-0.5">{a.tm}</span>
+                  <span className="text-sm text-muted-foreground flex-shrink-0 whitespace-nowrap pt-0.5">{a.tm}</span>
                 </div>
               );
             })}

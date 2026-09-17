@@ -3,7 +3,7 @@ import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import {
   ArrowLeft,
   TrendingUp,
@@ -230,13 +230,12 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
     <div className="h-full overflow-auto">
       <div className="space-y-4 p-4">
         {/* Compact Banner Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-3 pb-3 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -245,7 +244,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                     <Network className="h-5 w-5" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-0.5">
+                    <h1 className="text-xl   mb-0.5">
                       Division Scorecards
                     </h1>
                     <p className="text-white/90 text-sm">
@@ -275,7 +274,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
               <TabsTrigger 
                 key={division.id} 
                 value={division.id}
-                className="font-['Dubai:Medium',_sans-serif] text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2.5 px-3"
+                className="  text-xs data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md py-2.5 px-3"
               >
                 {division.name}
               </TabsTrigger>
@@ -298,7 +297,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                   {/* Tier 1: Outcomes */}
                   <div>
                     <div className="mb-3">
-                      <h2 className="text-base text-[#008755] flex items-center gap-2 font-['Dubai:Medium',_sans-serif]">
+                      <h2 className="text-base text-[#008755] flex items-center gap-2  ">
                         <div className="h-6 w-1 bg-[#008755] rounded-full"></div>
                         Outcomes — Strategic Results & Impact
                       </h2>
@@ -309,7 +308,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                         <div className="p-3 bg-gradient-to-br from-blue-50/30 to-white">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="text-[#008755] mb-0.5 font-['Dubai:Medium',_sans-serif]">International Stakeholders</h3>
+                              <h3 className="text-[#008755] mb-0.5  ">International Stakeholders</h3>
                               <p className="text-xs text-gray-600 font-['Dubai',_sans-serif]">Global recognition and reputation</p>
                             </div>
                             <TrendingUp className="h-4 w-4" style={{ color: '#357743' }} />
@@ -347,7 +346,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                         <div className="p-3 bg-gradient-to-br from-blue-50/30 to-white">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="text-[#008755] mb-0.5 font-['Dubai:Medium',_sans-serif]">Enforcement, Security & Protection of Society</h3>
+                              <h3 className="text-[#008755] mb-0.5  ">Enforcement, Security & Protection of Society</h3>
                               <p className="text-xs text-gray-600 font-['Dubai',_sans-serif]">Environmental responsibility</p>
                             </div>
                             <TrendingUp className="h-4 w-4" style={{ color: '#357743' }} />
@@ -385,7 +384,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                         <div className="p-3 bg-gradient-to-br from-blue-50/30 to-white">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="text-[#008755] mb-0.5 font-['Dubai:Medium',_sans-serif]">Financial Resources</h3>
+                              <h3 className="text-[#008755] mb-0.5  ">Financial Resources</h3>
                               <p className="text-xs text-gray-600 font-['Dubai',_sans-serif]">Fiscal performance and accountability</p>
                             </div>
                             <TrendingUp className="h-4 w-4" style={{ color: '#357743' }} />
@@ -423,7 +422,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                   {/* Tier 2: Internal Processes */}
                   <div>
                     <div className="mb-3">
-                      <h2 className="text-base text-[#008755] flex items-center gap-2 font-['Dubai:Medium',_sans-serif]">
+                      <h2 className="text-base text-[#008755] flex items-center gap-2  ">
                         <div className="h-6 w-1 bg-[#008755] rounded-full"></div>
                         Internal Processes — Operational Excellence
                       </h2>
@@ -436,7 +435,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#008755' }}>
                               <DollarSign className="h-4 w-4 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Finance</h3>
+                            <h3 className="text-xs text-[#008755]  ">Finance</h3>
                           </div>
                           <div className="space-y-1.5">
                             {[
@@ -476,7 +475,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#BB9956' }}>
                               <Briefcase className="h-4 w-4 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Administration Affairs</h3>
+                            <h3 className="text-xs text-[#008755]  ">Administration Affairs</h3>
                           </div>
                           <div className="space-y-1.5">
                             {[
@@ -520,7 +519,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#00B0AA' }}>
                               <Activity className="h-4 w-4 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Customs Refund Management</h3>
+                            <h3 className="text-xs text-[#008755]  ">Customs Refund Management</h3>
                           </div>
                           <div className="space-y-1.5">
                             {[
@@ -555,7 +554,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#115E67' }}>
                               <Users className="h-4 w-4 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Corporate Communication</h3>
+                            <h3 className="text-xs text-[#008755]  ">Corporate Communication</h3>
                           </div>
                           <div className="space-y-1.5">
                             {[
@@ -592,7 +591,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                   {/* Tier 3: Enablers */}
                   <div>
                     <div className="mb-3">
-                      <h2 className="text-base text-[#008755] flex items-center gap-2 font-['Dubai:Medium',_sans-serif]">
+                      <h2 className="text-base text-[#008755] flex items-center gap-2  ">
                         <div className="h-6 w-1 bg-[#008755] rounded-full"></div>
                         Enablers — Foundation for Success
                       </h2>
@@ -605,7 +604,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#008755] to-[#008755]/70 flex items-center justify-center flex-shrink-0">
                               <Users className="h-3.5 w-3.5 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Human Capital</h3>
+                            <h3 className="text-xs text-[#008755]  ">Human Capital</h3>
                           </div>
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5">
@@ -630,7 +629,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#008755] to-[#008755]/70 flex items-center justify-center flex-shrink-0">
                               <Cpu className="h-3.5 w-3.5 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Technology</h3>
+                            <h3 className="text-xs text-[#008755]  ">Technology</h3>
                           </div>
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5">
@@ -655,7 +654,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#008755] to-[#008755]/70 flex items-center justify-center flex-shrink-0">
                               <Trophy className="h-3.5 w-3.5 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Excellence</h3>
+                            <h3 className="text-xs text-[#008755]  ">Excellence</h3>
                           </div>
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5">
@@ -680,7 +679,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#008755] to-[#008755]/70 flex items-center justify-center flex-shrink-0">
                               <DollarSign className="h-3.5 w-3.5 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Financial</h3>
+                            <h3 className="text-xs text-[#008755]  ">Financial</h3>
                           </div>
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5">
@@ -705,7 +704,7 @@ export function DivisionScorecard({ onBack, divisionId }: DivisionScorecardProps
                             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#008755] to-[#008755]/70 flex items-center justify-center flex-shrink-0">
                               <Handshake className="h-3.5 w-3.5 text-white" />
                             </div>
-                            <h3 className="text-xs text-[#008755] font-['Dubai:Medium',_sans-serif]">Partners</h3>
+                            <h3 className="text-xs text-[#008755]  ">Partners</h3>
                           </div>
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-1.5">

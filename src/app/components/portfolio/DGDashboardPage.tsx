@@ -730,7 +730,7 @@ export function DGDashboardPage({
                       <Building2 className="h-6 w-6" />
                     </div>
                     <div>
-                      <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-1">
+                      <h1 className="text-xl   mb-1">
                         Executive Dashboard
                       </h1>
                       <p className="text-white/90 text-sm">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import internalIcon from "figma:asset/56c3a59fb9a3b1b84afb7b051b1842d94215e256.png";
 import localGovIcon from "figma:asset/f2912597d6259f3e385203e7990c89270c7f87e7.png";
 import {
@@ -632,13 +632,12 @@ export function CorporateScorecard({ onBack }: CorporateScorecardProps) {
     <div className="h-full overflow-auto">
       <div className="space-y-4 p-4">
         {/* Hero Banner Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-3 pb-3 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -647,7 +646,7 @@ export function CorporateScorecard({ onBack }: CorporateScorecardProps) {
                     <Award className="h-4 w-4" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-['Dubai:Medium',_sans-serif] mb-0.5">
+                    <h1 className="text-xl   mb-0.5">
                       Dubai Customs Corporate Scorecard
                     </h1>
                     <p className="text-white/90 text-xs">

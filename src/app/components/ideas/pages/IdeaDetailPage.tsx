@@ -314,7 +314,7 @@ function ScoreBar({ score }: { score: number }) {
           style={{ width: `${score}%` }}
         />
       </div>
-      <span className="text-xs font-['Dubai:Medium',_sans-serif] text-[#008755] tabular-nums whitespace-nowrap">
+      <span className="text-xs   text-[#008755] tabular-nums whitespace-nowrap">
         {score}/100
       </span>
     </div>
@@ -386,12 +386,12 @@ function TimelineStepper({ steps }: { steps: TimelineStep[] }) {
 function CommentBubble({ comment }: { comment: Comment }) {
   return (
     <div className="flex gap-2.5">
-      <div className="h-7 w-7 rounded-full bg-[#008755]/10 flex items-center justify-center flex-shrink-0 text-[11px] font-['Dubai:Medium',_sans-serif] text-[#008755]">
+      <div className="h-7 w-7 rounded-full bg-[#008755]/10 flex items-center justify-center flex-shrink-0 text-[11px]   text-[#008755]">
         {comment.initials}
       </div>
       <div className="flex-1">
         <div className="flex items-baseline gap-2 mb-0.5">
-          <span className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">{comment.author}</span>
+          <span className="text-xs   text-foreground">{comment.author}</span>
           <span className="text-[11px] text-muted-foreground">{comment.time}</span>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">{comment.text}</p>
@@ -438,7 +438,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="font-['Dubai:Medium',_sans-serif]">Back to My Ideas</span>
+              <span className=" ">Back to My Ideas</span>
             </button>
             <div className="h-4 w-px bg-border" />
             <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES[idea.status])}>
@@ -475,7 +475,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
           <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
             <Info className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-['Dubai:Medium',_sans-serif] text-amber-800 mb-0.5">
+              <p className="text-sm   text-amber-800 mb-0.5">
                 Action Required — Reviewer Question
               </p>
               <p className="text-xs text-amber-700">{idea.reviewerQuestion}</p>
@@ -487,7 +487,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
           <div className="flex items-start gap-3 bg-[#26D07C]/8 border border-[#26D07C]/30 rounded-xl px-4 py-3">
             <Info className="h-4 w-4 text-[#005844] flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-['Dubai:Medium',_sans-serif] text-[#005844] mb-0.5">
+              <p className="text-sm   text-[#005844] mb-0.5">
                 Idea Approved
               </p>
               <p className="text-xs text-[#005844]/80">
@@ -501,14 +501,14 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
           <div className="flex items-start gap-3 bg-[#008755]/8 border border-[#008755]/25 rounded-xl px-4 py-3">
             <Trophy className="h-4 w-4 text-[#008755] flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-['Dubai:Medium',_sans-serif] text-[#005844] mb-1">
+              <p className="text-sm   text-[#005844] mb-1">
                 Congratulations — Your Idea is Now Live!
               </p>
               {idea.impactStats && (
                 <div className="flex flex-wrap gap-3 mt-2">
                   {idea.impactStats.map(stat => (
                     <div key={stat.label} className="bg-white rounded-lg border border-[#008755]/20 px-3 py-1.5 text-center min-w-[80px]">
-                      <p className="text-sm font-['Dubai:Medium',_sans-serif] text-[#008755]">{stat.value}</p>
+                      <p className="text-sm   text-[#008755]">{stat.value}</p>
                       <p className="text-[11px] text-muted-foreground">{stat.label}</p>
                     </div>
                   ))}
@@ -523,7 +523,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
           <CardContent className="p-4">
             <div className="flex flex-col gap-3">
               {/* Title */}
-              <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-foreground leading-snug">
+              <h1 className="text-xl   text-foreground leading-snug">
                 {idea.title}
               </h1>
 
@@ -531,7 +531,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <UserIcon className="h-3.5 w-3.5" />
-                  <span>Submitted by <span className="font-['Dubai:Medium',_sans-serif] text-foreground">{idea.submittedBy}</span></span>
+                  <span>Submitted by <span className="  text-foreground">{idea.submittedBy}</span></span>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Building2 className="h-3.5 w-3.5" />
@@ -552,7 +552,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               {/* AI Score bar */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-['Dubai:Medium',_sans-serif] text-muted-foreground flex items-center gap-1">
+                  <span className="text-xs   text-muted-foreground flex items-center gap-1">
                     <Star className="h-3.5 w-3.5 text-[#008755]" />
                     AI Strategic Alignment Score
                   </span>
@@ -572,7 +572,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* Full description */}
             <Card className="rounded-xl">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Idea Details</CardTitle>
+                <CardTitle className="text-sm  ">Idea Details</CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 space-y-4">
                 <Section label="Full Description" text={idea.fullDescription} />
@@ -586,7 +586,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* AI Analysis card */}
             <Card className="rounded-xl border-[#008755]/20 bg-[#008755]/3">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] flex items-center gap-2">
+                <CardTitle className="text-sm   flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#008755]" />
                   AI Analysis
                 </CardTitle>
@@ -605,7 +605,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                     {idea.alignmentPillars.map(pillar => (
                       <span
                         key={pillar}
-                        className="inline-flex items-center rounded-full bg-[#008755]/10 px-2.5 py-0.5 text-[11px] font-['Dubai:Medium',_sans-serif] text-[#005844]"
+                        className="inline-flex items-center rounded-full bg-[#008755]/10 px-2.5 py-0.5 text-[11px]   text-[#005844]"
                       >
                         {pillar}
                       </span>
@@ -615,7 +615,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
 
                 {/* Recommendation */}
                 <div className="bg-white/70 rounded-lg p-3 border border-[#008755]/10">
-                  <p className="text-[11px] font-['Dubai:Medium',_sans-serif] text-[#005844] mb-1">
+                  <p className="text-[11px]   text-[#005844] mb-1">
                     AI Recommendation
                   </p>
                   <p className="text-xs text-muted-foreground leading-relaxed">{idea.aiRecommendation}</p>
@@ -625,7 +625,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                 <div className="flex items-start gap-2">
                   <TrendingUp className="h-3.5 w-3.5 text-[#008755] flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-[11px] font-['Dubai:Medium',_sans-serif] text-foreground">Estimated Impact</p>
+                    <p className="text-[11px]   text-foreground">Estimated Impact</p>
                     <p className="text-xs text-muted-foreground">{idea.estimatedImpact}</p>
                   </div>
                 </div>
@@ -635,7 +635,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* Attachments */}
             <Card className="rounded-xl">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] flex items-center gap-2">
+                <CardTitle className="text-sm   flex items-center gap-2">
                   <Paperclip className="h-4 w-4 text-muted-foreground" />
                   Attachments
                 </CardTitle>
@@ -651,11 +651,11 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                         <Paperclip className="h-3.5 w-3.5 text-[#008755]" />
                       </div>
                       <div>
-                        <p className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground">{file.name}</p>
+                        <p className="text-xs   text-foreground">{file.name}</p>
                         <p className="text-[11px] text-muted-foreground">{file.size}</p>
                       </div>
                     </div>
-                    <button className="text-[11px] text-[#008755] hover:text-[#005844] font-['Dubai:Medium',_sans-serif] transition-colors">
+                    <button className="text-[11px] text-[#008755] hover:text-[#005844]   transition-colors">
                       Download
                     </button>
                   </div>
@@ -670,7 +670,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* Progress timeline */}
             <Card className="rounded-xl">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Progress</CardTitle>
+                <CardTitle className="text-sm  ">Progress</CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4">
                 <TimelineStepper steps={idea.timeline} />
@@ -681,11 +681,11 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {idea.coordinatorNote && (
               <Card className="rounded-xl border-[#008755]/15">
                 <CardHeader className="pb-2 pt-3 px-4">
-                  <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif]">Coordinator Notes</CardTitle>
+                  <CardTitle className="text-sm  ">Coordinator Notes</CardTitle>
                 </CardHeader>
                 <CardContent className="px-4 pb-4">
                   <div className="flex gap-2.5">
-                    <div className="h-7 w-7 rounded-full bg-[#008755]/10 flex items-center justify-center flex-shrink-0 text-[11px] font-['Dubai:Medium',_sans-serif] text-[#008755]">
+                    <div className="h-7 w-7 rounded-full bg-[#008755]/10 flex items-center justify-center flex-shrink-0 text-[11px]   text-[#008755]">
                       CO
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed pt-0.5">
@@ -699,11 +699,11 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* Comments / discussion */}
             <Card className="rounded-xl">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm font-['Dubai:Medium',_sans-serif] flex items-center gap-2">
+                <CardTitle className="text-sm   flex items-center gap-2">
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
                   Discussion
                   {localComments.length > 0 && (
-                    <span className="ml-1 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/10 px-1 text-[10px] font-['Dubai:Medium',_sans-serif] text-[#008755]">
+                    <span className="ml-1 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/10 px-1 text-[10px]   text-[#008755]">
                       {localComments.length}
                     </span>
                   )}
@@ -759,7 +759,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
 function Section({ label, text }: { label: string; text: string }) {
   return (
     <div>
-      <p className="text-xs font-['Dubai:Medium',_sans-serif] text-foreground mb-1">{label}</p>
+      <p className="text-xs   text-foreground mb-1">{label}</p>
       <p className="text-xs text-muted-foreground leading-relaxed">{text}</p>
     </div>
   );

@@ -167,7 +167,7 @@ export function AnnouncementsPage({ onBack }: AnnouncementsPageProps) {
               Back to System Administration
             </Button>
             <div>
-              <h1 className="text-xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">
+              <h1 className="text-xl   text-[#1f2937]">
                 Announcements
               </h1>
               <p className="text-sm text-muted-foreground">

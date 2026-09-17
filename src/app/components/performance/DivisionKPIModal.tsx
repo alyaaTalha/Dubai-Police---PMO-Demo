@@ -227,7 +227,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
           <div className="mt-4 flex items-center gap-3 text-[13px] text-white/90">
             <div className="flex items-center gap-2">
               <Avatar className="w-8 h-8 border-2 border-white/30">
-                <AvatarFallback className="bg-white/20 text-white text-[11px] font-['Dubai:Medium',_sans-serif]">
+                <AvatarFallback className="bg-white/20 text-white text-[11px]  ">
                   {kpi.owner
                     .split(" ")
                     .map((n) => n[0])
@@ -235,7 +235,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                 </AvatarFallback>
               </Avatar>
               <div>
-                <div className="text-white font-['Dubai:Medium',_sans-serif]">{kpi.owner}</div>
+                <div className="text-white  ">{kpi.owner}</div>
                 <div className="text-[11px] text-white/70 font-['Dubai',_sans-serif]">KPI Owner</div>
               </div>
             </div>
@@ -248,9 +248,9 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
           <div className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid grid-cols-3 w-full mb-6">
-                <TabsTrigger value="overview" className="font-['Dubai:Medium',_sans-serif]">Overview</TabsTrigger>
-                <TabsTrigger value="trends" className="font-['Dubai:Medium',_sans-serif]">Historical Performance</TabsTrigger>
-                <TabsTrigger value="metadata" className="font-['Dubai:Medium',_sans-serif]">Metadata</TabsTrigger>
+                <TabsTrigger value="overview" className=" ">Overview</TabsTrigger>
+                <TabsTrigger value="trends" className=" ">Historical Performance</TabsTrigger>
+                <TabsTrigger value="metadata" className=" ">Metadata</TabsTrigger>
               </TabsList>
 
               {/* Overview Tab */}
@@ -267,7 +267,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
                       <div className="flex items-center gap-2 mb-2">
                         <Activity className="w-4 h-4 text-[#008755]" />
-                        <div className="text-[11px] uppercase text-gray-600 font-['Dubai:Medium',_sans-serif]">
+                        <div className="text-[11px] uppercase text-gray-600  ">
                           Current Value
                         </div>
                       </div>
@@ -280,7 +280,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <Card className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
                       <div className="flex items-center gap-2 mb-2">
                         <Target className="w-4 h-4 text-purple-600" />
-                        <div className="text-[11px] uppercase text-gray-600 font-['Dubai:Medium',_sans-serif]">
+                        <div className="text-[11px] uppercase text-gray-600  ">
                           Target Value
                         </div>
                       </div>
@@ -297,7 +297,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                         ) : (
                           <TrendingDown className="w-4 h-4 text-red-600" />
                         )}
-                        <div className="text-[11px] uppercase text-gray-600 font-['Dubai:Medium',_sans-serif]">
+                        <div className="text-[11px] uppercase text-gray-600  ">
                           Variance
                         </div>
                       </div>
@@ -317,7 +317,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                 {/* Formula */}
                 {kpi.formula && (
                   <Card className="p-4">
-                    <h4 className="text-gray-900 mb-3 flex items-center gap-2 font-['Dubai:Medium',_sans-serif]">
+                    <h4 className="text-gray-900 mb-3 flex items-center gap-2  ">
                       <AlertCircle className="w-4 h-4 text-[#008755]" />
                       Calculation Formula
                     </h4>
@@ -329,7 +329,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
 
                 {/* Performance Thresholds */}
                 <Card className="p-4">
-                  <h3 className="text-gray-900 mb-4 flex items-center gap-2 font-['Dubai:Medium',_sans-serif]">
+                  <h3 className="text-gray-900 mb-4 flex items-center gap-2  ">
                     <AlertCircle className="w-4 h-4 text-[#008755]" />
                     Performance Thresholds
                   </h3>
@@ -337,10 +337,10 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <div className="flex items-center gap-3">
                       <div className="w-24 text-[12px] text-gray-600 font-['Dubai',_sans-serif]">Green Zone</div>
                       <div className="flex-1 h-8 bg-gradient-to-r from-green-200 to-green-400 rounded flex items-center justify-between px-3">
-                        <span className="text-[12px] text-green-900 font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-[12px] text-green-900  ">
                           75%
                         </span>
-                        <span className="text-[12px] text-green-900 font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-[12px] text-green-900  ">
                           100%+
                         </span>
                       </div>
@@ -351,10 +351,10 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <div className="flex items-center gap-3">
                       <div className="w-24 text-[12px] text-gray-600 font-['Dubai',_sans-serif]">Amber Zone</div>
                       <div className="flex-1 h-8 bg-gradient-to-r from-amber-200 to-amber-400 rounded flex items-center justify-between px-3">
-                        <span className="text-[12px] text-amber-900 font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-[12px] text-amber-900  ">
                           50%
                         </span>
-                        <span className="text-[12px] text-amber-900 font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-[12px] text-amber-900  ">
                           74%
                         </span>
                       </div>
@@ -363,10 +363,10 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <div className="flex items-center gap-3">
                       <div className="w-24 text-[12px] text-gray-600 font-['Dubai',_sans-serif]">Red Zone</div>
                       <div className="flex-1 h-8 bg-gradient-to-r from-red-200 to-red-400 rounded flex items-center justify-between px-3">
-                        <span className="text-[12px] text-red-900 font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-[12px] text-red-900  ">
                           0%
                         </span>
-                        <span className="text-[12px] text-red-900 font-['Dubai:Medium',_sans-serif]">
+                        <span className="text-[12px] text-red-900  ">
                           49%
                         </span>
                       </div>
@@ -391,7 +391,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                 {/* Quarterly Trend */}
                 {kpi.trend && kpi.trend.length > 0 && (
                   <Card className="p-4">
-                    <h4 className="text-gray-900 mb-3 font-['Dubai:Medium',_sans-serif]">Quarterly Trend</h4>
+                    <h4 className="text-gray-900 mb-3  ">Quarterly Trend</h4>
                     <div className="flex items-center justify-between">
                       {kpi.trend.map((val, idx) => (
                         <div key={idx} className="flex flex-col items-center gap-1">
@@ -403,7 +403,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                         {kpi.trend[kpi.trend.length - 1] > kpi.trend[0] && (
                           <>
                             <TrendingUp className="w-5 h-5 text-green-600" />
-                            <span className="text-sm text-green-600 font-['Dubai:Medium',_sans-serif]">Improving</span>
+                            <span className="text-sm text-green-600  ">Improving</span>
                           </>
                         )}
                       </div>
@@ -414,7 +414,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                 {/* Comments */}
                 {kpi.comments && kpi.comments.length > 0 && (
                   <Card className="p-4">
-                    <h4 className="text-gray-900 mb-3 font-['Dubai:Medium',_sans-serif]">Notes & Comments</h4>
+                    <h4 className="text-gray-900 mb-3  ">Notes & Comments</h4>
                     <div className="space-y-2">
                       {kpi.comments.map((comment, index) => (
                         <div
@@ -433,14 +433,14 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
               <TabsContent value="trends" className="space-y-6">
                 {kpi.history && kpi.history.length > 0 && (
                   <Card className="p-4">
-                    <h3 className="text-gray-900 mb-4 font-['Dubai:Medium',_sans-serif]">Historical Performance</h3>
+                    <h3 className="text-gray-900 mb-4  ">Historical Performance</h3>
                     <div className="space-y-2">
                       {kpi.history.map((record, index) => (
                         <div
                           key={index}
                           className="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-200"
                         >
-                          <span className="text-[14px] text-gray-700 font-['Dubai:Medium',_sans-serif]">{record.date}</span>
+                          <span className="text-[14px] text-gray-700  ">{record.date}</span>
                           <div className="flex items-center gap-3">
                             <span className="text-[14px] text-gray-900 font-['Dubai:Bold',_sans-serif]">
                               {record.value} {kpi.unit}
@@ -459,19 +459,19 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
               {/* Metadata Tab */}
               <TabsContent value="metadata" className="space-y-6">
                 <Card className="p-4">
-                  <h3 className="text-gray-900 mb-4 font-['Dubai:Medium',_sans-serif]">KPI Metadata</h3>
+                  <h3 className="text-gray-900 mb-4  ">KPI Metadata</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <User className="w-4 h-4 text-gray-500" />
-                        <h4 className="text-[12px] uppercase text-gray-500 font-['Dubai:Medium',_sans-serif]">Owner</h4>
+                        <h4 className="text-[12px] uppercase text-gray-500  ">Owner</h4>
                       </div>
                       <p className="text-[14px] text-gray-900 font-['Dubai',_sans-serif]">{kpi.owner}</p>
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Database className="w-4 h-4 text-gray-500" />
-                        <h4 className="text-[12px] uppercase text-gray-500 font-['Dubai:Medium',_sans-serif]">Data Source</h4>
+                        <h4 className="text-[12px] uppercase text-gray-500  ">Data Source</h4>
                       </div>
                       <div className="flex items-center gap-2">
                         {getDataSourceIcon(kpi.dataSource)}
@@ -483,7 +483,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Calendar className="w-4 h-4 text-gray-500" />
-                        <h4 className="text-[12px] uppercase text-gray-500 font-['Dubai:Medium',_sans-serif]">Last Updated</h4>
+                        <h4 className="text-[12px] uppercase text-gray-500  ">Last Updated</h4>
                       </div>
                       <p className="text-[14px] text-gray-900 font-['Dubai',_sans-serif]">
                         {new Date(kpi.lastUpdated).toLocaleString("en-GB", {
@@ -498,7 +498,7 @@ export function DivisionKPIModal({ kpi, open, onClose }: DivisionKPIModalProps) 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <FileText className="w-4 h-4 text-gray-500" />
-                        <h4 className="text-[12px] uppercase text-gray-500 font-['Dubai:Medium',_sans-serif]">KPI ID</h4>
+                        <h4 className="text-[12px] uppercase text-gray-500  ">KPI ID</h4>
                       </div>
                       <p className="text-[14px] text-gray-900 font-['Dubai',_sans-serif]">{kpi.id}</p>
                     </div>

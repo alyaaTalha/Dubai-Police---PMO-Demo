@@ -44,7 +44,7 @@ import {
   Search
 } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, Cell } from "recharts";
-import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
+import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 
 interface ReportsPageProps {
   onBack: () => void;
@@ -177,13 +177,12 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
     <div className="h-full overflow-auto">
       <div className="space-y-4 p-4">
         {/* Hero Banner Section */}
-        <Card className="relative text-white border-none shadow-lg overflow-hidden">
-          <img 
-            src={bannerImage}
-            alt="Dubai Customs Banner"
-            className="absolute inset-0 w-full h-full object-cover"
+        <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+          <img
+            src={heroDecoration}
+            alt=""
+            className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" />
           <CardContent className="pt-5 pb-5 relative z-10">
             <div className="flex items-center justify-between">
               <div className="flex-1">
@@ -296,7 +295,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="font-['Dubai:Medium',_sans-serif]">Performance Trend</CardTitle>
+                        <CardTitle className=" ">Performance Trend</CardTitle>
                         <CardDescription>Monthly achievement percentage by division</CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
@@ -410,7 +409,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle className="font-['Dubai:Medium',_sans-serif]">Division Performance Trends</CardTitle>
+                        <CardTitle className=" ">Division Performance Trends</CardTitle>
                         <CardDescription>6-month achievement tracking by division</CardDescription>
                       </div>
                       <div className="flex gap-2">
@@ -454,7 +453,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                 {/* Department Drill-Down Chart */}
                 <Card className="rounded-xl">
                   <CardHeader>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">Department Performance by Category</CardTitle>
+                    <CardTitle className=" ">Department Performance by Category</CardTitle>
                     <CardDescription>Click to view detailed scorecard</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -493,7 +492,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                 {/* KPI Category Performance Trends */}
                 <Card className="rounded-xl">
                   <CardHeader>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">KPI Category Trends</CardTitle>
+                    <CardTitle className=" ">KPI Category Trends</CardTitle>
                     <CardDescription>Performance by category over time</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -525,7 +524,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                 {/* Department Performance Trends */}
                 <Card className="rounded-xl">
                   <CardHeader>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">Department Performance Trends</CardTitle>
+                    <CardTitle className=" ">Department Performance Trends</CardTitle>
                     <CardDescription>Top departments monthly achievement tracking</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -569,7 +568,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                 {/* Target vs Actual Performance */}
                 <Card className="rounded-xl">
                   <CardHeader>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">Target vs Actual Achievement</CardTitle>
+                    <CardTitle className=" ">Target vs Actual Achievement</CardTitle>
                     <CardDescription>Performance variance tracking</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -1202,7 +1201,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* KPI Achievement Trend */}
               <Card className="rounded-xl">
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Overall KPI Achievement</CardTitle>
+                  <CardTitle className=" ">Overall KPI Achievement</CardTitle>
                   <CardDescription>6-month performance progression</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1229,7 +1228,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* Initiatives Completed */}
               <Card className="rounded-xl">
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Initiatives Completed</CardTitle>
+                  <CardTitle className=" ">Initiatives Completed</CardTitle>
                   <CardDescription>Monthly completion tracking</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1257,7 +1256,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* Rating Trends */}
               <Card className="rounded-xl">
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Performance Rating Trends</CardTitle>
+                  <CardTitle className=" ">Performance Rating Trends</CardTitle>
                   <CardDescription>Average rating progression across divisions</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1287,7 +1286,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* Quarterly Comparison */}
               <Card className="rounded-xl">
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Quarterly Performance Overview</CardTitle>
+                  <CardTitle className=" ">Quarterly Performance Overview</CardTitle>
                   <CardDescription>Achievement, initiatives, and KPI growth</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1316,7 +1315,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* Multi-Division Comparison */}
               <Card className="rounded-xl lg:col-span-2">
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Division Achievement Comparison</CardTitle>
+                  <CardTitle className=" ">Division Achievement Comparison</CardTitle>
                   <CardDescription>All divisions performance over 6 months</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1350,7 +1349,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* Variance Analysis */}
               <Card className="rounded-xl lg:col-span-2">
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Target vs Actual Performance</CardTitle>
+                  <CardTitle className=" ">Target vs Actual Performance</CardTitle>
                   <CardDescription>Performance variance with target baseline</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1388,7 +1387,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
           <TabsContent value="kpi-insights" className="space-y-4">
             <Card className="rounded-xl">
               <CardHeader>
-                <CardTitle className="font-['Dubai:Medium',_sans-serif]">KPI Performance Leaderboard</CardTitle>
+                <CardTitle className=" ">KPI Performance Leaderboard</CardTitle>
                 <CardDescription>Detailed KPI tracking across all divisions</CardDescription>
               </CardHeader>
               <CardContent>
@@ -1396,12 +1395,12 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left p-3 text-sm font-['Dubai:Medium',_sans-serif]">KPI</th>
-                        <th className="text-left p-3 text-sm font-['Dubai:Medium',_sans-serif]">Division</th>
-                        <th className="text-center p-3 text-sm font-['Dubai:Medium',_sans-serif]">Achievement</th>
-                        <th className="text-center p-3 text-sm font-['Dubai:Medium',_sans-serif]">Trend</th>
-                        <th className="text-left p-3 text-sm font-['Dubai:Medium',_sans-serif]">Owner</th>
-                        <th className="text-center p-3 text-sm font-['Dubai:Medium',_sans-serif]">Status</th>
+                        <th className="text-left p-3 text-sm  ">KPI</th>
+                        <th className="text-left p-3 text-sm  ">Division</th>
+                        <th className="text-center p-3 text-sm  ">Achievement</th>
+                        <th className="text-center p-3 text-sm  ">Trend</th>
+                        <th className="text-left p-3 text-sm  ">Owner</th>
+                        <th className="text-center p-3 text-sm  ">Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1409,10 +1408,10 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                         <tr key={idx} className={`border-b hover:bg-gray-50 transition-colors ${
                           kpi.status === 'red' ? 'bg-red-50/50' : ''
                         }`}>
-                          <td className="p-3 text-sm font-['Dubai:Medium',_sans-serif]">{kpi.kpi}</td>
+                          <td className="p-3 text-sm  ">{kpi.kpi}</td>
                           <td className="p-3 text-sm text-muted-foreground">{kpi.division}</td>
                           <td className="p-3 text-center">
-                            <span className="text-sm font-['Dubai:Medium',_sans-serif]">{kpi.achievement}%</span>
+                            <span className="text-sm  ">{kpi.achievement}%</span>
                           </td>
                           <td className="p-3 text-center">
                             <div className="flex items-center justify-center gap-1">
@@ -1464,7 +1463,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">Total Tasks</p>
-                  <p className="text-3xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">127</p>
+                  <p className="text-3xl   text-[#1f2937]">127</p>
                   <p className="text-xs text-muted-foreground mt-2">Across 52 KPIs</p>
                 </CardContent>
               </Card>
@@ -1477,7 +1476,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">Completed</p>
-                  <p className="text-3xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">108</p>
+                  <p className="text-3xl   text-[#1f2937]">108</p>
                   <p className="text-xs text-muted-foreground mt-2">On schedule</p>
                 </CardContent>
               </Card>
@@ -1490,7 +1489,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">In Progress</p>
-                  <p className="text-3xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">14</p>
+                  <p className="text-3xl   text-[#1f2937]">14</p>
                   <p className="text-xs text-muted-foreground mt-2">Due this week</p>
                 </CardContent>
               </Card>
@@ -1503,7 +1502,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">At Risk</p>
-                  <p className="text-3xl font-['Dubai:Medium',_sans-serif] text-[#1f2937]">5</p>
+                  <p className="text-3xl   text-[#1f2937]">5</p>
                   <p className="text-xs text-muted-foreground mt-2">Needs attention</p>
                 </CardContent>
               </Card>
@@ -1517,7 +1516,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">KPI Tasks Overview</CardTitle>
+                    <CardTitle className=" ">KPI Tasks Overview</CardTitle>
                     <CardDescription>Tasks linked to KPI performance and improvement</CardDescription>
                   </div>
                   <div className="flex gap-2">
@@ -1549,14 +1548,14 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                           <ChevronDown className="h-4 w-4 text-gray-600" />
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1">
-                              <h4 className="font-['Dubai:Medium',_sans-serif]">Budget Compliance Rate</h4>
+                              <h4 className=" ">Budget Compliance Rate</h4>
                               <Badge className="bg-red-100 text-red-700 hover:bg-red-200">Critical</Badge>
                               <Badge variant="outline" className="text-[#B94700] border-[#B94700]">Finance & Admin</Badge>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Target className="h-3 w-3" />
-                                Achievement: <span className="font-['Dubai:Medium',_sans-serif] text-red-600">67%</span>
+                                Achievement: <span className="  text-red-600">67%</span>
                               </span>
                               <span className="flex items-center gap-1">
                                 <ListTodo className="h-3 w-3" />
@@ -1580,7 +1579,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-start gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
                         <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
                         <div className="flex-1">
-                          <h5 className="font-['Dubai:Medium',_sans-serif] mb-1">Review Q1 budget variances</h5>
+                          <h5 className="  mb-1">Review Q1 budget variances</h5>
                           <p className="text-sm text-muted-foreground mb-2">Analyze all departments with &gt;10% variance from allocated budget</p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
@@ -1600,7 +1599,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-start gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
                         <Circle className="h-5 w-5 text-amber-600 mt-0.5" />
                         <div className="flex-1">
-                          <h5 className="font-['Dubai:Medium',_sans-serif] mb-1">Implement monthly budget monitoring system</h5>
+                          <h5 className="  mb-1">Implement monthly budget monitoring system</h5>
                           <p className="text-sm text-muted-foreground mb-2">Set up automated alerts for budget threshold breaches</p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
@@ -1620,7 +1619,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-start gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
                         <Circle className="h-5 w-5 text-gray-400 mt-0.5" />
                         <div className="flex-1">
-                          <h5 className="font-['Dubai:Medium',_sans-serif] mb-1">Conduct budget training for department heads</h5>
+                          <h5 className="  mb-1">Conduct budget training for department heads</h5>
                           <p className="text-sm text-muted-foreground mb-2">3-hour workshop on budget planning and control procedures</p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
@@ -1640,7 +1639,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-start gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
                         <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
                         <div className="flex-1">
-                          <h5 className="font-['Dubai:Medium',_sans-serif] mb-1">Review and approve budget reallocation requests</h5>
+                          <h5 className="  mb-1">Review and approve budget reallocation requests</h5>
                           <p className="text-sm text-muted-foreground mb-2">Process 12 pending reallocation requests from various departments</p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
@@ -1660,7 +1659,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-start gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors">
                         <Circle className="h-5 w-5 text-gray-400 mt-0.5" />
                         <div className="flex-1">
-                          <h5 className="font-['Dubai:Medium',_sans-serif] mb-1">Prepare Q2 budget compliance report</h5>
+                          <h5 className="  mb-1">Prepare Q2 budget compliance report</h5>
                           <p className="text-sm text-muted-foreground mb-2">Comprehensive report for executive management review</p>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
@@ -1686,14 +1685,14 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                           <ChevronRight className="h-4 w-4 text-gray-600" />
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1">
-                              <h4 className="font-['Dubai:Medium',_sans-serif]">Employee Retention Rate</h4>
+                              <h4 className=" ">Employee Retention Rate</h4>
                               <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200">At Risk</Badge>
                               <Badge variant="outline" className="text-[#77787B] border-[#77787B]">Human Resources</Badge>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Target className="h-3 w-3" />
-                                Achievement: <span className="font-['Dubai:Medium',_sans-serif] text-amber-600">76%</span>
+                                Achievement: <span className="  text-amber-600">76%</span>
                               </span>
                               <span className="flex items-center gap-1">
                                 <ListTodo className="h-3 w-3" />
@@ -1722,14 +1721,14 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                           <ChevronRight className="h-4 w-4 text-gray-600" />
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1">
-                              <h4 className="font-['Dubai:Medium',_sans-serif]">Customer Satisfaction Score</h4>
+                              <h4 className=" ">Customer Satisfaction Score</h4>
                               <Badge className="bg-green-100 text-green-700 hover:bg-green-200">On Track</Badge>
                               <Badge variant="outline" className="text-[#008755] border-[#008755]">Customs Development</Badge>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Target className="h-3 w-3" />
-                                Achievement: <span className="font-['Dubai:Medium',_sans-serif] text-green-600">88%</span>
+                                Achievement: <span className="  text-green-600">88%</span>
                               </span>
                               <span className="flex items-center gap-1">
                                 <ListTodo className="h-3 w-3" />
@@ -1758,14 +1757,14 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                           <ChevronRight className="h-4 w-4 text-gray-600" />
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1">
-                              <h4 className="font-['Dubai:Medium',_sans-serif]">Customs Clearance Time</h4>
+                              <h4 className=" ">Customs Clearance Time</h4>
                               <Badge className="bg-green-100 text-green-700 hover:bg-green-200">On Track</Badge>
                               <Badge variant="outline" className="text-[#00B0AA] border-[#00B0AA]">Customs Intelligence</Badge>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Target className="h-3 w-3" />
-                                Achievement: <span className="font-['Dubai:Medium',_sans-serif] text-green-600">91%</span>
+                                Achievement: <span className="  text-green-600">91%</span>
                               </span>
                               <span className="flex items-center gap-1">
                                 <ListTodo className="h-3 w-3" />
@@ -1794,14 +1793,14 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                           <ChevronRight className="h-4 w-4 text-gray-600" />
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-1">
-                              <h4 className="font-['Dubai:Medium',_sans-serif]">System Uptime Percentage</h4>
+                              <h4 className=" ">System Uptime Percentage</h4>
                               <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200">At Risk</Badge>
                               <Badge variant="outline" className="text-[#008755] border-[#008755]">Customs Development</Badge>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Target className="h-3 w-3" />
-                                Achievement: <span className="font-['Dubai:Medium',_sans-serif] text-amber-600">85%</span>
+                                Achievement: <span className="  text-amber-600">85%</span>
                               </span>
                               <span className="flex items-center gap-1">
                                 <ListTodo className="h-3 w-3" />
@@ -1834,7 +1833,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               <SheetHeader className="px-6 py-4 border-b">
                 <div className="flex items-center justify-between">
                   <div>
-                    <SheetTitle className="font-['Dubai:Medium',_sans-serif] text-2xl">Performance Trend - Detailed View</SheetTitle>
+                    <SheetTitle className="  text-2xl">Performance Trend - Detailed View</SheetTitle>
                     <SheetDescription>Comprehensive analysis of monthly achievement percentages by division</SheetDescription>
                   </div>
                   <div className="flex items-center gap-2">
@@ -1872,7 +1871,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Average</p>
-                        <p className="text-2xl font-['Dubai:Medium',_sans-serif]">84.2%</p>
+                        <p className="text-2xl  ">84.2%</p>
                       </div>
                     </div>
                   </CardContent>
@@ -1886,7 +1885,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Best Performance</p>
-                        <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-green-600">95%</p>
+                        <p className="text-2xl   text-green-600">95%</p>
                       </div>
                     </div>
                   </CardContent>
@@ -1900,7 +1899,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Lowest Performance</p>
-                        <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-amber-600">65%</p>
+                        <p className="text-2xl   text-amber-600">65%</p>
                       </div>
                     </div>
                   </CardContent>
@@ -1914,7 +1913,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Trend</p>
-                        <p className="text-2xl font-['Dubai:Medium',_sans-serif] text-green-600">+2.3%</p>
+                        <p className="text-2xl   text-green-600">+2.3%</p>
                       </div>
                     </div>
                   </CardContent>
@@ -2004,7 +2003,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               {/* Detailed Data Table */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="font-['Dubai:Medium',_sans-serif]">Detailed Performance Data</CardTitle>
+                  <CardTitle className=" ">Detailed Performance Data</CardTitle>
                   <CardDescription>Monthly achievement percentages by division</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2023,7 +2022,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                     <TableBody>
                       {trendData.map((row, idx) => (
                         <TableRow key={idx}>
-                          <TableCell className="font-['Dubai:Medium',_sans-serif]">{row.month}</TableCell>
+                          <TableCell className=" ">{row.month}</TableCell>
                           <TableCell className="text-right">
                             <Badge variant="outline" className="bg-[#008755]/10 text-[#008755] border-[#008755]/20">
                               {row.cdd}%
@@ -2065,7 +2064,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
               <div className="grid grid-cols-2 gap-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">Top Performers</CardTitle>
+                    <CardTitle className=" ">Top Performers</CardTitle>
                     <CardDescription>Divisions exceeding targets</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
@@ -2073,7 +2072,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-[#008755]" />
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif]">Customs Development</p>
+                          <p className=" ">Customs Development</p>
                           <p className="text-xs text-muted-foreground">Consistent high performance</p>
                         </div>
                       </div>
@@ -2083,7 +2082,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-[#115E67]" />
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif]">Strategy & Excellence</p>
+                          <p className=" ">Strategy & Excellence</p>
                           <p className="text-xs text-muted-foreground">Upward trend</p>
                         </div>
                       </div>
@@ -2093,7 +2092,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-[#00B0AA]" />
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif]">Customs Intelligence</p>
+                          <p className=" ">Customs Intelligence</p>
                           <p className="text-xs text-muted-foreground">Strong performance</p>
                         </div>
                       </div>
@@ -2104,7 +2103,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="font-['Dubai:Medium',_sans-serif]">Needs Attention</CardTitle>
+                    <CardTitle className=" ">Needs Attention</CardTitle>
                     <CardDescription>Divisions requiring support</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
@@ -2112,7 +2111,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-[#B94700]" />
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif]">Finance & Admin</p>
+                          <p className=" ">Finance & Admin</p>
                           <p className="text-xs text-muted-foreground">Below target threshold</p>
                         </div>
                       </div>
@@ -2122,7 +2121,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-[#77787B]" />
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif]">Human Resources</p>
+                          <p className=" ">Human Resources</p>
                           <p className="text-xs text-muted-foreground">Requires improvement</p>
                         </div>
                       </div>
@@ -2132,7 +2131,7 @@ export function ReportsPage({ onBack }: ReportsPageProps) {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-[#FFBE9F]" />
                         <div>
-                          <p className="font-['Dubai:Medium',_sans-serif]">Legal Affairs</p>
+                          <p className=" ">Legal Affairs</p>
                           <p className="text-xs text-muted-foreground">Moderate performance</p>
                         </div>
                       </div>

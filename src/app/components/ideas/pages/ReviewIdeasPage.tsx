@@ -152,7 +152,7 @@ function IdeaRow({ idea, onAction, flash, evaluating, onToggleEvaluate }: IdeaRo
         {/* LEFT: title + meta */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start gap-2 mb-1">
-            <p className="font-['Dubai:Medium',_sans-serif] text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
+            <p className="  text-sm font-semibold text-gray-900 leading-snug line-clamp-2">
               {idea.title}
             </p>
             <Badge className={cn('ml-auto shrink-0 text-xs border', statusStyles(idea.status))}>
@@ -306,7 +306,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
       {/* ── Page header ─────────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-['Dubai:Medium',_sans-serif] text-xl font-bold text-gray-900 leading-tight">
+          <h1 className="  text-xl font-bold text-gray-900 leading-tight">
             Review Ideas
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
@@ -325,7 +325,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
         <StatCard>
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide mb-1">
+              <p className="text-xs text-gray-500   uppercase tracking-wide mb-1">
                 Review Backlog
               </p>
               <div className="flex items-baseline gap-2">
@@ -364,7 +364,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
         <StatCard>
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide mb-1">
+              <p className="text-xs text-gray-500   uppercase tracking-wide mb-1">
                 Avg Review Time
               </p>
               <div className="flex items-baseline gap-2">
@@ -393,7 +393,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
         <StatCard>
           <div className="flex items-start justify-between mb-2">
             <div>
-              <p className="text-xs text-gray-500 font-['Dubai:Medium',_sans-serif] uppercase tracking-wide mb-1">
+              <p className="text-xs text-gray-500   uppercase tracking-wide mb-1">
                 Reviewed This Month
               </p>
               <div className="flex items-baseline gap-2">
@@ -423,7 +423,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
         {/* Submission Trends — 2/3 */}
         <Card className="lg:col-span-2 rounded-xl border border-border bg-white shadow-sm">
           <CardHeader className="pb-2 pt-4 px-5">
-            <CardTitle className="font-['Dubai:Medium',_sans-serif] text-sm font-semibold text-gray-800">
+            <CardTitle className="  text-sm font-semibold text-gray-800">
               Submission Trends
             </CardTitle>
             <p className="text-xs text-gray-500">Jan – Jun 2025</p>
@@ -482,7 +482,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
         {/* Top Submitters — 1/3 */}
         <Card className="rounded-xl border border-border bg-white shadow-sm">
           <CardHeader className="pb-2 pt-4 px-5">
-            <CardTitle className="font-['Dubai:Medium',_sans-serif] text-sm font-semibold text-gray-800 flex items-center gap-2">
+            <CardTitle className="  text-sm font-semibold text-gray-800 flex items-center gap-2">
               <Users size={14} className="text-[#008755]" />
               Top Submitters
             </CardTitle>
@@ -521,7 +521,7 @@ export function ReviewIdeasPage({ user: _user, role: _role, onNavigate: _onNavig
       {/* ── Review Queue ────────────────────────────────────────────────────── */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-['Dubai:Medium',_sans-serif] text-base font-semibold text-gray-900 flex items-center gap-2">
+          <h2 className="  text-base font-semibold text-gray-900 flex items-center gap-2">
             Review Queue
             <Badge className="bg-amber-50 text-amber-700 border-amber-200 text-xs">
               {filteredIdeas.length} showing

@@ -1,0 +1,4 @@
+This is a helper file to document the replacement pattern:
+Replace: text-center
+With: text-left
+In all h4 and p tags within CardContent in the selected div

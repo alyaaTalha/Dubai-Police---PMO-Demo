@@ -10,13 +10,14 @@ import { VocDashboard } from './components/voc/VocDashboard';
 import { PortfolioDashboard } from './components/portfolio/PortfolioDashboard';
 import { SystemAdministrationPage } from './components/admin/SystemAdministrationPage';
 import { IdeasPlatformShell, type IdeaOriginProject } from './components/ideas/IdeasPlatformShell';
+import { SandboxPlatformShell } from './components/sandbox/SandboxPlatformShell';
 import Sidebar from './imports/Sidebar';
 import { Toaster } from './components/ui/sonner';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<
     'strategy' | 'performance' | 'scorecards' | 'home' | 'partnership' |
-    'voc' | 'portfolio' | 'system-admin' | 'ideas-platform'
+    'voc' | 'portfolio' | 'system-admin' | 'ideas-platform' | 'sandbox-platform'
   >('home');
   const [selectedDivisionId, setSelectedDivisionId] = useState<string | undefined>(undefined);
   const [breadcrumbs, setBreadcrumbs] = useState<Array<{ label: string; onClick?: () => void }>>([{ label: 'Home' }]);
@@ -60,6 +61,7 @@ export default function App() {
       portfolio:      [home, { label: 'Portfolio', onClick: () => setCurrentView('portfolio') }, { label: 'Dashboard' }],
       'system-admin': [home, { label: 'System Administration' }],
       'ideas-platform': [home, { label: 'Ideas Platform' }],
+      'sandbox-platform': [home, { label: 'Sandbox Platform' }],
     };
     if (map[view]) setBreadcrumbs(map[view]!);
     // 'performance' breadcrumbs are managed by PerformanceDashboard itself
@@ -71,7 +73,7 @@ export default function App() {
   }, [updateBreadcrumbsForView]);
 
   const handleHeaderNavigate = useCallback((view: string) => {
-    if (view === 'system-admin' || view === 'ideas-platform') {
+    if (view === 'system-admin' || view === 'ideas-platform' || view === 'sandbox-platform') {
       setCurrentView(view as typeof currentView);
       updateBreadcrumbsForView(view as typeof currentView);
     }
@@ -116,6 +118,11 @@ export default function App() {
               onConvertToProject={handleConvertToProject}
               onNavigateToPortfolio={navigateToPortfolio}
               initialPage={initialIdeasPage}
+            />
+          ) : currentView === 'sandbox-platform' ? (
+            <SandboxPlatformShell
+              onBack={goHome}
+              setBreadcrumbs={handleSetBreadcrumbs}
             />
           ) : currentView === 'strategy' ? (
             <StrategyDashboard onNavigateToIdeas={navigateToIdeasPage} />

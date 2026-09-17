@@ -33,7 +33,7 @@ import {
 import bannerImage from "figma:asset/2ceb5f3890ecf49940adbd1e2cca8cf7647ce99f.png";
 
 interface HomePageProps {
-  onNavigate: (view: 'strategy' | 'performance' | 'scorecards' | 'home' | 'partnership' | 'voc' | 'portfolio' | 'ideas-platform') => void;
+  onNavigate: (view: 'strategy' | 'performance' | 'scorecards' | 'home' | 'partnership' | 'voc' | 'portfolio' | 'ideas-platform' | 'sandbox-platform') => void;
 }
 
 // Mock tasks data
@@ -269,7 +269,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
                   <div
                     className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                    onClick={() => onNavigate('portfolio')}
+                    onClick={() => onNavigate('sandbox-platform')}
                   >
                     <div className="relative size-[40px]">
                       <div className="absolute inset-0 rounded-full bg-white" />

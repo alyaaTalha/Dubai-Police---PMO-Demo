@@ -74,7 +74,7 @@ export function IdeasHomePage({ user, role, onNavigate }: PageProps) {
   const stats = ROLE_STATS[role];
 
   return (
-    <div className="flex flex-col gap-6 p-6 max-w-6xl mx-auto w-full">
+    <div className="flex flex-col gap-6 p-6 mx-auto w-full">
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <div className="rounded-2xl bg-gradient-to-br from-[#00613c] via-[#008755] to-[#00a86b] p-8 text-white relative overflow-hidden">

@@ -4,7 +4,7 @@ import {
   Shield, Users, Calendar, Wallet, Layers, TrendingUp, TrendingDown, Lightbulb,
   CheckCircle2, FileText, Building2, ClipboardCheck, Target, ListTodo, AlertTriangle,
   Trophy, BarChart3, RefreshCw, FolderCheck, MessageSquare, Handshake, Plus, Edit,
-  Trash2, Eye, GripVertical, Link2, X,
+  Trash2, Eye, GripVertical, Link2, X, IdCard,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from '../../ui/badge';
@@ -26,6 +26,7 @@ import { KPIsTab } from '../../portfolio/KPIsTab';
 import { BiWeeklyStatusTab } from '../../portfolio/BiWeeklyStatusTab';
 import { AddTaskPanel } from '../../portfolio/AddTaskPanel';
 import { AddMilestonePanel } from '../../portfolio/AddMilestonePanel';
+import { ProjectCardTab } from './ProjectCardTab';
 
 interface PageProps {
   project: Project;
@@ -35,11 +36,12 @@ interface PageProps {
 }
 
 type DetailTab =
-  | 'overview' | 'biweekly' | 'milestones' | 'risk' | 'stakeholders' | 'goals'
+  | 'overview' | 'card' | 'biweekly' | 'milestones' | 'risk' | 'stakeholders' | 'goals'
   | 'evaluation' | 'kpis' | 'partners' | 'ip' | 'change-management' | 'closure' | 'documents';
 
 const TABS: Array<{ key: DetailTab; label: string; icon: React.ElementType }> = [
   { key: 'overview', label: 'Overview', icon: CheckCircle2 },
+  { key: 'card', label: 'Project Card', icon: IdCard },
   { key: 'biweekly', label: 'Bi-Weekly Status', icon: Calendar },
   { key: 'milestones', label: 'Milestones & Tasks', icon: ListTodo },
   { key: 'risk', label: 'Risk Register', icon: AlertTriangle },
@@ -364,6 +366,17 @@ export function SandboxProjectDetailsPage({ project, store, onBack, onNavigate }
               <DetailRow icon={Layers} label="Classification" value={project.cls === '—' ? 'Not classified' : project.cls} />
             </div>
           </div>
+        )}
+
+        {activeTab === 'card' && (
+          <ProjectCardTab
+            project={project}
+            cardNumber={store.projects.findIndex(p => p.id === project.id) + 1}
+            onExport={() => {
+              toast.success('Project card exported');
+              store.addAudit({ title: 'Project card exported', detail: `${project.name} card exported by Mohammed Hassan`, kind: 'warn' });
+            }}
+          />
         )}
 
         {activeTab === 'biweekly' && <BiWeeklyStatusTab />}

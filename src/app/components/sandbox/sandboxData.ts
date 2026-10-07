@@ -17,6 +17,7 @@ export interface Project {
   start: number;
   end: number;
   cls: string; // classification, e.g. IN1, Class 6, '—'
+  trl?: number; // Technology Readiness Level (1–9) — R&D projects only
   evaluator: string | null;
   score: number | null;
   partners: string[];
@@ -56,17 +57,34 @@ export const CRITERIA: Record<ProjectType, Array<[string, number]>> = {
   know:  [['Content Quality', 30], ['Reusability', 20], ['Institutional Value', 25], ['Accessibility', 15], ['Maintenance Plan', 10]],
 };
 
+// ── Readiness scales used by the dashboard Readiness Map & level filter ──
+// Each scale is ordered from most mature (inner ring) to least mature (outer).
+export const TRL_LEVELS = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+export const TRL_LABELS: Record<number, string> = {
+  1: 'Basic principles observed',
+  2: 'Technology concept formulated',
+  3: 'Proof of concept',
+  4: 'Validated in lab',
+  5: 'Validated in relevant environment',
+  6: 'Demonstrated in relevant environment',
+  7: 'Prototype in operational environment',
+  8: 'System complete & qualified',
+  9: 'Proven in operations',
+};
+export const INNOV_LEVELS = ['IN1', 'IN2', 'IN3'];
+export const KNOW_LEVELS = ['Class 7+', 'Class 7', 'Class 6', 'Class 5'];
+
 export function money(v: number): string {
   return `AED ${v.toFixed(1)}M`;
 }
 
 export const INITIAL_PROJECTS: Project[] = [
-  { id: 'P-101', name: 'Predictive Threat Modeling Engine', type: 'rd', status: 'Ongoing', stage: 'Development', budget: 4.2, dept: 'Digital Transformation', start: 2025, end: 2026, cls: '—', evaluator: 'Dr. Layla Ahmed', score: 88, partners: ['Khalifa University', 'Patsnap'], ip: ['AI-Powered Threat Detection Algorithm'], desc: 'Machine-learning engine forecasting incident hotspots from historical and environmental signals.' },
-  { id: 'P-102', name: 'Autonomous Patrol Drone Study', type: 'rd', status: 'Pending Approval', stage: 'Feasibility Study', budget: 1.8, dept: 'Operations', start: 2026, end: 2027, cls: '—', evaluator: null, score: null, partners: ['Interpol Innovation Lab'], ip: [], desc: 'Feasibility assessment of autonomous aerial patrol units across designated districts.' },
-  { id: 'P-103', name: 'Forensic DNA Rapid-Analysis Method', type: 'rd', status: 'Ongoing', stage: 'Development', budget: 3.6, dept: 'Forensics', start: 2024, end: 2026, cls: '—', evaluator: 'Dr. Hessa Al Blooshi', score: 91, partners: ['Khalifa University'], ip: ['Rapid DNA Sequencing Protocol'], desc: 'Reducing forensic DNA turnaround from 48 hours to under 6 hours.' },
-  { id: 'P-104', name: 'Behavioral Risk Prediction Study', type: 'rd', status: 'Delayed', stage: 'Approval', budget: 2.1, dept: 'Community Affairs', start: 2025, end: 2026, cls: '—', evaluator: 'Omar Al Zaabi', score: 64, partners: [], ip: [], desc: 'Longitudinal study on early behavioral indicators for community intervention programmes.' },
-  { id: 'P-105', name: 'Quantum-Resistant Encryption Pilot', type: 'rd', status: 'Completed', stage: 'Sandbox', budget: 2.9, dept: 'Digital Transformation', start: 2024, end: 2025, cls: '—', evaluator: 'Dr. Layla Ahmed', score: 95, partners: ['Smart Dubai Ventures'], ip: ['Post-Quantum Key Exchange Method'], desc: 'Pilot deployment of post-quantum cryptography across internal communication channels.' },
-  { id: 'P-106', name: 'Next-Gen Body Camera Optics', type: 'rd', status: 'Ongoing', stage: 'Idea', budget: 1.4, dept: 'Operations', start: 2026, end: 2027, cls: '—', evaluator: null, score: null, partners: [], ip: [], desc: 'Low-light optical research for next generation officer-worn recording devices.' },
+  { id: 'P-101', name: 'Predictive Threat Modeling Engine', type: 'rd', status: 'Ongoing', stage: 'Development', budget: 4.2, dept: 'Digital Transformation', start: 2025, end: 2026, cls: '—', trl: 5, evaluator: 'Dr. Layla Ahmed', score: 88, partners: ['Khalifa University', 'Patsnap'], ip: ['AI-Powered Threat Detection Algorithm'], desc: 'Machine-learning engine forecasting incident hotspots from historical and environmental signals.' },
+  { id: 'P-102', name: 'Autonomous Patrol Drone Study', type: 'rd', status: 'Pending Approval', stage: 'Feasibility Study', budget: 1.8, dept: 'Operations', start: 2026, end: 2027, cls: '—', trl: 2, evaluator: null, score: null, partners: ['Interpol Innovation Lab'], ip: [], desc: 'Feasibility assessment of autonomous aerial patrol units across designated districts.' },
+  { id: 'P-103', name: 'Forensic DNA Rapid-Analysis Method', type: 'rd', status: 'Ongoing', stage: 'Development', budget: 3.6, dept: 'Forensics', start: 2024, end: 2026, cls: '—', trl: 6, evaluator: 'Dr. Hessa Al Blooshi', score: 91, partners: ['Khalifa University'], ip: ['Rapid DNA Sequencing Protocol'], desc: 'Reducing forensic DNA turnaround from 48 hours to under 6 hours.' },
+  { id: 'P-104', name: 'Behavioral Risk Prediction Study', type: 'rd', status: 'Delayed', stage: 'Approval', budget: 2.1, dept: 'Community Affairs', start: 2025, end: 2026, cls: '—', trl: 3, evaluator: 'Omar Al Zaabi', score: 64, partners: [], ip: [], desc: 'Longitudinal study on early behavioral indicators for community intervention programmes.' },
+  { id: 'P-105', name: 'Quantum-Resistant Encryption Pilot', type: 'rd', status: 'Completed', stage: 'Sandbox', budget: 2.9, dept: 'Digital Transformation', start: 2024, end: 2025, cls: '—', trl: 8, evaluator: 'Dr. Layla Ahmed', score: 95, partners: ['Smart Dubai Ventures'], ip: ['Post-Quantum Key Exchange Method'], desc: 'Pilot deployment of post-quantum cryptography across internal communication channels.' },
+  { id: 'P-106', name: 'Next-Gen Body Camera Optics', type: 'rd', status: 'Ongoing', stage: 'Idea', budget: 1.4, dept: 'Operations', start: 2026, end: 2027, cls: '—', trl: 1, evaluator: null, score: null, partners: [], ip: [], desc: 'Low-light optical research for next generation officer-worn recording devices.' },
 
   { id: 'P-201', name: 'Smart Evidence Room (RFID)', type: 'innov', status: 'Ongoing', stage: 'Development', budget: 5.1, dept: 'Legal Affairs', start: 2025, end: 2026, cls: 'IN1', evaluator: 'Eng. Sara Al Neyadi', score: 94, partners: ['Dubai Future Foundation'], ip: ['Smart Evidence Chain-of-Custody Protocol'], desc: 'Fully digital evidence room with RFID tracking, eliminating manual custody logs.' },
   { id: 'P-202', name: 'AI Complaint Triage Engine', type: 'innov', status: 'Completed', stage: 'Sandbox', budget: 2.4, dept: 'Community Affairs', start: 2024, end: 2025, cls: 'IN1', evaluator: 'Fatima Al Mansoori', score: 89, partners: ['Smart Dubai Ventures'], ip: ['Automated Complaint Routing Method'], desc: 'NLP triage routing public complaints 40% faster than the manual process.' },

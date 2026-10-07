@@ -7,15 +7,17 @@ import {
 import { toast } from 'sonner';
 import { Badge } from '../../ui/badge';
 import { Progress } from '../../ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '../../ui/select';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '../../ui/dialog';
 import { cn } from '../../ui/utils';
 import {
   DEPARTMENTS, IP_REGISTER, STAGES, STAGE_SUBLABELS, STATUS_META, TYPES,
-  money, type ProjectStatus, type ProjectType,
+  INNOV_LEVELS, KNOW_LEVELS, TRL_LEVELS,
+  money, type Project, type ProjectStatus, type ProjectType,
 } from '../sandboxData';
 import type { SandboxPage, SandboxStore } from '../SandboxStore';
 import { NewProjectDialog } from '../NewProjectDialog';
+import { ReadinessOrbit } from './ReadinessOrbit';
 import heroDecoration from '../../../../assets/sandbox-hero-decoration.png';
 import hero from '../../../../assets/hero.jpeg';
 import dubaiPolice from '../../../../assets/Dubai-Police-Image.jpeg';
@@ -33,6 +35,17 @@ interface PageProps {
 const STATUS_LIST: ProjectStatus[] = ['Ongoing', 'Completed', 'Delayed', 'Pending Approval', 'Rejected'];
 const TIMELINE_YEARS = [2023, 2024, 2025, 2026, 2027];
 const AWARDS = [['Global', 3], ['Regional', 5], ['Federal', 4], ['Local', 2]] as const;
+
+// ── Readiness level filter (TRL for R&D, IN class for Innovation, tier for Knowledge) ──
+const LEVEL_GROUPS: Array<{ type: ProjectType; options: Array<{ value: string; label: string }> }> = [
+  { type: 'rd', options: [...TRL_LEVELS].reverse().map(n => ({ value: `TRL ${n}`, label: `TRL ${n}` })) },
+  { type: 'innov', options: INNOV_LEVELS.map(c => ({ value: c, label: c })) },
+  { type: 'know', options: [...KNOW_LEVELS].reverse().map(c => ({ value: c, label: c })) },
+];
+const levelType = (level: string): ProjectType =>
+  level.startsWith('TRL') ? 'rd' : INNOV_LEVELS.includes(level) ? 'innov' : 'know';
+const matchesLevel = (p: Project, level: string) =>
+  level.startsWith('TRL') ? p.type === 'rd' && `TRL ${p.trl}` === level : p.cls === level;
 
 const GALLERY = [
   {hero: dubaiPolice, title: 'Smart Evidence Room, Precinct 4', tag: 'Sandbox Pilot', pin: 'IN1', from: '#00a869', to: '#005844', desc: 'The first fully digital evidence room, where every item is RFID-tagged and custody transfers are logged automatically. Manual custody errors dropped 71% in the first eight weeks of the sandbox pilot.' },
@@ -61,14 +74,34 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
   const [typeFilter, setTypeFilter] = useState<'all' | ProjectType>('all');
   const [deptFilter, setDeptFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [yearFilter, setYearFilter] = useState<string>('all');
+  const [levelFilter, setLevelFilter] = useState<string>('all');
   const [newOpen, setNewOpen] = useState(false);
+
+  const years = useMemo(() => {
+    const min = Math.min(...projects.map(p => p.start));
+    const max = Math.max(...projects.map(p => p.end));
+    return Array.from({ length: max - min + 1 }, (_, i) => min + i);
+  }, [projects]);
+
+  // Picking a level also narrows the type; switching type clears an incompatible level.
+  const changeType = (t: 'all' | ProjectType) => {
+    setTypeFilter(t);
+    if (t !== 'all' && levelFilter !== 'all' && levelType(levelFilter) !== t) setLevelFilter('all');
+  };
+  const changeLevel = (level: string) => {
+    setLevelFilter(level);
+    if (level !== 'all') setTypeFilter(levelType(level));
+  };
 
   const filtered = useMemo(() => projects.filter(p =>
     (typeFilter === 'all' || p.type === typeFilter) &&
     (deptFilter === 'all' || p.dept === deptFilter) &&
     (statusFilter === 'all' || p.status === statusFilter) &&
+    (yearFilter === 'all' || (p.start <= +yearFilter && p.end >= +yearFilter)) &&
+    (levelFilter === 'all' || matchesLevel(p, levelFilter)) &&
     (!search || (p.name + p.dept + p.id + p.status).toLowerCase().includes(search.toLowerCase()))
-  ), [projects, typeFilter, deptFilter, statusFilter, search]);
+  ), [projects, typeFilter, deptFilter, statusFilter, yearFilter, levelFilter, search]);
 
   const totalBudget = filtered.reduce((s, p) => s + p.budget, 0);
   const depts = new Set(filtered.map(p => p.dept));
@@ -201,7 +234,7 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
             {(['all', 'rd', 'innov', 'know'] as const).map(t => (
               <button
                 key={t}
-                onClick={() => setTypeFilter(t)}
+                onClick={() => changeType(t)}
                 className={cn(
                   "px-3.5 py-1.5 rounded-lg text-sm   transition-colors",
                   typeFilter === t ? 'bg-white text-[#005844]' : 'text-white/85 hover:text-white'
@@ -227,6 +260,29 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
             <SelectContent>
               <SelectItem value="all">All Statuses</SelectItem>
               {STATUS_LIST.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={yearFilter} onValueChange={setYearFilter}>
+            <SelectTrigger className="h-8 w-auto text-sm bg-white/15 border-white/30 text-white [&>svg]:text-white">
+              <SelectValue placeholder="All Years" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Years</SelectItem>
+              {years.map(y => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={levelFilter} onValueChange={changeLevel}>
+            <SelectTrigger className="h-8 w-auto text-sm bg-white/15 border-white/30 text-white [&>svg]:text-white">
+              <SelectValue placeholder="All Levels" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Levels</SelectItem>
+              {LEVEL_GROUPS.filter(g => typeFilter === 'all' || g.type === typeFilter).map(g => (
+                <SelectGroup key={g.type}>
+                  <SelectLabel>{TYPES[g.type].full}</SelectLabel>
+                  {g.options.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                </SelectGroup>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -259,6 +315,9 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
           ))}
         </div>
       </div>
+
+      {/* ── Project Readiness Map (TRL / IN / Class) ─────────────────────── */}
+      <ReadinessOrbit projects={filtered} typeFilter={typeFilter} onOpenProject={store.openProject} />
 
       {/* ── Status distribution + Budget by type ────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_.75fr] gap-4">

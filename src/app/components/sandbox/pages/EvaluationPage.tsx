@@ -6,6 +6,8 @@ import { Slider } from '../../ui/slider';
 import { cn } from '../../ui/utils';
 import { CRITERIA, TYPES, scoreVerdict } from '../sandboxData';
 import type { SandboxStore } from '../SandboxStore';
+import { useLanguage } from '../../../i18n/LanguageContext';
+import { useSandboxTr } from '../sandboxI18n';
 import heroDecoration from '../../../../assets/sandbox-hero-decoration.png';
 
 interface PageProps { store: SandboxStore; }
@@ -14,11 +16,13 @@ const EVALUATORS = ['Dr. Layla Ahmed', 'Eng. Sara Al Neyadi', 'Omar Al Zaabi', '
 const OFFSETS = [6, -4, 2, -8, 4];
 
 export function EvaluationPage({ store }: PageProps) {
+  const { tr } = useLanguage();
+  const ts = useSandboxTr();
   const { projects, search } = store;
   const [selId, setSelId] = useState<string>(projects[0]?.id ?? '');
   const [scores, setScores] = useState<Record<string, number>>({});
 
-  const filtered = useMemo(() => projects.filter(p => !search || p.name.toLowerCase().includes(search.toLowerCase())), [projects, search]);
+  const filtered = useMemo(() => projects.filter(p => !search || p.name.toLowerCase().includes(search.toLowerCase()) || ts(p.name).includes(search)), [projects, search, ts]);
   const selected = projects.find(p => p.id === selId) ?? projects[0];
 
   const evaluated = projects.filter(p => p.score !== null);
@@ -43,32 +47,32 @@ export function EvaluationPage({ store }: PageProps) {
   const save = () => {
     store.setProjects(prev => prev.map(p => p.id === selected.id ? { ...p, score: total, evaluator: p.evaluator ?? 'Mohammed Hassan' } : p));
     store.addAudit({ title: 'Evaluation submitted', detail: `${selected.name} scored ${total}/100 against ${TYPES[selected.type].full} criteria by ${selected.evaluator ?? 'Mohammed Hassan'}`, kind: 'info' });
-    toast.success(`Evaluation saved — ${selected.name} scored ${total}/100`);
+    toast.success(tr(`Evaluation saved — ${selected.name} scored ${total}/100`, `تم حفظ التقييم — حصل ${ts(selected.name)} على ${total}/100`));
   };
 
   const assign = () => {
     const name = EVALUATORS[Math.floor(Math.random() * EVALUATORS.length)];
     store.setProjects(prev => prev.map(p => p.id === selected.id ? { ...p, evaluator: name } : p));
     store.addAudit({ title: 'Evaluator assigned', detail: `${selected.name} assigned to ${name} for assessment`, kind: 'violet' });
-    toast.success(`Assigned to ${name}`);
+    toast.success(tr(`Assigned to ${name}`, `تم الإسناد إلى ${ts(name)}`));
   };
 
   return (
     <div className="p-5  mx-auto space-y-5">
       <div className="rounded-2xl bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869] p-7 text-white relative overflow-hidden">
-        <img src={heroDecoration} alt="" className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none" />
+        <img src={heroDecoration} alt="" className="absolute -top-16 -end-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none" />
         <div className="relative z-10 flex gap-3.5">
           <div className="h-12 w-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center flex-shrink-0">
             <CheckSquare className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl   tracking-tight">Project Evaluation</h1>
-            <p className="text-white/80 text-sm mt-1 max-w-md">Every project scored against criteria specific to its type — R&amp;D, Innovation or Knowledge.</p>
+            <h1 className="text-2xl   tracking-tight">{tr('Project Evaluation', 'تقييم المشاريع')}</h1>
+            <p className="text-white/80 text-sm mt-1 max-w-md">{tr('Every project scored against criteria specific to its type — R&D, Innovation or Knowledge.', 'يُقيَّم كل مشروع وفق معايير خاصة بنوعه — البحث والتطوير أو الابتكار أو المعرفة.')}</p>
           </div>
         </div>
         <div className="relative z-10 flex flex-wrap gap-6 mt-6">
-          {[['Evaluated', evaluated.length], ['Pending', pending.length], ['Average Score', `${avgScore}/100`]].map(([l, v]) => (
-            <div key={l as string} className="border-l-2 border-white/30 pl-3">
+          {[[tr('Evaluated', 'تم تقييمها'), evaluated.length], [tr('Pending', 'معلّقة'), pending.length], [tr('Average Score', 'متوسط الدرجة'), `${avgScore}/100`]].map(([l, v]) => (
+            <div key={l as string} className="border-s-2 border-white/30 ps-3">
               <p className="text-xl   leading-none">{v}</p>
               <p className="text-sm uppercase tracking-wide text-white/75 mt-1 font-medium">{l}</p>
             </div>
@@ -79,16 +83,16 @@ export function EvaluationPage({ store }: PageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 items-start">
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <div className="px-4 py-3.5 border-b border-border">
-            <h3 className="text-sm  ">Evaluation Register</h3>
-            <p className="text-sm text-muted-foreground mt-0.5">Select a project to open its scoring sheet</p>
+            <h3 className="text-sm  ">{tr('Evaluation Register', 'سجل التقييم')}</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">{tr('Select a project to open its scoring sheet', 'اختر مشروعاً لفتح ورقة التقييم الخاصة به')}</p>
           </div>
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border text-left text-sm uppercase tracking-wide text-muted-foreground bg-muted/30">
-                <th className="px-4 py-2.5 font-semibold">Project</th>
-                <th className="px-4 py-2.5 font-semibold">Type</th>
-                <th className="px-4 py-2.5 font-semibold">Evaluator</th>
-                <th className="px-4 py-2.5 font-semibold">Score</th>
+              <tr className="border-b border-border text-start text-sm uppercase tracking-wide text-muted-foreground bg-muted/30">
+                <th className="px-4 py-2.5 font-semibold">{tr('Project', 'المشروع')}</th>
+                <th className="px-4 py-2.5 font-semibold">{tr('Type', 'النوع')}</th>
+                <th className="px-4 py-2.5 font-semibold">{tr('Evaluator', 'المقيّم')}</th>
+                <th className="px-4 py-2.5 font-semibold">{tr('Score', 'الدرجة')}</th>
               </tr>
             </thead>
             <tbody>
@@ -98,14 +102,14 @@ export function EvaluationPage({ store }: PageProps) {
                     <div className="flex items-center gap-2.5">
                       {/* <span className="h-7 w-7 rounded-lg flex-shrink-0" style={{ backgroundImage: `linear-gradient(135deg, ${TYPES[p.type].gradientFrom}, ${TYPES[p.type].gradientTo})` }} /> */}
                       <div className="min-w-0">
-                        <p className="  truncate">{p.name}</p>
-                        <p className="text-sm text-muted-foreground">{p.dept}</p>
+                        <p className="  truncate">{ts(p.name)}</p>
+                        <p className="text-sm text-muted-foreground">{ts(p.dept)}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3"><Badge className={`${TYPES[p.type].badgeClass} border-0 text-sm`}>{TYPES[p.type].label}</Badge></td>
-                  <td className="px-4 py-3 text-sm">{p.evaluator ?? <span className="text-amber-600 font-medium">Unassigned</span>}</td>
-                  <td className="px-4 py-3 text-sm">{p.score ? <span className=" ">{p.score}</span> : <Badge className="bg-blue-50 text-blue-700 border-0 text-sm">Pending</Badge>}</td>
+                  <td className="px-4 py-3"><Badge className={`${TYPES[p.type].badgeClass} border-0 text-sm`}>{ts(TYPES[p.type].label)}</Badge></td>
+                  <td className="px-4 py-3 text-sm">{p.evaluator ? ts(p.evaluator) : <span className="text-amber-600 font-medium">{tr('Unassigned', 'غير مُسند')}</span>}</td>
+                  <td className="px-4 py-3 text-sm">{p.score ? <span className=" ">{p.score}</span> : <Badge className="bg-blue-50 text-blue-700 border-0 text-sm">{tr('Pending', 'معلّق')}</Badge>}</td>
                 </tr>
               ))}
             </tbody>
@@ -114,15 +118,15 @@ export function EvaluationPage({ store }: PageProps) {
 
         <div className="bg-card border border-border rounded-xl p-4 lg:sticky lg:top-4">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-sm  ">Scoring Sheet</h3>
-            <Badge className={`${TYPES[selected.type].badgeClass} border-0 text-sm`}>{TYPES[selected.type].label}</Badge>
+            <h3 className="text-sm  ">{tr('Scoring Sheet', 'ورقة التقييم')}</h3>
+            <Badge className={`${TYPES[selected.type].badgeClass} border-0 text-sm`}>{ts(TYPES[selected.type].label)}</Badge>
           </div>
-          <p className="text-sm text-muted-foreground mb-3">{TYPES[selected.type].full} criteria</p>
+          <p className="text-sm text-muted-foreground mb-3">{tr(`${TYPES[selected.type].full} criteria`, `معايير ${ts(TYPES[selected.type].full)}`)}</p>
           <div className="flex items-center gap-2.5 pb-3.5 border-b border-border mb-4">
             {/* <span className="h-9 w-9 rounded-lg flex-shrink-0" style={{ backgroundImage: `linear-gradient(135deg, ${TYPES[selected.type].gradientFrom}, ${TYPES[selected.type].gradientTo})` }} /> */}
             <div className="min-w-0">
-              <p className="text-sm  truncate">{selected.name}</p>
-              <p className="text-sm text-muted-foreground">{selected.dept} · {selected.evaluator ?? 'No evaluator assigned'}</p>
+              <p className="text-sm  truncate">{ts(selected.name)}</p>
+              <p className="text-sm text-muted-foreground">{ts(selected.dept)} · {selected.evaluator ? ts(selected.evaluator) : tr('No evaluator assigned', 'لم يُسند مقيّم')}</p>
             </div>
           </div>
 
@@ -131,7 +135,7 @@ export function EvaluationPage({ store }: PageProps) {
               <div key={label}>
                 <div className="flex items-center justify-between text-sm mb-1.5">
                   <span className="font-medium">
-                    {label} <span className="text-sm text-muted-foreground bg-muted rounded-full px-1.5 py-0.5 ml-1">{weight}%</span>
+                    {ts(label)} <span className="text-sm text-muted-foreground bg-muted rounded-full px-1.5 py-0.5 ms-1">{weight}%</span>
                   </span>
                   <span className="  text-[#008755]">{scores[label] ?? 0}</span>
                 </div>
@@ -148,18 +152,18 @@ export function EvaluationPage({ store }: PageProps) {
 
           <div className="rounded-xl bg-gradient-to-br from-[#005844] to-[#008755] text-white p-4 flex items-center justify-between my-4">
             <div>
-              <p className="text-sm uppercase tracking-wide text-white/80 font-semibold">Weighted Total</p>
+              <p className="text-sm uppercase tracking-wide text-white/80 font-semibold">{tr('Weighted Total', 'المجموع المرجّح')}</p>
               <p className="text-2xl   leading-none mt-0.5">{total}</p>
             </div>
-            <span className="text-sm font-bold px-2.5 py-1 rounded-full bg-white/20">{verdict}</span>
+            <span className="text-sm font-bold px-2.5 py-1 rounded-full bg-white/20">{ts(verdict)}</span>
           </div>
 
           <div className="flex gap-2">
             <button onClick={save} className="flex-1 rounded-lg bg-[#008755] hover:bg-[#005844] text-white text-sm   py-2.5 transition-colors">
-              Save Evaluation
+              {tr('Save Evaluation', 'حفظ التقييم')}
             </button>
             <button onClick={assign} className="rounded-lg border border-border text-sm   px-4 py-2.5 hover:bg-muted/40 transition-colors">
-              Assign
+              {tr('Assign', 'إسناد')}
             </button>
           </div>
         </div>

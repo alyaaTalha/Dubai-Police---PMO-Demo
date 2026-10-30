@@ -9,6 +9,7 @@ import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Textarea } from '../../ui/textarea';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -19,6 +20,10 @@ interface User {
   xp: number;
   initials: string;
   chip: string;
+  nameAr?: string;
+  roleAr?: string;
+  subtitleAr?: string;
+  chipAr?: string;
 }
 interface PageProps {
   ideaId: string;
@@ -236,6 +241,7 @@ interface Comment {
   initials: string;
   time: string;
   text: string;
+  authorAr?: string;
 }
 
 const MOCK_COMMENTS: Record<string, Comment[]> = {
@@ -303,6 +309,173 @@ const MOCK_ATTACHMENTS = [
   { name: 'Vendor_Comparison.xlsx', size: '480 KB', type: 'xlsx' },
 ];
 
+// ── Arabic display translations (keyed by English value; render-time only) ──────
+const AR: Record<string, string> = {
+  // Statuses
+  'Implemented': 'منفذة',
+  'Approved': 'معتمدة',
+  'Under Review': 'قيد المراجعة',
+  'Pending Initial Review': 'بانتظار المراجعة الأولية',
+  'Needs More Info': 'تحتاج إلى مزيد من المعلومات',
+  'Draft': 'مسودة',
+  'Grievance Filed': 'تم تقديم تظلم',
+  // Timeline steps
+  'Submitted': 'تم التقديم',
+  'Initial Review': 'المراجعة الأولية',
+  'Coordinator Review': 'مراجعة المنسق',
+  'Director Approval': 'اعتماد المدير',
+  'Implementation': 'التنفيذ',
+  // Titles
+  'AI Queue Management System': 'نظام إدارة الطوابير بالذكاء الاصطناعي',
+  'Predictive Patrol Routing': 'التوجيه التنبؤي للدوريات',
+  'Smart Evidence Digitization': 'الرقمنة الذكية للأدلة',
+  'Employee Wellness App': 'تطبيق عافية الموظفين',
+  // Departments / categories
+  'Digital Transformation': 'التحول الرقمي',
+  'Operations': 'العمليات',
+  'Legal Affairs': 'الشؤون القانونية',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Technology': 'التكنولوجيا',
+  'Legal & Compliance': 'الشؤون القانونية والامتثال',
+  'Human Resources': 'الموارد البشرية',
+  // People / authors
+  'Ahmed Al Mansouri': 'أحمد المنصوري',
+  'Sara Al Ketbi': 'سارة الكتبي',
+  'Fatima Al Blooshi': 'فاطمة البلوشي',
+  'Khalid Al Nuaimi': 'خالد النعيمي',
+  'Coordinator — Innovation Office': 'المنسق — مكتب الابتكار',
+  'Director — Operations': 'المدير — العمليات',
+  'Legal Affairs Coordinator': 'منسق الشؤون القانونية',
+  'Just now': 'الآن',
+  // Alignment pillars
+  'Digital Policing': 'العمل الشرطي الرقمي',
+  'Citizen Experience': 'تجربة المتعاملين',
+  'Operational Excellence': 'التميز التشغيلي',
+  'Predictive Policing': 'العمل الشرطي التنبؤي',
+  'Smart Mobility': 'التنقل الذكي',
+  'Legal Excellence': 'التميز القانوني',
+  'Data Integrity': 'سلامة البيانات',
+  'People First': 'الإنسان أولاً',
+  'HR Excellence': 'تميز الموارد البشرية',
+  'Wellbeing & Safety': 'العافية والسلامة',
+  // Impact stats
+  'Stations Live': 'المراكز العاملة',
+  'Officers Trained': 'الضباط المدربون',
+  'Time Saved': 'الوقت الموفَّر',
+  'Error Reduction': 'خفض الأخطاء',
+  '~112 min/case': '~112 دقيقة/قضية',
+  // qi1
+  'An AI-driven system to reduce wait times at Dubai Police service centers using predictive analytics and real-time queue optimisation.':
+    'نظام قائم على الذكاء الاصطناعي لتقليل أوقات الانتظار في مراكز خدمة شرطة دبي باستخدام التحليلات التنبؤية والتحسين اللحظي للطوابير.',
+  'The AI Queue Management System leverages machine learning to predict peak service periods, dynamically allocate staff resources, and provide citizens with accurate estimated wait times via a mobile app. The system integrates with existing CRM platforms and provides live dashboard visibility to station managers.':
+    'يوظّف نظام إدارة الطوابير بالذكاء الاصطناعي تقنيات التعلم الآلي للتنبؤ بفترات ذروة الخدمة، وتوزيع الموارد البشرية بشكل ديناميكي، وتزويد المتعاملين بأوقات انتظار تقديرية دقيقة عبر تطبيق الهاتف. ويتكامل النظام مع منصات إدارة علاقات المتعاملين الحالية، ويوفر لمديري المراكز لوحة معلومات لحظية.',
+  'Dubai Police service centers experience significant congestion during peak hours, leading to long wait times, reduced citizen satisfaction, and inefficient staff allocation. Manual queue management is reactive rather than predictive, resulting in avoidable delays.':
+    'تشهد مراكز خدمة شرطة دبي ازدحاماً كبيراً خلال ساعات الذروة، مما يؤدي إلى طول أوقات الانتظار وانخفاض رضا المتعاملين وعدم كفاءة توزيع الموظفين. كما أن الإدارة اليدوية للطوابير تفاعلية وليست تنبؤية، مما ينتج عنه تأخير يمكن تجنبه.',
+  'Deploy a cloud-based AI queue management platform with IoT sensors at service counters, a citizen-facing mobile check-in app, and a real-time analytics dashboard. The system predicts footfall 30 minutes in advance and auto-schedules staff deployment accordingly.':
+    'نشر منصة سحابية لإدارة الطوابير بالذكاء الاصطناعي مزودة بمستشعرات إنترنت الأشياء عند نوافذ الخدمة، وتطبيق للمتعاملين لتسجيل الحضور عبر الهاتف، ولوحة تحليلات لحظية. يتنبأ النظام بأعداد الزوار قبل 30 دقيقة ويجدول توزيع الموظفين تلقائياً وفقاً لذلك.',
+  'Citizens visiting service centers, frontline service officers, station operations managers, and the Digital Transformation directorate.':
+    'المتعاملون المراجعون لمراكز الخدمة، وموظفو الخدمة في الخطوط الأمامية، ومديرو عمليات المراكز، والإدارة العامة للتحول الرقمي.',
+  'Reduce average wait time by 40%, increase citizen satisfaction index from 3.8 to 4.5/5, reduce peak-hour staffing overtime costs by 25%, and provide actionable footfall data for long-term capacity planning.':
+    'خفض متوسط وقت الانتظار بنسبة 40%، ورفع مؤشر رضا المتعاملين من 3.8 إلى 4.5/5، وخفض تكاليف العمل الإضافي في ساعات الذروة بنسبة 25%، وتوفير بيانات قابلة للتنفيذ حول أعداد الزوار لتخطيط الطاقة الاستيعابية على المدى الطويل.',
+  'This idea strongly aligns with the Dubai Police Smart Policing 2030 roadmap. High feasibility given existing digital infrastructure. Recommend fast-tracking to coordinator review.':
+    'تتوافق هذه الفكرة بقوة مع خارطة طريق العمل الشرطي الذكي 2030 لشرطة دبي. جدواها مرتفعة في ظل البنية التحتية الرقمية القائمة. يُوصى بتسريع إحالتها إلى مراجعة المنسق.',
+  'High — affects 2,400+ citizens/month across 5 service centers.':
+    'مرتفع — يشمل أكثر من 2,400 متعامل شهرياً في 5 مراكز خدمة.',
+  'The idea shows strong merit. Currently assessing vendor landscape and integration feasibility with the existing CRM. Estimated review completion: Aug 20, 2025.':
+    'تُظهر الفكرة جدارة واضحة. يجري حالياً تقييم الموردين المتاحين وجدوى التكامل مع نظام إدارة علاقات المتعاملين الحالي. الموعد المتوقع لاستكمال المراجعة: 20 أغسطس 2025.',
+};
+const AR_MORE: Record<string, string> = {
+  // qi2
+  'Data-driven route optimisation for patrol units based on real-time traffic, incident history, and risk heatmaps.':
+    'تحسين مسارات الدوريات استناداً إلى البيانات، بالاعتماد على حركة المرور اللحظية وسجل الحوادث والخرائط الحرارية للمخاطر.',
+  'Predictive Patrol Routing uses historical incident data, live traffic feeds, and machine-learning-based crime pattern analysis to generate optimised patrol routes. Officers receive route suggestions via in-vehicle terminals, updated every 15 minutes. Dispatch coordinators gain a unified situational awareness map.':
+    'يستخدم التوجيه التنبؤي للدوريات بيانات الحوادث التاريخية وبيانات حركة المرور المباشرة وتحليل أنماط الجريمة بالتعلم الآلي لإنشاء مسارات دوريات محسّنة. يتلقى الضباط اقتراحات المسارات عبر الأجهزة المثبتة في المركبات، وتُحدَّث كل 15 دقيقة، ويحصل منسقو التوجيه على خريطة موحدة للوعي الميداني.',
+  'Current patrol routes are static and based on fixed zones, ignoring real-time incident patterns and traffic conditions. This leads to delayed response times and uneven coverage of high-risk areas.':
+    'مسارات الدوريات الحالية ثابتة وتعتمد على مناطق محددة، دون مراعاة أنماط الحوادث اللحظية وحالة المرور، مما يؤدي إلى تأخر زمن الاستجابة وتفاوت تغطية المناطق عالية الخطورة.',
+  'Integrate a predictive routing engine with the existing CAD (Computer-Aided Dispatch) system. Use 3 years of incident data, live traffic APIs, and risk scoring models to generate dynamic patrol recommendations updated in near-real-time.':
+    'دمج محرك توجيه تنبؤي مع نظام التوجيه بمساعدة الحاسوب (CAD) القائم، واستخدام بيانات الحوادث لثلاث سنوات وواجهات برمجة بيانات المرور المباشرة ونماذج تقييم المخاطر لإنشاء توصيات ديناميكية للدوريات تُحدَّث بشكل شبه لحظي.',
+  'Patrol officers, dispatch coordinators, Operations directorate leadership, and the communities in high-risk areas.':
+    'ضباط الدوريات، ومنسقو التوجيه، وقيادة الإدارة العامة للعمليات، والمجتمعات في المناطق عالية الخطورة.',
+  'Improve emergency response time by 22%, increase patrol coverage of high-risk zones by 35%, reduce fuel costs through optimised routes, and enhance officer situational awareness.':
+    'تحسين زمن الاستجابة للطوارئ بنسبة 22%، وزيادة تغطية الدوريات للمناطق عالية الخطورة بنسبة 35%، وخفض تكاليف الوقود من خلال المسارات المحسّنة، وتعزيز الوعي الميداني للضباط.',
+  'Exceptional strategic fit. This idea directly supports the Dubai Police Vision 2030 goal of predictive law enforcement. Recommend immediate implementation planning.':
+    'توافق استراتيجي استثنائي. تدعم هذه الفكرة مباشرة هدف رؤية شرطة دبي 2030 في إنفاذ القانون التنبؤي. يُوصى بالبدء فوراً في تخطيط التنفيذ.',
+  'Very High — affects all patrol operations across Dubai.':
+    'مرتفع جداً — يشمل جميع عمليات الدوريات في دبي.',
+  'Approved by the Director on Jul 30. The IT department is coordinating with the vendor for a phased rollout starting September 2025. Pilot zone: Al Barsha.':
+    'اعتمدها المدير في 30 يوليو. تنسق إدارة تقنية المعلومات مع المورد لتنفيذ تدريجي يبدأ في سبتمبر 2025. المنطقة التجريبية: البرشاء.',
+  // qi3
+  'End-to-end paperless evidence management with digital signatures and chain-of-custody tracking.':
+    'إدارة متكاملة للأدلة دون استخدام الورق مع التوقيعات الرقمية وتتبع سلسلة الحيازة.',
+  'Smart Evidence Digitization replaces paper-based evidence logs with a secure digital platform featuring QR-coded evidence tags, tamper-proof audit trails, biometric access controls, and automated chain-of-custody reporting. Integrated with the court e-filing system for seamless case progression.':
+    'تستبدل الرقمنة الذكية للأدلة السجلات الورقية بمنصة رقمية آمنة تتضمن ملصقات أدلة برموز QR، وسجلات تدقيق غير قابلة للتلاعب، وضوابط وصول بالقياسات الحيوية، وتقارير آلية لسلسلة الحيازة، مع تكاملها مع نظام الإيداع الإلكتروني للمحاكم لتسيير القضايا بسلاسة.',
+  'Evidence management at Dubai Police relies heavily on paper logs and manual processes, creating risk of documentation errors, chain-of-custody gaps, and delays in court proceedings. Physical storage constraints further compound the problem.':
+    'تعتمد إدارة الأدلة في شرطة دبي بشكل كبير على السجلات الورقية والإجراءات اليدوية، مما يزيد مخاطر أخطاء التوثيق والثغرات في سلسلة الحيازة والتأخير في إجراءات المحاكم، وتزيد قيود التخزين المادي من حدة المشكلة.',
+  'Deploy an evidence management information system (EMIS) with QR tagging, blockchain audit trail, and biometric access. Digitise all incoming evidence intake forms and integrate with the Attorney General e-filing portal for direct court submissions.':
+    'نشر نظام معلومات لإدارة الأدلة (EMIS) يتضمن الوسم برموز QR وسجل تدقيق بتقنية البلوك تشين والوصول بالقياسات الحيوية، ورقمنة جميع نماذج استلام الأدلة، والتكامل مع بوابة الإيداع الإلكتروني للنيابة العامة لتقديم الملفات إلى المحاكم مباشرة.',
+  'Evidence custodians, investigating officers, prosecutors, Legal Affairs directorate, and the judiciary.':
+    'أمناء الأدلة، وضباط التحقيق، وأعضاء النيابة العامة، والإدارة العامة للشؤون القانونية، والجهاز القضائي.',
+  'Eliminate paper evidence logs, reduce chain-of-custody errors by 95%, cut evidence retrieval time from 2 hours to 8 minutes, and accelerate court file submissions by 3 business days on average.':
+    'إلغاء السجلات الورقية للأدلة، وخفض أخطاء سلسلة الحيازة بنسبة 95%، وتقليص وقت استرجاع الأدلة من ساعتين إلى 8 دقائق، وتسريع تقديم ملفات المحاكم بمعدل 3 أيام عمل.',
+  'Outstanding innovation. Full alignment with UAE Paperless Government initiative and Dubai Police Digital Transformation strategy. Highest priority for implementation.':
+    'ابتكار متميز. توافق كامل مع مبادرة الحكومة اللاورقية في دولة الإمارات واستراتيجية التحول الرقمي لشرطة دبي. أولوية قصوى للتنفيذ.',
+  'Transformational — affects all criminal investigations and court proceedings.':
+    'تحويلي — يشمل جميع التحقيقات الجنائية وإجراءات المحاكم.',
+  'Fully implemented as of Jul 20, 2025. All 6 evidence stores across Dubai Police stations are now live on the new platform. Training completed for 340 officers.':
+    'تم التنفيذ بالكامل اعتباراً من 20 يوليو 2025. جميع مخازن الأدلة الستة في مراكز شرطة دبي تعمل الآن على المنصة الجديدة، واكتمل تدريب 340 ضابطاً.',
+  // qi4
+  'A mobile app to support officer mental health with wellbeing check-ins, guided exercises, and confidential resource access.':
+    'تطبيق هاتفي لدعم الصحة النفسية للضباط من خلال متابعات العافية والتمارين الموجّهة والوصول السري إلى موارد الدعم.',
+  'The Employee Wellness App provides Dubai Police officers with daily mood check-ins, guided mindfulness sessions, access to confidential counselling resources, and an anonymous peer support network. A wellness dashboard for HR managers tracks aggregate (non-identifiable) trends to inform wellbeing programmes.':
+    'يوفر تطبيق عافية الموظفين لضباط شرطة دبي متابعة يومية للحالة المزاجية، وجلسات موجّهة لليقظة الذهنية، ووصولاً إلى موارد الاستشارة السرية، وشبكة دعم مجهولة الهوية بين الزملاء. كما تتيح لوحة معلومات العافية لمديري الموارد البشرية تتبع الاتجاهات الإجمالية (غير المحددة للهوية) لتوجيه برامج العافية.',
+  'Officer mental health and burnout are growing concerns in high-pressure law enforcement roles. Current support mechanisms are reactive and require officers to self-initiate contact with HR, creating barriers due to stigma. There is no proactive digital wellness channel.':
+    'تُعد الصحة النفسية للضباط والإرهاق الوظيفي من المخاوف المتزايدة في أدوار إنفاذ القانون عالية الضغط. آليات الدعم الحالية تفاعلية وتتطلب من الضباط المبادرة بالتواصل مع الموارد البشرية، مما يخلق حواجز بسبب الوصمة الاجتماعية، ولا توجد قناة رقمية استباقية للعافية.',
+  'Build a native mobile app (iOS/Android) with daily wellness nudges, anonymous check-in surveys, curated mental health content, and a directory of confidential support services. HR managers access an aggregate dashboard with no individual-level data to protect privacy.':
+    'بناء تطبيق هاتفي أصلي (iOS/Android) يتضمن تنبيهات يومية للعافية، واستبيانات متابعة مجهولة الهوية، ومحتوى منتقى عن الصحة النفسية، ودليلاً لخدمات الدعم السرية. ويطّلع مديرو الموارد البشرية على لوحة معلومات إجمالية دون بيانات فردية حفاظاً على الخصوصية.',
+  'All Dubai Police officers and civilian staff, HR & Training directorate, and employee wellbeing coordinators.':
+    'جميع ضباط شرطة دبي وموظفيها المدنيين، والإدارة العامة للموارد البشرية والتدريب، ومنسقو عافية الموظفين.',
+  'Improve officer wellbeing index by 30%, reduce stress-related sick leave by 20%, increase voluntary engagement with HR wellness programmes by 50%, and establish a benchmark for law enforcement wellness in the region.':
+    'تحسين مؤشر عافية الضباط بنسبة 30%، وخفض الإجازات المرضية المرتبطة بالضغط بنسبة 20%، وزيادة المشاركة الطوعية في برامج العافية بنسبة 50%، ووضع معيار مرجعي لعافية العاملين في إنفاذ القانون على مستوى المنطقة.',
+  'Strong alignment with Dubai Police People Strategy 2025–2030. Recommend prioritising as part of the Smart HR initiative. Consider a pilot with one directorate before full rollout.':
+    'توافق قوي مع استراتيجية الموارد البشرية لشرطة دبي 2025–2030. يُوصى بإعطائها الأولوية ضمن مبادرة الموارد البشرية الذكية، والنظر في تجربتها في إدارة عامة واحدة قبل التعميم الكامل.',
+  'High — affects all 18,000+ Dubai Police employees.':
+    'مرتفع — يشمل جميع موظفي شرطة دبي البالغ عددهم أكثر من 18,000 موظف.',
+  // Comments
+  'Excellent submission. The use of predictive analytics is well thought out. Can you provide additional details on the vendor shortlist you have in mind?':
+    'مقترح ممتاز، واستخدام التحليلات التنبؤية مدروس جيداً. هل يمكنك تقديم مزيد من التفاصيل حول القائمة المختصرة للموردين التي تفكر فيها؟',
+  'Thank you! I have attached a preliminary vendor comparison in the attachments above. Happy to schedule a call to walk through the options.':
+    'شكراً لك! أرفقت مقارنة أولية بين الموردين ضمن المرفقات أعلاه، ويسعدني تحديد موعد اتصال لاستعراض الخيارات.',
+  'This is exactly the kind of data-driven thinking we need. Approved with priority. Coordinate with IT for the September pilot.':
+    'هذا بالضبط نوع التفكير القائم على البيانات الذي نحتاجه. تم الاعتماد بأولوية. يرجى التنسيق مع تقنية المعلومات لتجربة سبتمبر.',
+  'Thank you for the approval. I will liaise with IT and prepare the pilot scope document by end of this week.':
+    'شكراً على الاعتماد. سأنسق مع تقنية المعلومات وأُعدّ وثيقة نطاق التجربة بنهاية هذا الأسبوع.',
+  'This is a landmark project for Legal Affairs. The AG e-filing integration was particularly impressive. Strongly recommend for immediate approval.':
+    'هذا مشروع بارز للشؤون القانونية، وكان التكامل مع نظام الإيداع الإلكتروني للنيابة العامة مثيراً للإعجاب بشكل خاص. أوصي بشدة باعتماده فوراً.',
+  'System is now live across all stations. Extremely proud of the team. Training feedback has been very positive — officers adapted quickly.':
+    'النظام يعمل الآن في جميع المراكز. فخورة جداً بالفريق. وكانت ملاحظات التدريب إيجابية للغاية — فقد تكيّف الضباط بسرعة.',
+  'Received and queued for initial review. Expect first feedback within 5 business days.':
+    'تم الاستلام والإدراج في قائمة المراجعة الأولية. يُتوقع وصول أول ملاحظات خلال 5 أيام عمل.',
+};
+Object.assign(AR, AR_MORE);
+
+const MONTHS_AR: Record<string, string> = {
+  Jan: 'يناير', Feb: 'فبراير', Mar: 'مارس', Apr: 'أبريل', May: 'مايو', Jun: 'يونيو',
+  Jul: 'يوليو', Aug: 'أغسطس', Sep: 'سبتمبر', Oct: 'أكتوبر', Nov: 'نوفمبر', Dec: 'ديسمبر',
+};
+
+/** 'Aug 2, 2025 · 09:14' → '2 أغسطس 2025 · 09:14' */
+function toArabicDate(s: string): string {
+  return s.replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{1,2}), (\d{4})/g, (_, m: string, d: string, y: string) => `${d} ${MONTHS_AR[m]} ${y}`);
+}
+
+/** Hook returning a translator for this page's mock data. */
+function useIdeaTr() {
+  const { tr, lang } = useLanguage();
+  const L = (s: string) => tr(s, AR[s]);
+  const D = (s: string) => (lang === 'ar' ? toArabicDate(s) : s);
+  return { tr, L, D };
+}
+
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
 function ScoreBar({ score }: { score: number }) {
@@ -322,6 +495,7 @@ function ScoreBar({ score }: { score: number }) {
 }
 
 function TimelineStepper({ steps }: { steps: TimelineStep[] }) {
+  const { tr, L, D } = useIdeaTr();
   return (
     <div className="flex flex-col gap-0">
       {steps.map((step, idx) => {
@@ -365,15 +539,15 @@ function TimelineStepper({ steps }: { steps: TimelineStep[] }) {
                   step.state === 'pending' ? 'text-gray-400' : 'text-foreground',
                 )}
               >
-                {step.label}
+                {L(step.label)}
                 {step.state === 'active' && (
-                  <span className="ml-2 inline-flex items-center gap-1 text-[10px] text-[#008755] font-normal">
-                    <Clock className="h-3 w-3" /> In Progress
+                  <span className="ms-2 inline-flex items-center gap-1 text-[10px] text-[#008755] font-normal">
+                    <Clock className="h-3 w-3" /> {tr('In Progress', 'قيد التنفيذ')}
                   </span>
                 )}
               </p>
               {step.timestamp && (
-                <p className="text-[11px] text-muted-foreground mt-0.5">{step.timestamp}</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5">{D(step.timestamp)}</p>
               )}
             </div>
           </div>
@@ -384,6 +558,7 @@ function TimelineStepper({ steps }: { steps: TimelineStep[] }) {
 }
 
 function CommentBubble({ comment }: { comment: Comment }) {
+  const { tr, L, D } = useIdeaTr();
   return (
     <div className="flex gap-2.5">
       <div className="h-7 w-7 rounded-full bg-[#008755]/10 flex items-center justify-center flex-shrink-0 text-[11px]   text-[#008755]">
@@ -391,10 +566,10 @@ function CommentBubble({ comment }: { comment: Comment }) {
       </div>
       <div className="flex-1">
         <div className="flex items-baseline gap-2 mb-0.5">
-          <span className="text-xs   text-foreground">{comment.author}</span>
-          <span className="text-[11px] text-muted-foreground">{comment.time}</span>
+          <span className="text-xs   text-foreground">{tr(comment.author, comment.authorAr ?? AR[comment.author])}</span>
+          <span className="text-[11px] text-muted-foreground">{D(L(comment.time))}</span>
         </div>
-        <p className="text-xs text-muted-foreground leading-relaxed">{comment.text}</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">{L(comment.text)}</p>
       </div>
     </div>
   );
@@ -406,6 +581,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
   const comments = MOCK_COMMENTS[ideaId] ?? [];
   const [commentText, setCommentText] = useState('');
   const [localComments, setLocalComments] = useState<Comment[]>(comments);
+  const { tr, L, D } = useIdeaTr();
 
   const canEdit = idea.status === 'Draft' || idea.status === 'Needs More Info';
 
@@ -417,6 +593,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
       {
         id: `local-${Date.now()}`,
         author: user.name,
+        authorAr: user.nameAr,
         initials: user.initials,
         time: 'Just now',
         text,
@@ -437,12 +614,12 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               onClick={() => onNavigate('my-ideas')}
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span className=" ">Back to My Ideas</span>
+              <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
+              <span className=" ">{tr('Back to My Ideas', 'العودة إلى أفكاري')}</span>
             </button>
             <div className="h-4 w-px bg-border" />
             <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES[idea.status])}>
-              {idea.status}
+              {L(idea.status)}
             </Badge>
           </div>
 
@@ -456,16 +633,16 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                 onClick={() => onNavigate('submit-idea')}
               >
                 <Edit2 className="h-3.5 w-3.5" />
-                Edit Idea
+                {tr('Edit Idea', 'تعديل الفكرة')}
               </Button>
             )}
             <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8">
               <MessageSquare className="h-3.5 w-3.5" />
-              Submit Feedback
+              {tr('Submit Feedback', 'إرسال ملاحظات')}
             </Button>
             <Button variant="outline" size="sm" className="gap-1.5 text-xs h-8">
               <Download className="h-3.5 w-3.5" />
-              Download PDF
+              {tr('Download PDF', 'تنزيل PDF')}
             </Button>
           </div>
         </div>
@@ -476,9 +653,9 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             <Info className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm   text-amber-800 mb-0.5">
-                Action Required — Reviewer Question
+                {tr('Action Required — Reviewer Question', 'إجراء مطلوب — سؤال من المراجع')}
               </p>
-              <p className="text-xs text-amber-700">{idea.reviewerQuestion}</p>
+              <p className="text-xs text-amber-700">{L(idea.reviewerQuestion)}</p>
             </div>
           </div>
         )}
@@ -488,10 +665,13 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             <Info className="h-4 w-4 text-[#005844] flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm   text-[#005844] mb-0.5">
-                Idea Approved
+                {tr('Idea Approved', 'تم اعتماد الفكرة')}
               </p>
               <p className="text-xs text-[#005844]/80">
-                Your idea has been approved and is now in the implementation planning phase. The assigned coordinator will be in touch shortly.
+                {tr(
+                  'Your idea has been approved and is now in the implementation planning phase. The assigned coordinator will be in touch shortly.',
+                  'تم اعتماد فكرتك وهي الآن في مرحلة تخطيط التنفيذ. سيتواصل معك المنسق المعني قريباً.',
+                )}
               </p>
             </div>
           </div>
@@ -502,14 +682,14 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             <Trophy className="h-4 w-4 text-[#008755] flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-sm   text-[#005844] mb-1">
-                Congratulations — Your Idea is Now Live!
+                {tr('Congratulations — Your Idea is Now Live!', 'تهانينا — فكرتك أصبحت مطبقة الآن!')}
               </p>
               {idea.impactStats && (
                 <div className="flex flex-wrap gap-3 mt-2">
                   {idea.impactStats.map(stat => (
                     <div key={stat.label} className="bg-white rounded-lg border border-[#008755]/20 px-3 py-1.5 text-center min-w-[80px]">
-                      <p className="text-sm   text-[#008755]">{stat.value}</p>
-                      <p className="text-[11px] text-muted-foreground">{stat.label}</p>
+                      <p className="text-sm   text-[#008755]">{L(stat.value)}</p>
+                      <p className="text-[11px] text-muted-foreground">{L(stat.label)}</p>
                     </div>
                   ))}
                 </div>
@@ -524,37 +704,37 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             <div className="flex flex-col gap-3">
               {/* Title */}
               <h1 className="text-xl   text-foreground leading-snug">
-                {idea.title}
+                {L(idea.title)}
               </h1>
 
               {/* Meta row */}
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <UserIcon className="h-3.5 w-3.5" />
-                  <span>Submitted by <span className="  text-foreground">{idea.submittedBy}</span></span>
+                  <span>{tr('Submitted by', 'مقدمة من')} <span className="  text-foreground">{L(idea.submittedBy)}</span></span>
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Building2 className="h-3.5 w-3.5" />
-                  {idea.department}
+                  {L(idea.department)}
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CalendarDays className="h-3.5 w-3.5" />
-                  {idea.date}
+                  {D(idea.date)}
                 </span>
                 <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] text-gray-600">
-                  {idea.category}
+                  {L(idea.category)}
                 </span>
               </div>
 
               {/* Short description */}
-              <p className="text-sm text-muted-foreground leading-relaxed">{idea.shortDescription}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{L(idea.shortDescription)}</p>
 
               {/* AI Score bar */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs   text-muted-foreground flex items-center gap-1">
                     <Star className="h-3.5 w-3.5 text-[#008755]" />
-                    AI Strategic Alignment Score
+                    {tr('AI Strategic Alignment Score', 'درجة التوافق الاستراتيجي بالذكاء الاصطناعي')}
                   </span>
                 </div>
                 <ScoreBar score={idea.aiScore} />
@@ -572,14 +752,14 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* Full description */}
             <Card className="rounded-xl">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm  ">Idea Details</CardTitle>
+                <CardTitle className="text-sm  ">{tr('Idea Details', 'تفاصيل الفكرة')}</CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 space-y-4">
-                <Section label="Full Description" text={idea.fullDescription} />
-                <Section label="Problem Statement" text={idea.problemStatement} />
-                <Section label="Proposed Solution" text={idea.proposedSolution} />
-                <Section label="Beneficiaries" text={idea.beneficiaries} />
-                <Section label="Expected Benefits" text={idea.expectedBenefits} />
+                <Section label={tr('Full Description', 'الوصف الكامل')} text={L(idea.fullDescription)} />
+                <Section label={tr('Problem Statement', 'بيان المشكلة')} text={L(idea.problemStatement)} />
+                <Section label={tr('Proposed Solution', 'الحل المقترح')} text={L(idea.proposedSolution)} />
+                <Section label={tr('Beneficiaries', 'المستفيدون')} text={L(idea.beneficiaries)} />
+                <Section label={tr('Expected Benefits', 'الفوائد المتوقعة')} text={L(idea.expectedBenefits)} />
               </CardContent>
             </Card>
 
@@ -588,26 +768,26 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               <CardHeader className="pb-2 pt-3 px-4">
                 <CardTitle className="text-sm   flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#008755]" />
-                  AI Analysis
+                  {tr('AI Analysis', 'تحليل الذكاء الاصطناعي')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 space-y-3">
                 {/* Score */}
                 <div>
-                  <p className="text-[11px] text-muted-foreground mb-1">Strategic Fit Score</p>
+                  <p className="text-[11px] text-muted-foreground mb-1">{tr('Strategic Fit Score', 'درجة التوافق الاستراتيجي')}</p>
                   <ScoreBar score={idea.aiScore} />
                 </div>
 
                 {/* Alignment pillars */}
                 <div>
-                  <p className="text-[11px] text-muted-foreground mb-1.5">Alignment Pillars</p>
+                  <p className="text-[11px] text-muted-foreground mb-1.5">{tr('Alignment Pillars', 'ركائز التوافق')}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {idea.alignmentPillars.map(pillar => (
                       <span
                         key={pillar}
                         className="inline-flex items-center rounded-full bg-[#008755]/10 px-2.5 py-0.5 text-[11px]   text-[#005844]"
                       >
-                        {pillar}
+                        {L(pillar)}
                       </span>
                     ))}
                   </div>
@@ -616,17 +796,17 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                 {/* Recommendation */}
                 <div className="bg-white/70 rounded-lg p-3 border border-[#008755]/10">
                   <p className="text-[11px]   text-[#005844] mb-1">
-                    AI Recommendation
+                    {tr('AI Recommendation', 'توصية الذكاء الاصطناعي')}
                   </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{idea.aiRecommendation}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{L(idea.aiRecommendation)}</p>
                 </div>
 
                 {/* Estimated impact */}
                 <div className="flex items-start gap-2">
                   <TrendingUp className="h-3.5 w-3.5 text-[#008755] flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-[11px]   text-foreground">Estimated Impact</p>
-                    <p className="text-xs text-muted-foreground">{idea.estimatedImpact}</p>
+                    <p className="text-[11px]   text-foreground">{tr('Estimated Impact', 'الأثر المتوقع')}</p>
+                    <p className="text-xs text-muted-foreground">{L(idea.estimatedImpact)}</p>
                   </div>
                 </div>
               </CardContent>
@@ -637,7 +817,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               <CardHeader className="pb-2 pt-3 px-4">
                 <CardTitle className="text-sm   flex items-center gap-2">
                   <Paperclip className="h-4 w-4 text-muted-foreground" />
-                  Attachments
+                  {tr('Attachments', 'المرفقات')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 space-y-2">
@@ -652,11 +832,11 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                       </div>
                       <div>
                         <p className="text-xs   text-foreground">{file.name}</p>
-                        <p className="text-[11px] text-muted-foreground">{file.size}</p>
+                        <p className="text-[11px] text-muted-foreground">{tr(file.size, file.size.replace('MB', 'ميجابايت').replace('KB', 'كيلوبايت'))}</p>
                       </div>
                     </div>
                     <button className="text-[11px] text-[#008755] hover:text-[#005844]   transition-colors">
-                      Download
+                      {tr('Download', 'تنزيل')}
                     </button>
                   </div>
                 ))}
@@ -670,7 +850,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {/* Progress timeline */}
             <Card className="rounded-xl">
               <CardHeader className="pb-2 pt-3 px-4">
-                <CardTitle className="text-sm  ">Progress</CardTitle>
+                <CardTitle className="text-sm  ">{tr('Progress', 'مراحل التقدم')}</CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4">
                 <TimelineStepper steps={idea.timeline} />
@@ -681,15 +861,15 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
             {idea.coordinatorNote && (
               <Card className="rounded-xl border-[#008755]/15">
                 <CardHeader className="pb-2 pt-3 px-4">
-                  <CardTitle className="text-sm  ">Coordinator Notes</CardTitle>
+                  <CardTitle className="text-sm  ">{tr('Coordinator Notes', 'ملاحظات المنسق')}</CardTitle>
                 </CardHeader>
                 <CardContent className="px-4 pb-4">
                   <div className="flex gap-2.5">
                     <div className="h-7 w-7 rounded-full bg-[#008755]/10 flex items-center justify-center flex-shrink-0 text-[11px]   text-[#008755]">
-                      CO
+                      {tr('CO', 'من')}
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed pt-0.5">
-                      {idea.coordinatorNote}
+                      {L(idea.coordinatorNote)}
                     </p>
                   </div>
                 </CardContent>
@@ -701,9 +881,9 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
               <CardHeader className="pb-2 pt-3 px-4">
                 <CardTitle className="text-sm   flex items-center gap-2">
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  Discussion
+                  {tr('Discussion', 'النقاش')}
                   {localComments.length > 0 && (
-                    <span className="ml-1 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/10 px-1 text-[10px]   text-[#008755]">
+                    <span className="ms-1 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/10 px-1 text-[10px]   text-[#008755]">
                       {localComments.length}
                     </span>
                   )}
@@ -719,7 +899,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground text-center py-4">
-                    No comments yet. Be the first to start the discussion.
+                    {tr('No comments yet. Be the first to start the discussion.', 'لا توجد تعليقات بعد. كن أول من يبدأ النقاش.')}
                   </p>
                 )}
 
@@ -728,7 +908,7 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                   <Textarea
                     value={commentText}
                     onChange={e => setCommentText(e.target.value)}
-                    placeholder="Add a comment or question…"
+                    placeholder={tr('Add a comment or question…', 'أضف تعليقاً أو سؤالاً…')}
                     className="text-xs min-h-[64px] resize-none"
                     onKeyDown={e => {
                       if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmitComment();
@@ -741,8 +921,8 @@ export function IdeaDetailPage({ ideaId, user, role: _role, onNavigate }: PagePr
                       onClick={handleSubmitComment}
                       disabled={!commentText.trim()}
                     >
-                      <Send className="h-3.5 w-3.5" />
-                      Post Comment
+                      <Send className="h-3.5 w-3.5 rtl:-scale-x-100" />
+                      {tr('Post Comment', 'نشر التعليق')}
                     </Button>
                   </div>
                 </div>

@@ -7,6 +7,8 @@ import {
   INNOV_LEVELS, KNOW_LEVELS, STATUS_META, TRL_LABELS, TRL_LEVELS, TYPES, money,
   type Project, type ProjectStatus, type ProjectType,
 } from '../sandboxData';
+import { useLanguage } from '../../../i18n/LanguageContext';
+import { useSandboxTr } from '../sandboxI18n';
 
 // ── Project Readiness Map ────────────────────────────────────────────────────
 // Orbital view of the filtered portfolio: the core is full readiness, each ring
@@ -24,24 +26,30 @@ interface ReadinessOrbitProps {
 type Level = string | number;
 
 const SCALES: Record<ProjectType, {
-  tab: string; title: string; subtitle: string; icon: React.ElementType;
+  tab: string; title: string; subtitle: string; tabAr: string; titleAr: string; subtitleAr: string; icon: React.ElementType;
   levels: Level[]; label: (l: Level) => string; levelOf: (p: Project) => Level | null;
 }> = {
   rd: {
     tab: 'R&D · TRL', title: 'Technology Readiness Level',
     subtitle: 'TRL 1 – 9 · inner rings are closer to operational deployment',
+    tabAr: 'البحث والتطوير · TRL', titleAr: 'مستوى الجاهزية التقنية',
+    subtitleAr: 'TRL 1 – 9 · الحلقات الداخلية أقرب إلى التشغيل الفعلي',
     icon: FlaskConical, levels: TRL_LEVELS, label: (l) => `TRL ${l}`,
     levelOf: (p) => p.trl ?? null,
   },
   innov: {
     tab: 'Innovation · IN', title: 'Innovation Classification',
     subtitle: 'GIMI-aligned IN1 – IN3 · IN1 sits closest to the core',
+    tabAr: 'الابتكار · IN', titleAr: 'تصنيف الابتكار',
+    subtitleAr: 'IN1 – IN3 وفق GIMI · يقع IN1 الأقرب إلى المركز',
     icon: Lightbulb, levels: INNOV_LEVELS, label: (l) => String(l),
     levelOf: (p) => (INNOV_LEVELS.includes(p.cls) ? p.cls : null),
   },
   know: {
     tab: 'Knowledge · Class', title: 'Knowledge Classification',
     subtitle: 'Institutional knowledge tiers · Class 7+ sits closest to the core',
+    tabAr: 'المعرفة · الفئة', titleAr: 'تصنيف المعرفة',
+    subtitleAr: 'مستويات المعرفة المؤسسية · تقع الفئة 7+ الأقرب إلى المركز',
     icon: BookOpen, levels: KNOW_LEVELS, label: (l) => String(l),
     levelOf: (p) => (KNOW_LEVELS.includes(p.cls) ? p.cls : null),
   },
@@ -91,6 +99,8 @@ function arcPath(r: number, from: number, to: number) {
 interface OrbitNode { p: Project; type: ProjectType; level: Level; x: number; y: number }
 
 export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: ReadinessOrbitProps) {
+  const { tr } = useLanguage();
+  const ts = useSandboxTr();
   const [view, setView] = useState<View>(typeFilter);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
@@ -159,8 +169,8 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
 
   const single = view === 'all' ? null : SCALES[view];
   const counts = single
-    ? single.levels.map(l => ({ key: String(l), label: single.label(l), color: TYPES[view as ProjectType].color, v: shown.filter(p => single.levelOf(p) === l).length }))
-    : TYPE_ORDER.map(t => ({ key: t, label: TYPES[t].label, color: TYPES[t].color, v: shown.filter(p => p.type === t).length }));
+    ? single.levels.map(l => ({ key: String(l), label: ts(single.label(l)), color: TYPES[view as ProjectType].color, v: shown.filter(p => single.levelOf(p) === l).length }))
+    : TYPE_ORDER.map(t => ({ key: t, label: ts(TYPES[t].label), color: TYPES[t].color, v: shown.filter(p => p.type === t).length }));
   const cmax = Math.max(...counts.map(c => c.v), 1);
 
   return (
@@ -168,11 +178,11 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
       <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="font-medium">Project Readiness Map</h3>
-            <Badge className="bg-[#008755]/10 text-[#008755] border-0 text-sm">{single ? single.title.toUpperCase() : 'ALL PROJECT TYPES'}</Badge>
+            <h3 className="font-medium">{tr('Project Readiness Map', 'خريطة جاهزية المشاريع')}</h3>
+            <Badge className="bg-[#008755]/10 text-[#008755] border-0 text-sm">{single ? tr(single.title.toUpperCase(), single.titleAr) : tr('ALL PROJECT TYPES', 'جميع أنواع المشاريع')}</Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {single ? single.subtitle : 'One sector per type — TRL for R&D, IN for Innovation, Class for Knowledge · inner rings are more mature'}
+            {single ? tr(single.subtitle, single.subtitleAr) : tr('One sector per type — TRL for R&D, IN for Innovation, Class for Knowledge · inner rings are more mature', 'قطاع لكل نوع — TRL للبحث والتطوير، وIN للابتكار، والفئة للمعرفة · الحلقات الداخلية أكثر نضجاً')}
           </p>
         </div>
         <div className="flex gap-0.5 bg-muted/60 rounded-lg p-0.5">
@@ -185,7 +195,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
                 className={cn('flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm font-medium transition-colors',
                   view === k ? 'bg-white shadow-sm text-[#008755]' : 'text-muted-foreground hover:text-foreground')}
               >
-                <Icon className="h-3 w-3" /> {k === 'all' ? 'All Types' : SCALES[k].tab}
+                <Icon className="h-3 w-3" /> {k === 'all' ? tr('All Types', 'جميع الأنواع') : tr(SCALES[k].tab, SCALES[k].tabAr)}
               </button>
             );
           })}
@@ -251,7 +261,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
                       fill={isHot(type, level) ? '#5eead4' : 'rgba(255,255,255,.55)'}
                       stroke="#023126" strokeWidth={5} paintOrder="stroke" style={{ letterSpacing: '.04em' }}
                     >
-                      {scale.label(level)}
+                      {ts(scale.label(level))}
                     </text>
                   );
                 });
@@ -265,7 +275,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
                     key={`title-${type}`} x={pos.x} y={pos.y + 4} textAnchor="middle"
                     fontSize={11} fontWeight={700} fill="rgba(255,255,255,.85)" style={{ letterSpacing: '.12em' }}
                   >
-                    {TYPES[type].label.toUpperCase()}
+                    {tr(TYPES[type].label.toUpperCase(), ts(TYPES[type].label))}
                   </text>
                 );
               })}
@@ -277,7 +287,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
               style={{ left: '50%', top: '50%', width: `${(CORE_R * 2 / SIZE) * 100}%`, height: `${(CORE_R * 2 / SIZE) * 100}%` }}
             >
               <span className="text-xl leading-none">{nodes.length}</span>
-              <span className="text-[9px] uppercase tracking-wide text-white/80 mt-1">{view === 'all' ? 'Projects' : TYPES[view].label}</span>
+              <span className="text-[9px] uppercase tracking-wide text-white/80 mt-1">{view === 'all' ? tr('Projects', 'مشروع') : ts(TYPES[view].label)}</span>
             </div>
 
             {/* Project nodes */}
@@ -293,7 +303,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
                   onMouseLeave={() => setHoverId(null)}
                   className={cn('absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 group', isActive ? 'z-20' : 'z-10')}
                   style={{ left: `${(nd.x / SIZE) * 100}%`, top: `${(nd.y / SIZE) * 100}%` }}
-                  title={`${nd.p.name} · ${SCALES[nd.type].label(nd.level)} · ${nd.p.status}`}
+                  title={`${ts(nd.p.name)} · ${ts(SCALES[nd.type].label(nd.level))} · ${ts(nd.p.status)}`}
                 >
                   <span
                     className={cn('h-8 w-8 rounded-full flex items-center justify-center border-2 transition-all', isActive ? 'scale-125' : 'group-hover:scale-110')}
@@ -307,7 +317,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
                     <span className={cn('absolute top-full mt-1 w-[120px] text-center text-[10.5px] leading-tight line-clamp-2 pointer-events-none',
                       isActive ? 'text-white font-medium' : 'text-white/70',
                       compact && 'mt-2 rounded-md bg-[#02241b]/90 border border-white/15 px-1.5 py-1')}>
-                      {nd.p.name}
+                      {ts(nd.p.name)}
                     </span>
                   )}
                 </button>
@@ -316,7 +326,9 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
 
             {!nodes.length && (
               <div className="absolute inset-x-0 bottom-[14%] text-center text-sm text-white/70">
-                No {view === 'all' ? '' : `${TYPES[view].full} `}projects match the current filters.
+                {view === 'all'
+                  ? tr('No projects match the current filters.', 'لا توجد مشاريع مطابقة لعوامل التصفية الحالية.')
+                  : tr(`No ${TYPES[view].full} projects match the current filters.`, `لا توجد مشاريع ${ts(TYPES[view].full)} مطابقة لعوامل التصفية الحالية.`)}
               </div>
             )}
           </div>
@@ -325,7 +337,7 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
           <div className="relative flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 px-4 pt-4 pb-3.5 text-[11px] text-white/75">
             {(Object.keys(NODE_COLORS) as ProjectStatus[]).map(s => (
               <span key={s} className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full" style={{ background: NODE_COLORS[s] }} /> {s}
+                <span className="h-2 w-2 rounded-full" style={{ background: NODE_COLORS[s] }} /> {ts(s)}
               </span>
             ))}
           </div>
@@ -338,17 +350,17 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-sm text-muted-foreground">{selected.p.id} · {selected.p.start}–{selected.p.end}</p>
-                  <h4 className="font-medium leading-snug mt-0.5">{selected.p.name}</h4>
+                  <h4 className="font-medium leading-snug mt-0.5">{ts(selected.p.name)}</h4>
                 </div>
-                <button onClick={() => setSelectedId(null)} className="h-6 w-6 rounded-md hover:bg-muted flex items-center justify-center flex-shrink-0">
+                <button onClick={() => setSelectedId(null)} aria-label={tr('Close', 'إغلاق')} className="h-6 w-6 rounded-md hover:bg-muted flex items-center justify-center flex-shrink-0">
                   <X className="h-3.5 w-3.5 text-muted-foreground" />
                 </button>
               </div>
 
-              <div className="rounded-lg border border-[#008755]/30 bg-gradient-to-r from-[#008755]/5 to-white p-3">
-                <p className="text-sm text-muted-foreground">Current level</p>
-                <p className="text-lg text-[#008755] leading-tight mt-0.5">{SCALES[selected.type].label(selected.level)}</p>
-                {selected.type === 'rd' && <p className="text-sm text-muted-foreground mt-0.5">{TRL_LABELS[selected.level as number]}</p>}
+              <div className="rounded-lg border border-[#008755]/30 bg-gradient-to-r rtl:bg-gradient-to-l from-[#008755]/5 to-white p-3">
+                <p className="text-sm text-muted-foreground">{tr('Current level', 'المستوى الحالي')}</p>
+                <p className="text-lg text-[#008755] leading-tight mt-0.5">{ts(SCALES[selected.type].label(selected.level))}</p>
+                {selected.type === 'rd' && <p className="text-sm text-muted-foreground mt-0.5">{ts(TRL_LABELS[selected.level as number])}</p>}
                 <div className="flex gap-1 mt-2.5">
                   {[...SCALES[selected.type].levels].reverse().map(l => {
                     const levels = SCALES[selected.type].levels;
@@ -359,14 +371,14 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
               </div>
 
               <div className="flex flex-wrap gap-1.5">
-                <Badge className={`${STATUS_META[selected.p.status].badgeClass} border-0 text-sm`}>{selected.p.status}</Badge>
-                <Badge className={`${TYPES[selected.p.type].badgeClass} border-0 text-sm`}>{TYPES[selected.p.type].label}</Badge>
+                <Badge className={`${STATUS_META[selected.p.status].badgeClass} border-0 text-sm`}>{ts(selected.p.status)}</Badge>
+                <Badge className={`${TYPES[selected.p.type].badgeClass} border-0 text-sm`}>{ts(TYPES[selected.p.type].label)}</Badge>
               </div>
 
-              <p className="text-sm text-muted-foreground leading-relaxed">{selected.p.desc}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{ts(selected.p.desc)}</p>
 
               <div className="grid grid-cols-2 gap-2.5 text-sm">
-                {[['Stage', selected.p.stage], ['Budget', money(selected.p.budget)], ['Department', selected.p.dept], ['Score', selected.p.score ? `${selected.p.score}/100` : 'Pending']].map(([l, v]) => (
+                {[[tr('Stage', 'المرحلة'), ts(selected.p.stage)], [tr('Budget', 'الميزانية'), tr(money(selected.p.budget), `${selected.p.budget.toFixed(1)} مليون درهم`)], [tr('Department', 'الإدارة'), ts(selected.p.dept)], [tr('Score', 'الدرجة'), selected.p.score ? `${selected.p.score}/100` : tr('Pending', 'قيد الانتظار')]].map(([l, v]) => (
                   <div key={l}>
                     <p className="text-muted-foreground">{l}</p>
                     <p className="font-medium truncate">{v}</p>
@@ -378,29 +390,29 @@ export function ReadinessOrbit({ projects, typeFilter, onOpenProject }: Readines
                 onClick={() => onOpenProject(selected.p.id)}
                 className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#008755] hover:bg-[#005844] text-white text-sm px-4 py-2.5 transition-colors"
               >
-                Open Project Record <ArrowRight className="h-3.5 w-3.5" />
+                {tr('Open Project Record', 'فتح سجل المشروع')} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
               </button>
             </div>
           ) : (
             <div>
               <div className="flex items-center gap-2 border-b border-border pb-2.5 mb-3.5">
                 <Orbit className="h-4 w-4 text-[#008755]" />
-                <h4 className="text-sm">{single ? 'Projects by Level' : 'Projects by Type'}</h4>
+                <h4 className="text-sm">{single ? tr('Projects by Level', 'المشاريع حسب المستوى') : tr('Projects by Type', 'المشاريع حسب النوع')}</h4>
               </div>
               <div className="space-y-2.5">
                 {counts.map(({ key, label, color, v }) => (
                   <div key={key} className="grid grid-cols-[72px_1fr_22px] items-center gap-2.5 text-sm">
                     <span className="text-foreground/80 font-medium">{label}</span>
                     <Progress value={(v / cmax) * 100} className="h-2" indicatorColor={color} />
-                    <span className="text-right">{v}</span>
+                    <span className="text-end">{v}</span>
                   </div>
                 ))}
               </div>
               {unassessed.length > 0 && (
-                <p className="text-sm text-amber-700 mt-3.5">{unassessed.length} project{unassessed.length > 1 ? 's' : ''} not yet assessed</p>
+                <p className="text-sm text-amber-700 mt-3.5">{tr(`${unassessed.length} project${unassessed.length > 1 ? 's' : ''} not yet assessed`, `${unassessed.length} ${unassessed.length > 1 ? 'مشاريع لم تُقيَّم' : 'مشروع لم يُقيَّم'} بعد`)}</p>
               )}
               <p className="text-sm text-muted-foreground mt-3.5 pt-3 border-t border-border">
-                {single ? 'Select a project on the map to see its readiness details.' : 'Select a project for its details, or pick a type above to see its levels.'}
+                {single ? tr('Select a project on the map to see its readiness details.', 'اختر مشروعاً على الخريطة لعرض تفاصيل جاهزيته.') : tr('Select a project for its details, or pick a type above to see its levels.', 'اختر مشروعاً لعرض تفاصيله، أو اختر نوعاً من الأعلى لعرض مستوياته.')}
               </p>
             </div>
           )}

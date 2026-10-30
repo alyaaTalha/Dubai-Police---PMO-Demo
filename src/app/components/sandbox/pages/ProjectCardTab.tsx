@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 import { Badge } from '../../ui/badge';
 import { cn } from '../../ui/utils';
 import { TRL_LABELS, type Project } from '../sandboxData';
+import { useLanguage } from '../../../i18n/LanguageContext';
+import { SANDBOX_AR } from '../sandboxI18n';
 import dubaiPolice from '../../../../assets/Dubai-Police-Image.jpeg';
 import dubaiPolice2 from '../../../../assets/dubai-police.jpg';
 import dubaiPolice3 from '../../../../assets/img1.jpeg';
@@ -51,6 +53,78 @@ const CARD_IMAGES: Record<string, string> = {
   'P-302': dubaiPolice5, 'P-105': dubaiPolice6, 'P-206': hero,
 };
 
+// Arabic translations for the card's mock content, keyed by the English value.
+const CARD_AR: Record<string, string> = {
+  // Submitters
+  'Capt. Khalid Al Rashid': 'النقيب خالد الراشد',
+  'Lt. Hamad Al Falasi': 'الملازم حمد الفلاسي',
+  'Maj. Noura Al Hammadi': 'الرائد نورة الحمادي',
+  'Eng. Saif Al Mazrouei': 'م. سيف المزروعي',
+  'Maj. Rashid Al Suwaidi': 'الرائد راشد السويدي',
+  // Choice options
+  'Yes': 'نعم',
+  'No': 'لا',
+  'Not Sure': 'غير متأكد',
+  'Needs Study': 'يحتاج إلى دراسة',
+  'Companies identified': 'تم تحديد شركات',
+  'None': 'لا يوجد',
+  // Notes & recommendations
+  'Similar predictive models are reported by two international police forces; no UAE deployment confirmed.': 'أفادت قوتا شرطة دوليتان باستخدام نماذج تنبؤية مماثلة، ولم يُؤكَّد أي تطبيق داخل دولة الإمارات.',
+  'Historical incident data is available and cleansed; compute capacity secured in the sandbox.': 'بيانات الحوادث التاريخية متوفرة ومنقّحة، وتم تأمين القدرة الحاسوبية في البيئة التجريبية.',
+  'Proceed to field validation in two districts and file the detection algorithm patent.': 'المضي في التحقق الميداني في منطقتين وإيداع براءة اختراع خوارزمية الكشف.',
+  'Trialled by partner agencies abroad for event monitoring; airspace rules differ locally.': 'جرّبتها جهات شريكة في الخارج لمراقبة الفعاليات، وتختلف قواعد المجال الجوي محلياً.',
+  'Depends on GCAA regulatory clearance and flight-endurance benchmarks.': 'يعتمد على الموافقة التنظيمية من الهيئة العامة للطيران المدني ومعايير قدرة التحمل في الطيران.',
+  'Complete the feasibility study and secure regulatory clearance before approval.': 'استكمال دراسة الجدوى والحصول على الموافقة التنظيمية قبل الاعتماد.',
+  'No equivalent rapid-analysis protocol in use across federal forensic labs.': 'لا يوجد بروتوكول تحليل سريع مماثل مستخدم في مختبرات الأدلة الجنائية الاتحادية.',
+  'Lab trials show a stable sub-6-hour turnaround on reference samples.': 'تُظهر التجارب المخبرية زمن إنجاز مستقراً يقل عن 6 ساعات على العينات المرجعية.',
+  'Continue development and progress the sequencing protocol patent.': 'مواصلة التطوير والمضي في براءة اختراع بروتوكول التسلسل.',
+  'Ethics and privacy review must be completed before data collection.': 'يجب استكمال مراجعة الأخلاقيات والخصوصية قبل جمع البيانات.',
+  'Re-baseline the timeline after the ethics review concludes.': 'إعادة تحديد خط الأساس للجدول الزمني بعد انتهاء مراجعة الأخلاقيات.',
+  'First post-quantum pilot across a UAE government communications network.': 'أول تجربة للتشفير ما بعد الكمي عبر شبكة اتصالات حكومية في دولة الإمارات.',
+  'Pilot completed with no measurable latency impact.': 'اكتملت التجربة دون أي أثر ملموس على زمن الاستجابة.',
+  'Applied — scale to all internal channels.': 'مطبّق — التوسع ليشمل جميع القنوات الداخلية.',
+  'Optical components require vendor benchmarking.': 'تتطلب المكونات البصرية مقارنة معيارية بين الموردين.',
+  'Run a vendor benchmarking exercise before feasibility sign-off.': 'إجراء مقارنة معيارية للموردين قبل اعتماد دراسة الجدوى.',
+  'First fully digital evidence room in the region.': 'أول غرفة أدلة رقمية بالكامل في المنطقة.',
+  'Running in sandbox across two precincts with a 71% drop in custody errors.': 'تعمل في البيئة التجريبية في مركزين مع انخفاض أخطاء الحفظ بنسبة 71%.',
+  'Roll out to all precincts and pursue federal accreditation.': 'التعميم على جميع المراكز والسعي للحصول على الاعتماد الاتحادي.',
+  'Comparable NLP triage used in other government call centres.': 'يُستخدم فرز مماثل بمعالجة اللغة الطبيعية في مراكز اتصال حكومية أخرى.',
+  'Routing complaints 40% faster than the manual process.': 'توجيه الشكاوى أسرع بنسبة 40% من العملية اليدوية.',
+  'Applied — extend triage to Arabic voice channels.': 'مطبّق — توسيع الفرز ليشمل القنوات الصوتية العربية.',
+  'Digital twins in use by city transport authorities for planning.': 'تستخدم هيئات النقل في المدن التوائم الرقمية لأغراض التخطيط.',
+  'Live sensor feeds available through the traffic control centre.': 'تتوفر بيانات المستشعرات الحية عبر مركز التحكم المروري.',
+  'Continue build and integrate with the RTA data exchange.': 'مواصلة البناء والتكامل مع منصة تبادل البيانات في هيئة الطرق والمواصلات.',
+  'Sensor installation across the fleet is behind schedule.': 'تركيب المستشعرات في الأسطول متأخر عن الجدول الزمني.',
+  'Reallocate resources to recover the installation schedule.': 'إعادة تخصيص الموارد لاستدراك جدول التركيب.',
+  'Queue systems are common; dynamic allocation method is proprietary.': 'أنظمة الطوابير شائعة، إلا أن طريقة التخصيص الديناميكي مملوكة حصرياً.',
+  'Wait times reduced from 25 to 9 minutes across pilot centres.': 'انخفضت أوقات الانتظار من 25 إلى 9 دقائق في المراكز التجريبية.',
+  'Applied — deploy to remaining service centres.': 'مطبّق — النشر في بقية مراكز الخدمة.',
+  'Deployed to every frontline officer device.': 'تم النشر على أجهزة جميع ضباط الخطوط الأمامية.',
+  'Applied — maintain quarterly content updates.': 'مطبّق — الحفاظ على تحديثات المحتوى الفصلية.',
+  'Positioned as the first federal forensic documentation standard.': 'يُعد أول معيار اتحادي لتوثيق الأدلة الجنائية.',
+  'Endorsed by partner universities and forensic leads.': 'معتمد من الجامعات الشريكة وقيادات الأدلة الجنائية.',
+  'Submit for federal adoption.': 'رفعه للاعتماد على المستوى الاتحادي.',
+  'Applied — continue operation and monitor outcomes.': 'مطبّق — مواصلة التشغيل ومتابعة النتائج.',
+  'Continue current plan pending evaluation.': 'مواصلة الخطة الحالية لحين التقييم.',
+};
+
+const MONTHS_AR: Record<string, string> = {
+  Jan: 'يناير', Feb: 'فبراير', Mar: 'مارس', Apr: 'أبريل', May: 'مايو', Jun: 'يونيو',
+  Jul: 'يوليو', Aug: 'أغسطس', Sep: 'سبتمبر', Oct: 'أكتوبر', Nov: 'نوفمبر', Dec: 'ديسمبر',
+};
+
+/** 'Mar 04, 2025' -> '04 مارس 2025' */
+function dateAr(s: string): string {
+  return s.replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{1,2})(?:, (\d{4}))?/g,
+    (_, m: string, d: string, y?: string) => `${d} ${MONTHS_AR[m]}${y ? ` ${y}` : ''}`);
+}
+
+/** Hook returning a translator for card content (card dictionary first, then the Sandbox dictionary). */
+function useCardTr() {
+  const { lang } = useLanguage();
+  return (en: string) => (lang === 'ar' ? CARD_AR[en] ?? SANDBOX_AR[en] ?? en : en);
+}
+
 function cardFor(project: Project): CardDetails {
   const d = CARD_DETAILS[project.id] ?? {};
   const applied = project.status === 'Completed' || project.stage === 'Sandbox';
@@ -76,6 +150,8 @@ export function ProjectCardTab({ project, cardNumber, onExport }: ProjectCardTab
   const card = cardFor(project);
   const image = CARD_IMAGES[project.id];
   const isApplied = project.status === 'Completed' || project.stage === 'Sandbox';
+  const { tr, lang } = useLanguage();
+  const tc = useCardTr();
 
   return (
     <div className="space-y-5">
@@ -86,22 +162,22 @@ export function ProjectCardTab({ project, cardNumber, onExport }: ProjectCardTab
             <Hexagon className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h2 className="text-lg leading-tight">Project Card</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">Innovation Labs — Research &amp; Development Section</p>
+            <h2 className="text-lg leading-tight">{tr('Project Card', 'بطاقة المشروع')}</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">{tr('Innovation Labs — Research & Development Section', 'مختبرات الابتكار — قسم البحث والتطوير')}</p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <div className="rounded-lg border border-border px-3 py-1.5 text-sm">
-            <span className="text-muted-foreground">Filled on: </span><span className="font-medium">{card.filledOn}</span>
+            <span className="text-muted-foreground">{tr('Filled on: ', 'تاريخ التعبئة: ')}</span><span className="font-medium">{lang === 'ar' ? dateAr(card.filledOn) : card.filledOn}</span>
           </div>
           <div className="rounded-lg border border-[#008755] bg-[#008755]/10 text-[#008755] px-3 py-1.5 text-sm font-medium">
-            Card No. {String(cardNumber).padStart(2, '0')}
+            {tr('Card No.', 'بطاقة رقم')} {String(cardNumber).padStart(2, '0')}
           </div>
-          <button onClick={() => toast.success('Project card sent to printer')} className="h-8 w-8 rounded-lg border border-border hover:bg-muted/40 flex items-center justify-center transition-colors" title="Print">
+          <button onClick={() => toast.success(tr('Project card sent to printer', 'تم إرسال بطاقة المشروع إلى الطابعة'))} className="h-8 w-8 rounded-lg border border-border hover:bg-muted/40 flex items-center justify-center transition-colors" title={tr('Print', 'طباعة')}>
             <Printer className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
           <button onClick={onExport} className="inline-flex items-center gap-1.5 rounded-lg bg-[#008755] hover:bg-[#005844] text-white text-sm px-3.5 py-1.5 transition-colors">
-            <Download className="h-3.5 w-3.5" /> Export Card
+            <Download className="h-3.5 w-3.5" /> {tr('Export Card', 'تصدير البطاقة')}
           </button>
         </div>
       </div>
@@ -110,40 +186,40 @@ export function ProjectCardTab({ project, cardNumber, onExport }: ProjectCardTab
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4">
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <CardField n={1} label="Submitted By"><ValueBox>{card.submitter}</ValueBox></CardField>
-            <CardField n={2} label="Beneficiary Department"><ValueBox>{project.dept}</ValueBox></CardField>
-            <CardField n={3} label="Project Name"><ValueBox>{project.name}</ValueBox></CardField>
+            <CardField n={1} label={tr('Submitted By', 'مقدم الطلب')}><ValueBox>{tc(card.submitter)}</ValueBox></CardField>
+            <CardField n={2} label={tr('Beneficiary Department', 'الإدارة المستفيدة')}><ValueBox>{tc(project.dept)}</ValueBox></CardField>
+            <CardField n={3} label={tr('Project Name', 'اسم المشروع')}><ValueBox>{tc(project.name)}</ValueBox></CardField>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 bg-muted/30 border border-border rounded-xl px-4 py-3">
-            <FieldTitle n={4} label="Project Classification" />
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 ml-auto">
-              <Choice checked={project.type === 'innov'} label="Innovation" />
-              <Choice checked={project.type === 'rd'} label="Research & Development" />
-              <Choice checked={project.type === 'know'} label="Knowledge" />
-              <Choice checked={isApplied} label="Applied" />
+            <FieldTitle n={4} label={tr('Project Classification', 'تصنيف المشروع')} />
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 ms-auto">
+              <Choice checked={project.type === 'innov'} label={tc('Innovation')} />
+              <Choice checked={project.type === 'rd'} label={tc('Research & Development')} />
+              <Choice checked={project.type === 'know'} label={tc('Knowledge')} />
+              <Choice checked={isApplied} label={tr('Applied', 'مطبّق')} />
               {project.type === 'rd' && project.trl && (
-                <Badge className="bg-blue-50 text-blue-700 border-0 text-sm" title={TRL_LABELS[project.trl]}>TRL {project.trl}</Badge>
+                <Badge className="bg-blue-50 text-blue-700 border-0 text-sm" title={tc(TRL_LABELS[project.trl])}>{tr('TRL', 'مستوى الجاهزية التقنية')} {project.trl}</Badge>
               )}
-              {project.cls !== '—' && <Badge className="bg-violet-50 text-violet-700 border-0 text-sm">{project.cls}</Badge>}
+              {project.cls !== '—' && <Badge className="bg-violet-50 text-violet-700 border-0 text-sm">{tc(project.cls)}</Badge>}
             </div>
           </div>
 
-          <CardField n={5} label="Project Summary">
-            <ValueBox className="min-h-[96px] leading-relaxed">{project.desc}</ValueBox>
+          <CardField n={5} label={tr('Project Summary', 'ملخص المشروع')}>
+            <ValueBox className="min-h-[96px] leading-relaxed">{tc(project.desc)}</ValueBox>
           </CardField>
         </div>
 
-        <CardField n={6} label="Project Image">
+        <CardField n={6} label={tr('Project Image', 'صورة المشروع')}>
           <div className="relative flex-1 min-h-[220px] rounded-xl border-2 border-dashed border-[#008755]/50 overflow-hidden bg-[#008755]/5">
             {image ? (
-              <img src={image} alt={project.name} className="absolute inset-0 h-full w-full object-cover" />
+              <img src={image} alt={tc(project.name)} className="absolute inset-0 h-full w-full object-cover" />
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center p-4">
                 <ImageIcon className="h-9 w-9 text-[#008755]" />
-                <p className="text-sm text-muted-foreground">No image uploaded yet</p>
-                <button onClick={() => toast.info('Image upload opened')} className="inline-flex items-center gap-1.5 text-sm text-[#008755] hover:underline">
-                  <Upload className="h-3.5 w-3.5" /> Upload image
+                <p className="text-sm text-muted-foreground">{tr('No image uploaded yet', 'لم يتم رفع صورة بعد')}</p>
+                <button onClick={() => toast.info(tr('Image upload opened', 'تم فتح نافذة رفع الصورة'))} className="inline-flex items-center gap-1.5 text-sm text-[#008755] hover:underline">
+                  <Upload className="h-3.5 w-3.5" /> {tr('Upload image', 'رفع صورة')}
                 </button>
               </div>
             )}
@@ -153,20 +229,20 @@ export function ProjectCardTab({ project, cardNumber, onExport }: ProjectCardTab
 
       {/* 07–09 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-        <QuestionBox n={7} label="Applied in another department or entity?" options={['Yes', 'No', 'Not Sure']} value={card.appliedElsewhere} note={card.appliedNote} />
-        <QuestionBox n={8} label="Is the project feasible to implement?" options={['Yes', 'No', 'Needs Study']} value={card.feasible} note={card.feasibleNote} />
+        <QuestionBox n={7} label={tr('Applied in another department or entity?', 'هل طُبّق في إدارة أو جهة أخرى؟')} options={['Yes', 'No', 'Not Sure']} value={card.appliedElsewhere} note={tc(card.appliedNote)} />
+        <QuestionBox n={8} label={tr('Is the project feasible to implement?', 'هل المشروع قابل للتنفيذ؟')} options={['Yes', 'No', 'Needs Study']} value={card.feasible} note={tc(card.feasibleNote)} />
         <QuestionBox
-          n={9} label="Candidate companies for implementation"
+          n={9} label={tr('Candidate companies for implementation', 'الشركات المرشحة للتنفيذ')}
           options={['Companies identified', 'None']}
           value={card.companies.length ? 'Companies identified' : 'None'}
-          note={card.companies.join(' · ')}
+          note={card.companies.map(tc).join(' · ')}
         />
       </div>
 
       {/* 10 */}
-      <div className="rounded-xl border-2 border-[#008755]/40 bg-gradient-to-r from-[#008755]/5 to-white p-4">
-        <FieldTitle n={10} label="Recommendation" />
-        <ValueBox className="mt-3 bg-white">{card.recommendation}</ValueBox>
+      <div className="rounded-xl border-2 border-[#008755]/40 bg-gradient-to-r rtl:bg-gradient-to-l from-[#008755]/5 to-white p-4">
+        <FieldTitle n={10} label={tr('Recommendation', 'التوصية')} />
+        <ValueBox className="mt-3 bg-white">{tc(card.recommendation)}</ValueBox>
       </div>
     </div>
   );
@@ -219,14 +295,16 @@ function Choice({ checked, label }: { checked: boolean; label: string }) {
 }
 
 function QuestionBox({ n, label, options, value, note }: { n: number; label: string; options: string[]; value: string; note: string }) {
+  const { tr } = useLanguage();
+  const tc = useCardTr();
   return (
     <div className="bg-muted/30 border border-border rounded-xl p-4 flex flex-col gap-3">
       <FieldTitle n={n} label={label} />
       <div className="flex flex-wrap gap-x-4 gap-y-2">
-        {options.map(o => <Choice key={o} checked={o === value} label={o} />)}
+        {options.map(o => <Choice key={o} checked={o === value} label={tc(o)} />)}
       </div>
       <ValueBox className="bg-white flex-1 min-h-[64px]">
-        {note || <span className="text-muted-foreground">No additional notes</span>}
+        {note || <span className="text-muted-foreground">{tr('No additional notes', 'لا توجد ملاحظات إضافية')}</span>}
       </ValueBox>
     </div>
   );

@@ -7,6 +7,72 @@ import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
+
+// ── Arabic lookup for mock data (keyed by English value) ─────────────────────
+const AR: Record<string, string> = {
+  // statuses
+  'Implemented': 'منفذة',
+  'Approved': 'معتمدة',
+  'Under Review': 'قيد المراجعة',
+  'Pending Initial Review': 'بانتظار المراجعة الأولية',
+  'Needs More Info': 'بحاجة إلى معلومات إضافية',
+  'Draft': 'مسودة',
+  'Grievance Filed': 'تظلم مقدم',
+  // departments
+  'Digital Transformation': 'التحول الرقمي',
+  'Operations': 'العمليات',
+  'Legal Affairs': 'الشؤون القانونية',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Finance': 'المالية',
+  'Community Affairs': 'شؤون المجتمع',
+  // titles
+  'AI Queue Management System': 'نظام إدارة الطوابير بالذكاء الاصطناعي',
+  'Predictive Patrol Routing': 'التوجيه التنبؤي للدوريات',
+  'Smart Evidence Digitization': 'الرقمنة الذكية للأدلة',
+  'Employee Wellness App': 'تطبيق رفاهية الموظفين',
+  'Blockchain Asset Registry': 'سجل الأصول بتقنية البلوك تشين',
+  'Community Crime Heatmap Portal': 'بوابة الخريطة الحرارية للجريمة المجتمعية',
+  'Body-Cam Live-Stream Integration': 'دمج البث المباشر لكاميرات الجسم',
+  'HR Self-Service Kiosk': 'أكشاك الخدمة الذاتية للموارد البشرية',
+  'Community Safety Dashboard': 'لوحة معلومات السلامة المجتمعية',
+  'Smart Speed Camera Network': 'شبكة كاميرات السرعة الذكية',
+  'Vehicle Predictive Maintenance': 'الصيانة التنبؤية للمركبات',
+  'Idea not credited properly': 'عدم نسب الفكرة بشكل صحيح',
+  // descriptions
+  'An AI-driven system to reduce wait times at service centers using predictive analytics.': 'نظام قائم على الذكاء الاصطناعي لتقليل أوقات الانتظار في مراكز الخدمة باستخدام التحليلات التنبؤية.',
+  'Data-driven route optimisation for patrol units based on real-time traffic and incident history.': 'تحسين مسارات وحدات الدوريات بالاعتماد على البيانات وحركة المرور الفورية وسجل الحوادث.',
+  'End-to-end paperless evidence management with digital signatures and chain-of-custody tracking.': 'إدارة متكاملة للأدلة دون ورق مع التوقيعات الرقمية وتتبع سلسلة الحيازة.',
+  'A mobile app to support officer mental health with wellbeing check-ins and resource access.': 'تطبيق جوال لدعم الصحة النفسية للضباط من خلال متابعات الرفاهية والوصول إلى الموارد.',
+  'Immutable ledger for tracking seized assets throughout their lifecycle.': 'سجل غير قابل للتعديل لتتبع الأصول المضبوطة طوال دورة حياتها.',
+  'Public-facing portal showing anonymised crime density maps to aid community awareness.': 'بوابة عامة تعرض خرائط كثافة الجريمة مجهولة الهوية لتعزيز الوعي المجتمعي.',
+  'Integrating body camera feeds into the central operations dashboard for real-time monitoring.': 'دمج بث كاميرات الجسم في لوحة العمليات المركزية للمراقبة الفورية.',
+  'Touch-screen kiosks at police stations for leave requests and payslip access.': 'أكشاك بشاشات لمس في مراكز الشرطة لطلبات الإجازة والاطلاع على كشوف الرواتب.',
+  'A real-time dashboard for community safety officers to track incidents and resources.': 'لوحة معلومات فورية لضباط السلامة المجتمعية لتتبع الحوادث والموارد.',
+  'Interconnected speed camera network with automatic fine issuance and vehicle tracking.': 'شبكة مترابطة من كاميرات السرعة مع إصدار تلقائي للمخالفات وتتبع المركبات.',
+  'IoT-based monitoring system to predict fleet maintenance needs before breakdowns occur.': 'نظام مراقبة قائم على إنترنت الأشياء للتنبؤ باحتياجات صيانة الأسطول قبل حدوث الأعطال.',
+  'Please clarify the budget estimate and vendor options.': 'يرجى توضيح تقدير الميزانية وخيارات الموردين.',
+  'Submitted a grievance regarding attribution of the queue management idea.': 'تم تقديم تظلم بشأن نسب فكرة إدارة الطوابير.',
+  // dates
+  'Aug 2, 2025': '2 أغسطس 2025',
+  'Jul 15, 2025': '15 يوليو 2025',
+  'May 10, 2025': '10 مايو 2025',
+  'Aug 10, 2025': '10 أغسطس 2025',
+  'Jul 28, 2025': '28 يوليو 2025',
+  'Jul 20, 2025': '20 يوليو 2025',
+  'Aug 1, 2025': '1 أغسطس 2025',
+  'Apr 5, 2025': '5 أبريل 2025',
+  'Aug 7, 2025': '7 أغسطس 2025',
+  'Jul 30, 2025': '30 يوليو 2025',
+  'Jul 1, 2025': '1 يوليو 2025',
+  'Aug 5, 2025': '5 أغسطس 2025',
+};
+
+/** Translate a mock-data value using the local AR lookup. */
+function useT() {
+  const { tr } = useLanguage();
+  return { tr, t: (s: string) => tr(s, AR[s]) };
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -178,26 +244,27 @@ const GRIEVANCES: GrievanceCard[] = [
 
 // ── Shared idea card ──────────────────────────────────────────────────────────
 function IdeaListCard({ idea, onNavigate }: { idea: IdeaCard; onNavigate: (id: string) => void }) {
+  const { tr, t } = useT();
   return (
     <Card className="rounded-xl hover:shadow-sm transition-shadow">
       <CardContent className="pt-3 pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm   text-foreground">{idea.title}</h3>
+              <h3 className="text-sm   text-foreground">{t(idea.title)}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES[idea.status])}>
-                {idea.status}
+                {t(idea.status)}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{idea.description}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{t(idea.description)}</p>
             <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Building2 className="h-3 w-3" />
-                {idea.department}
+                {t(idea.department)}
               </span>
               <span className="flex items-center gap-1">
                 <CalendarDays className="h-3 w-3" />
-                {idea.date}
+                {t(idea.date)}
               </span>
             </div>
           </div>
@@ -205,7 +272,7 @@ function IdeaListCard({ idea, onNavigate }: { idea: IdeaCard; onNavigate: (id: s
             onClick={() => onNavigate('idea-detail-' + idea.id)}
             className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
-            View Details <ArrowRight className="h-3.5 w-3.5" />
+            {tr('View Details', 'عرض التفاصيل')} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </button>
         </div>
       </CardContent>
@@ -214,26 +281,27 @@ function IdeaListCard({ idea, onNavigate }: { idea: IdeaCard; onNavigate: (id: s
 }
 
 function DraftListCard({ draft, onNavigate }: { draft: DraftCard; onNavigate: (id: string) => void }) {
+  const { tr, t } = useT();
   return (
     <Card className="rounded-xl hover:shadow-sm transition-shadow">
       <CardContent className="pt-3 pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm   text-foreground">{draft.title}</h3>
+              <h3 className="text-sm   text-foreground">{t(draft.title)}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Draft'])}>
-                Draft
+                {tr('Draft', 'مسودة')}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{draft.description}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{t(draft.description)}</p>
             <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Building2 className="h-3 w-3" />
-                {draft.department}
+                {t(draft.department)}
               </span>
               <span className="flex items-center gap-1">
                 <FileEdit className="h-3 w-3" />
-                Last edited {draft.lastEdited}
+                {tr('Last edited', 'آخر تعديل')} {t(draft.lastEdited)}
               </span>
             </div>
           </div>
@@ -241,7 +309,7 @@ function DraftListCard({ draft, onNavigate }: { draft: DraftCard; onNavigate: (i
             onClick={() => onNavigate('submit-idea')}
             className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
-            Continue <ArrowRight className="h-3.5 w-3.5" />
+            {tr('Continue', 'متابعة')} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </button>
         </div>
       </CardContent>
@@ -250,34 +318,35 @@ function DraftListCard({ draft, onNavigate }: { draft: DraftCard; onNavigate: (i
 }
 
 function NeedsInfoListCard({ item, onNavigate }: { item: NeedsInfoCard; onNavigate: (id: string) => void }) {
+  const { tr, t } = useT();
   return (
     <Card className="rounded-xl hover:shadow-sm transition-shadow border-orange-200">
       <CardContent className="pt-3 pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm   text-foreground">{item.title}</h3>
+              <h3 className="text-sm   text-foreground">{t(item.title)}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Needs More Info'])}>
-                Needs More Info
+                {tr('Needs More Info', 'بحاجة إلى معلومات إضافية')}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{item.description}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{t(item.description)}</p>
             {/* Reviewer message */}
             <div className="flex items-start gap-2 bg-orange-50 border border-orange-200 rounded-lg px-3 py-2 mb-2">
               <MessageSquare className="h-3.5 w-3.5 text-orange-500 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-orange-700">
-                <span className=" ">Reviewer: </span>
-                {item.reviewerMessage}
+                <span className=" ">{tr('Reviewer: ', 'المراجع: ')}</span>
+                {t(item.reviewerMessage)}
               </p>
             </div>
             <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Building2 className="h-3 w-3" />
-                {item.department}
+                {t(item.department)}
               </span>
               <span className="flex items-center gap-1">
                 <CalendarDays className="h-3 w-3" />
-                Submitted {item.submittedDate}
+                {tr('Submitted', 'تاريخ التقديم')} {t(item.submittedDate)}
               </span>
             </div>
           </div>
@@ -285,7 +354,7 @@ function NeedsInfoListCard({ item, onNavigate }: { item: NeedsInfoCard; onNaviga
             onClick={() => onNavigate('idea-detail-' + item.id)}
             className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
-            View Details <ArrowRight className="h-3.5 w-3.5" />
+            {tr('View Details', 'عرض التفاصيل')} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </button>
         </div>
       </CardContent>
@@ -294,25 +363,26 @@ function NeedsInfoListCard({ item, onNavigate }: { item: NeedsInfoCard; onNaviga
 }
 
 function GrievanceListCard({ item, onNavigate }: { item: GrievanceCard; onNavigate: (id: string) => void }) {
+  const { tr, t } = useT();
   return (
     <Card className="rounded-xl hover:shadow-sm transition-shadow border-red-200">
       <CardContent className="pt-3 pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1.5">
-              <h3 className="text-sm   text-foreground">{item.title}</h3>
+              <h3 className="text-sm   text-foreground">{t(item.title)}</h3>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Grievance Filed'])}>
-                Grievance Filed
+                {tr('Grievance Filed', 'تظلم مقدم')}
               </Badge>
               <Badge className={cn('text-[11px] px-2 py-0.5 h-auto', STATUS_STYLES['Under Review'])}>
-                Under Review
+                {tr('Under Review', 'قيد المراجعة')}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{item.description}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-2">{t(item.description)}</p>
             <div className="flex items-center gap-4 text-[11px] text-muted-foreground">
               <span className="flex items-center gap-1">
                 <AlertCircle className="h-3 w-3 text-red-400" />
-                Filed {item.date}
+                {tr('Filed', 'تاريخ التقديم')} {t(item.date)}
               </span>
             </div>
           </div>
@@ -320,7 +390,7 @@ function GrievanceListCard({ item, onNavigate }: { item: GrievanceCard; onNaviga
             onClick={() => onNavigate('grievance-detail-' + item.id)}
             className="flex items-center gap-1 text-xs text-[#008755] hover:text-[#005844]   transition-colors whitespace-nowrap flex-shrink-0 mt-0.5"
           >
-            View Details <ArrowRight className="h-3.5 w-3.5" />
+            {tr('View Details', 'عرض التفاصيل')} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
           </button>
         </div>
       </CardContent>
@@ -361,6 +431,7 @@ function StatPill({ label, value, color }: { label: string; value: number; color
 // ── Main component ────────────────────────────────────────────────────────────
 export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
   const [activeTab, setActiveTab] = useState('my-ideas');
+  const { tr } = useLanguage();
 
   const myIdeas = role === 'admin' || role === 'director'
     ? [...MY_IDEAS_BASE, ...MY_IDEAS_ADMIN_EXTRA]
@@ -379,9 +450,9 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
         {/* ── Page header ─────────────────────────────────────────────────── */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl   text-foreground mb-0.5">My Ideas</h1>
+            <h1 className="text-xl   text-foreground mb-0.5">{tr('My Ideas', 'أفكاري')}</h1>
             <p className="text-sm text-muted-foreground leading-snug">
-              Track and manage all ideas you've submitted on the platform.
+              {tr("Track and manage all ideas you've submitted on the platform.", 'تابع وأدِر جميع الأفكار التي قدمتها على المنصة.')}
             </p>
           </div>
           <Button
@@ -389,48 +460,48 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
             className="bg-[#008755] hover:bg-[#005844] text-white gap-1.5 flex-shrink-0"
           >
             <Plus className="h-4 w-4" />
-            Submit New Idea
+            {tr('Submit New Idea', 'تقديم فكرة جديدة')}
           </Button>
         </div>
 
         {/* ── Stat pills ──────────────────────────────────────────────────── */}
         <div className="flex flex-wrap gap-3">
-          <StatPill label="Total Ideas" value={myIdeas.length} color="text-foreground" />
-          <StatPill label="Implemented" value={implementedCount} color="text-[#008755]" />
-          <StatPill label="Approved" value={approvedCount} color="text-[#005844]" />
-          <StatPill label="Under Review" value={underReviewCount} color="text-amber-600" />
-          <StatPill label="Drafts" value={DRAFTS.length} color="text-blue-600" />
+          <StatPill label={tr('Total Ideas', 'إجمالي الأفكار')} value={myIdeas.length} color="text-foreground" />
+          <StatPill label={tr('Implemented', 'منفذة')} value={implementedCount} color="text-[#008755]" />
+          <StatPill label={tr('Approved', 'معتمدة')} value={approvedCount} color="text-[#005844]" />
+          <StatPill label={tr('Under Review', 'قيد المراجعة')} value={underReviewCount} color="text-amber-600" />
+          <StatPill label={tr('Drafts', 'المسودات')} value={DRAFTS.length} color="text-blue-600" />
         </div>
 
         {/* ── Tabs ────────────────────────────────────────────────────────── */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full grid grid-cols-4 h-auto p-1">
             <TabsTrigger value="my-ideas" className="text-xs py-1.5">
-              My Ideas
+              {tr('My Ideas', 'أفكاري')}
               {myIdeas.length > 0 && (
-                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/15 px-1 text-[10px]   text-[#008755]">
+                <span className="ms-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#008755]/15 px-1 text-[10px]   text-[#008755]">
                   {myIdeas.length}
                 </span>
               )}
             </TabsTrigger>
             <TabsTrigger value="drafts" className="text-xs py-1.5">
-              Drafts
+              {tr('Drafts', 'المسودات')}
               {DRAFTS.length > 0 && (
-                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-blue-100 px-1 text-[10px]   text-blue-700">
+                <span className="ms-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-blue-100 px-1 text-[10px]   text-blue-700">
                   {DRAFTS.length}
                 </span>
               )}
             </TabsTrigger>
             <TabsTrigger value="needs-info" className="text-xs py-1.5">
-              Needs More Info
+              {tr('Needs More Info', 'بحاجة إلى معلومات')}
               {NEEDS_INFO.length > 0 && (
-                <span className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-100 px-1 text-[10px]   text-orange-700">
+                <span className="ms-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-orange-100 px-1 text-[10px]   text-orange-700">
                   {NEEDS_INFO.length}
                 </span>
               )}
             </TabsTrigger>
             <TabsTrigger value="grievances" className="text-xs py-1.5">
-              Grievances
+              {tr('Grievances', 'التظلمات')}
             </TabsTrigger>
           </TabsList>
 
@@ -441,8 +512,8 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
                   <IdeaListCard key={idea.id} idea={idea} onNavigate={onNavigate} />
                 ))
               : <EmptyState
-                  label="No ideas submitted yet"
-                  action="Submit your first idea →"
+                  label={tr('No ideas submitted yet', 'لم تقدم أي أفكار بعد')}
+                  action={tr('Submit your first idea →', 'قدّم فكرتك الأولى ←')}
                   onAction={() => onNavigate('submit-idea')}
                 />
             }
@@ -455,8 +526,8 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
                   <DraftListCard key={draft.id} draft={draft} onNavigate={onNavigate} />
                 ))
               : <EmptyState
-                  label="No drafts saved"
-                  action="Start a new idea →"
+                  label={tr('No drafts saved', 'لا توجد مسودات محفوظة')}
+                  action={tr('Start a new idea →', 'ابدأ فكرة جديدة ←')}
                   onAction={() => onNavigate('submit-idea')}
                 />
             }
@@ -468,7 +539,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
               ? NEEDS_INFO.map(item => (
                   <NeedsInfoListCard key={item.id} item={item} onNavigate={onNavigate} />
                 ))
-              : <EmptyState label="No ideas need additional information" />
+              : <EmptyState label={tr('No ideas need additional information', 'لا توجد أفكار بحاجة إلى معلومات إضافية')} />
             }
           </TabsContent>
 
@@ -478,16 +549,16 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
               ? GRIEVANCES.map(item => (
                   <GrievanceListCard key={item.id} item={item} onNavigate={onNavigate} />
                 ))
-              : <EmptyState label="No grievances filed" />
+              : <EmptyState label={tr('No grievances filed', 'لا توجد تظلمات مقدمة')} />
             }
             {/* File new grievance CTA */}
             <div className="border border-dashed border-border rounded-xl p-3 flex items-center justify-between">
               <div>
                 <p className="text-sm   text-foreground mb-0.5">
-                  Have a concern about an idea?
+                  {tr('Have a concern about an idea?', 'هل لديك ملاحظة بشأن إحدى الأفكار؟')}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  File a grievance if your idea wasn't credited or was unfairly rejected.
+                  {tr("File a grievance if your idea wasn't credited or was unfairly rejected.", 'قدّم تظلمًا إذا لم تُنسب إليك فكرتك أو رُفضت بشكل غير عادل.')}
                 </p>
               </div>
               <Button
@@ -497,7 +568,7 @@ export function MyIdeasPage({ user, role, onNavigate }: PageProps) {
                 onClick={() => onNavigate('file-grievance')}
               >
                 <AlertCircle className="h-3.5 w-3.5 text-red-500" />
-                File Grievance
+                {tr('File Grievance', 'تقديم تظلم')}
               </Button>
             </div>
           </TabsContent>

@@ -31,6 +31,7 @@ import {
   Smile,
   Workflow,
 } from 'lucide-react';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,10 @@ interface User {
   xp: number;
   initials: string;
   chip: string;
+  nameAr?: string;
+  roleAr?: string;
+  subtitleAr?: string;
+  chipAr?: string;
 }
 
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -126,6 +131,94 @@ const SYSTEM_LOGS: LogEntry[] = [
   { id: 12, timestamp: '2024-06-09 10:12:07', level: 'Error', event: 'File upload error', user: 'ahmed.almansouri@dubaipolice.gov.ae', details: 'Attachment exceeds 10 MB limit for idea #1048' },
 ];
 
+// ─── Arabic translations for mock data (keyed by English value) ───────────────
+
+const AR: Record<string, string> = {
+  // Users
+  'Lt. Ahmed Al Mansouri': 'ملازم أحمد المنصوري',
+  'Cpt. Fatima Al Zaabi': 'نقيب فاطمة الزعابي',
+  'Maj. Khalid Al Rashidi': 'رائد خالد الراشدي',
+  'Sgt. Mariam Al Falasi': 'رقيب مريم الفلاسي',
+  'Insp. Omar Al Ketbi': 'مفتش عمر الكتبي',
+  'Col. Sara Al Muhairi': 'عقيد سارة المهيري',
+  'Cpl. Yousef Al Shamsi': 'عريف يوسف الشامسي',
+  'Brig. Noura Al Hashimi': 'عميد نورة الهاشمي',
+  // Departments
+  'Cybercrime': 'الجرائم الإلكترونية',
+  'Traffic & Patrol': 'المرور والدوريات',
+  'Criminal Investigations': 'التحريات الجنائية',
+  'Community Service': 'خدمة المجتمع',
+  'Smart Services': 'الخدمات الذكية',
+  'Operations': 'العمليات',
+  'Logistics': 'الخدمات اللوجستية',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  // Roles
+  'Innovator': 'مبتكر',
+  'Primary Coordinator': 'منسق رئيسي',
+  'Department Director': 'مدير إدارة',
+  'System Admin': 'مسؤول النظام',
+  // Status
+  'Active': 'نشط',
+  'Inactive': 'غير نشط',
+  // Last active
+  '2 hours ago': 'منذ ساعتين',
+  '1 day ago': 'منذ يوم',
+  '3 days ago': 'منذ 3 أيام',
+  '30 minutes ago': 'منذ 30 دقيقة',
+  '2 weeks ago': 'منذ أسبوعين',
+  '5 hours ago': 'منذ 5 ساعات',
+  '4 hours ago': 'منذ 4 ساعات',
+  // Categories
+  'Technology': 'التكنولوجيا',
+  'Process Improvement': 'تحسين العمليات',
+  'Customer Experience': 'تجربة المتعاملين',
+  'Safety & Security': 'السلامة والأمن',
+  'Environmental': 'البيئة',
+  'HR & Wellbeing': 'الموارد البشرية وجودة الحياة',
+  'Digital Transformation': 'التحول الرقمي',
+  'Strategic Partnerships': 'الشراكات الاستراتيجية',
+  // Log levels
+  'All': 'الكل',
+  'Error': 'خطأ',
+  'Warning': 'تحذير',
+  'Info': 'معلومات',
+  // Log events
+  'User login': 'تسجيل دخول مستخدم',
+  'SLA breach': 'تجاوز مهلة مستوى الخدمة',
+  'Email delivery failed': 'فشل إرسال البريد الإلكتروني',
+  'Idea submitted': 'تم تقديم فكرة',
+  'Role updated': 'تم تحديث الدور',
+  'Rate limit': 'تجاوز حد الاستخدام',
+  'Category updated': 'تم تحديث الفئة',
+  'DB connection timeout': 'انتهاء مهلة الاتصال بقاعدة البيانات',
+  'Settings saved': 'تم حفظ الإعدادات',
+  'Failed login attempt': 'محاولة دخول فاشلة',
+  'Export completed': 'اكتمل التصدير',
+  'File upload error': 'خطأ في رفع الملف',
+  // Log users
+  'system': 'النظام',
+  'unknown': 'غير معروف',
+  // Log details
+  'Successful login from 10.0.1.45': 'تسجيل دخول ناجح من 10.0.1.45',
+  'Idea #1042 exceeded coordinator review SLA by 2 days': 'تجاوزت الفكرة رقم 1042 مهلة مراجعة المنسق بيومين',
+  'SMTP error 550 for omar.alketbi@dubaipolice.gov.ae': 'خطأ SMTP رقم 550 للعنوان omar.alketbi@dubaipolice.gov.ae',
+  'Idea #1055 submitted in category: Technology': 'تم تقديم الفكرة رقم 1055 ضمن فئة: التكنولوجيا',
+  'User omar.alketbi promoted to Primary Coordinator': 'تمت ترقية المستخدم omar.alketbi إلى منسق رئيسي',
+  'Monthly idea submission limit reached (3/3)': 'تم بلوغ الحد الشهري لتقديم الأفكار (3/3)',
+  'Category "Strategic Partnerships" deactivated': 'تم تعطيل فئة "الشراكات الاستراتيجية"',
+  'Primary DB timeout, fell back to replica (recovered in 3s)': 'انتهت مهلة قاعدة البيانات الرئيسية وتم التحويل إلى النسخة الاحتياطية (استُعيدت خلال 3 ثوانٍ)',
+  'Platform settings updated: max_description_length=2000': 'تم تحديث إعدادات المنصة: max_description_length=2000',
+  '3 consecutive failed logins from 192.168.2.101': '3 محاولات دخول فاشلة متتالية من 192.168.2.101',
+  'Ideas export (CSV, 127 records) downloaded successfully': 'تم تنزيل ملف تصدير الأفكار (CSV، 127 سجلاً) بنجاح',
+  'Attachment exceeds 10 MB limit for idea #1048': 'المرفق يتجاوز الحد المسموح (10 ميجابايت) للفكرة رقم 1048',
+};
+
+/** Translate a mock-data value at render time (logic keys remain English). */
+function useDataTr() {
+  const { tr } = useLanguage();
+  return (value: string) => tr(value, AR[value]);
+}
+
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
 function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void }) {
@@ -143,7 +236,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
       <span
         className={cn(
           'pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
-          checked ? 'translate-x-4' : 'translate-x-0',
+          checked ? 'translate-x-4 rtl:-translate-x-4' : 'translate-x-0',
         )}
       />
     </button>
@@ -151,6 +244,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
 }
 
 function StatusBadge({ status }: { status: UserStatus }) {
+  const td = useDataTr();
   return (
     <span
       className={cn(
@@ -160,12 +254,13 @@ function StatusBadge({ status }: { status: UserStatus }) {
           : 'bg-gray-100 text-gray-500',
       )}
     >
-      {status}
+      {td(status)}
     </span>
   );
 }
 
 function LogLevelBadge({ level }: { level: LogLevel }) {
+  const td = useDataTr();
   const styles: Record<LogLevel, string> = {
     Error: 'bg-red-100 text-red-700',
     Warning: 'bg-amber-100 text-amber-700',
@@ -179,7 +274,7 @@ function LogLevelBadge({ level }: { level: LogLevel }) {
   return (
     <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium', styles[level])}>
       {icons[level]}
-      {level}
+      {td(level)}
     </span>
   );
 }
@@ -187,6 +282,8 @@ function LogLevelBadge({ level }: { level: LogLevel }) {
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
 function UserManagementTab() {
+  const { tr } = useLanguage();
+  const td = useDataTr();
   const [users, setUsers] = useState<MockUser[]>(MOCK_USERS);
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<number[]>([]);
@@ -194,7 +291,9 @@ function UserManagementTab() {
   const filtered = users.filter(
     (u) =>
       u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.department.toLowerCase().includes(search.toLowerCase()),
+      u.department.toLowerCase().includes(search.toLowerCase()) ||
+      td(u.name).includes(search) ||
+      td(u.department).includes(search),
   );
 
   const allSelected = filtered.length > 0 && filtered.every((u) => selected.includes(u.id));
@@ -237,36 +336,36 @@ function UserManagementTab() {
       {/* Toolbar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
           <Input
-            placeholder="Search users or department…"
+            placeholder={tr('Search users or department…', 'ابحث عن مستخدم أو إدارة…')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="ps-9"
           />
         </div>
         <Button className="gap-2 bg-[#008755] hover:bg-[#005844] text-white">
           <UserPlus className="size-4" />
-          Invite User
+          {tr('Invite User', 'دعوة مستخدم')}
         </Button>
       </div>
 
       {/* Bulk actions */}
       {selected.length > 0 && (
         <div className="flex items-center gap-3 rounded-lg bg-[#008755]/10 border border-[#008755]/30 px-4 py-2">
-          <span className="text-sm font-medium text-[#005844]">{selected.length} selected</span>
+          <span className="text-sm font-medium text-[#005844]">{selected.length} {tr('selected', 'محدد')}</span>
           <Button
             size="sm"
             variant="outline"
             className="h-7 text-xs"
             onClick={deactivateSelected}
           >
-            <UserX className="size-3 mr-1" />
-            Deactivate Selected
+            <UserX className="size-3 me-1" />
+            {tr('Deactivate Selected', 'تعطيل المحدد')}
           </Button>
           <Button size="sm" variant="outline" className="h-7 text-xs">
-            <Download className="size-3 mr-1" />
-            Export
+            <Download className="size-3 me-1" />
+            {tr('Export', 'تصدير')}
           </Button>
         </div>
       )}
@@ -285,13 +384,13 @@ function UserManagementTab() {
                     className="rounded border-gray-300 accent-[#008755]"
                   />
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Department</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Role</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">Ideas</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Active</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Name', 'الاسم')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Department', 'الإدارة')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Role', 'الدور')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Status', 'الحالة')}</th>
+                <th className="px-4 py-3 text-end text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Ideas', 'الأفكار')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Last Active', 'آخر نشاط')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Actions', 'الإجراءات')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -310,22 +409,22 @@ function UserManagementTab() {
                       <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#008755]/10 text-[#008755] text-xs font-bold">
                         {u.initials}
                       </div>
-                      <span className="font-medium text-gray-900">{u.name}</span>
+                      <span className="font-medium text-gray-900">{td(u.name)}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{u.department}</td>
+                  <td className="px-4 py-3 text-gray-600">{td(u.department)}</td>
                   <td className="px-4 py-3">
                     <div className="relative">
                       <select
                         value={u.role}
                         onChange={(e) => changeRole(u.id, e.target.value as PlatformRole)}
-                        className="appearance-none rounded-md border border-gray-200 bg-white py-1 pl-2 pr-7 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#008755]/40 cursor-pointer"
+                        className="appearance-none rounded-md border border-gray-200 bg-white py-1 ps-2 pe-7 text-xs text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#008755]/40 cursor-pointer"
                       >
                         {ROLES.map((r) => (
-                          <option key={r} value={r}>{r}</option>
+                          <option key={r} value={r}>{td(r)}</option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 size-3 text-gray-400" />
+                      <ChevronDown className="pointer-events-none absolute end-2 top-1/2 -translate-y-1/2 size-3 text-gray-400" />
                     </div>
                   </td>
                   <td className="px-4 py-3">
@@ -337,11 +436,11 @@ function UserManagementTab() {
                       <StatusBadge status={u.status} />
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right font-medium text-gray-800">{u.ideasSubmitted}</td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">{u.lastActive}</td>
+                  <td className="px-4 py-3 text-end font-medium text-gray-800">{u.ideasSubmitted}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">{td(u.lastActive)}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1">
-                      <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-gray-500 hover:text-[#008755]">
+                      <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-gray-500 hover:text-[#008755]" aria-label={tr('Edit', 'تعديل')}>
                         <Edit2 className="size-3.5" />
                       </Button>
                       <Button
@@ -359,7 +458,7 @@ function UserManagementTab() {
             </tbody>
           </table>
           {filtered.length === 0 && (
-            <div className="py-10 text-center text-sm text-gray-400">No users match your search.</div>
+            <div className="py-10 text-center text-sm text-gray-400">{tr('No users match your search.', 'لا يوجد مستخدمون مطابقون لبحثك.')}</div>
           )}
         </div>
       </Card>
@@ -402,6 +501,7 @@ function NumberInput({ defaultValue, min = 1, max = 9999 }: { defaultValue: numb
 }
 
 function PlatformSettingsTab() {
+  const { tr } = useLanguage();
   const [aiAssist, setAiAssist] = useState(true);
   const [anonSubmit, setAnonSubmit] = useState(false);
   const [autoAssign, setAutoAssign] = useState(true);
@@ -415,19 +515,19 @@ function PlatformSettingsTab() {
       {/* Submission Settings */}
       <Card>
         <CardHeader className="px-4 pt-4 pb-2">
-          <CardTitle className="text-base font-semibold text-gray-900">Submission Settings</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-900">{tr('Submission Settings', 'إعدادات التقديم')}</CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4 divide-y divide-gray-100">
-          <SettingRow label="Ideas per employee per month" description="Maximum ideas one employee can submit per month.">
+          <SettingRow label={tr('Ideas per employee per month', 'عدد الأفكار لكل موظف شهرياً')} description={tr('Maximum ideas one employee can submit per month.', 'الحد الأقصى لعدد الأفكار التي يمكن للموظف تقديمها شهرياً.')}>
             <NumberInput defaultValue={3} />
           </SettingRow>
-          <SettingRow label="Max idea description length" description="Character limit for the idea description field.">
+          <SettingRow label={tr('Max idea description length', 'الحد الأقصى لطول وصف الفكرة')} description={tr('Character limit for the idea description field.', 'الحد الأقصى لعدد الأحرف في حقل وصف الفكرة.')}>
             <NumberInput defaultValue={2000} max={10000} />
           </SettingRow>
-          <SettingRow label="Allow anonymous submissions" description="Employees can submit ideas without revealing their identity.">
+          <SettingRow label={tr('Allow anonymous submissions', 'السماح بالتقديم دون الكشف عن الهوية')} description={tr('Employees can submit ideas without revealing their identity.', 'يمكن للموظفين تقديم الأفكار دون الكشف عن هويتهم.')}>
             <Toggle checked={anonSubmit} onChange={() => setAnonSubmit((v) => !v)} />
           </SettingRow>
-          <SettingRow label="Auto-assign coordinator by department" description="Automatically route ideas to the coordinator of the submitter's department.">
+          <SettingRow label={tr('Auto-assign coordinator by department', 'التعيين التلقائي للمنسق حسب الإدارة')} description={tr("Automatically route ideas to the coordinator of the submitter's department.", 'توجيه الأفكار تلقائياً إلى منسق الإدارة التي ينتمي إليها مقدّم الفكرة.')}>
             <Toggle checked={autoAssign} onChange={() => setAutoAssign((v) => !v)} />
           </SettingRow>
         </CardContent>
@@ -436,28 +536,28 @@ function PlatformSettingsTab() {
       {/* SLA Settings */}
       <Card>
         <CardHeader className="px-4 pt-4 pb-2">
-          <CardTitle className="text-base font-semibold text-gray-900">Review SLA Settings</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-900">{tr('Review SLA Settings', 'إعدادات مهل المراجعة')}</CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4 divide-y divide-gray-100">
-          <SettingRow label="Initial review SLA" description="Days before an unreviewed idea triggers an alert.">
+          <SettingRow label={tr('Initial review SLA', 'مهلة المراجعة الأولية')} description={tr('Days before an unreviewed idea triggers an alert.', 'عدد الأيام قبل أن تُطلق الفكرة غير المراجَعة تنبيهاً.')}>
             <div className="flex items-center gap-2">
               <NumberInput defaultValue={3} max={30} />
-              <span className="text-sm text-gray-500">days</span>
+              <span className="text-sm text-gray-500">{tr('days', 'أيام')}</span>
             </div>
           </SettingRow>
-          <SettingRow label="Coordinator decision SLA" description="Days for a coordinator to approve or reject an idea.">
+          <SettingRow label={tr('Coordinator decision SLA', 'مهلة قرار المنسق')} description={tr('Days for a coordinator to approve or reject an idea.', 'عدد الأيام المتاحة للمنسق لاعتماد الفكرة أو رفضها.')}>
             <div className="flex items-center gap-2">
               <NumberInput defaultValue={7} max={30} />
-              <span className="text-sm text-gray-500">days</span>
+              <span className="text-sm text-gray-500">{tr('days', 'أيام')}</span>
             </div>
           </SettingRow>
-          <SettingRow label="Director approval SLA" description="Days for a director to make a final decision.">
+          <SettingRow label={tr('Director approval SLA', 'مهلة اعتماد المدير')} description={tr('Days for a director to make a final decision.', 'عدد الأيام المتاحة للمدير لاتخاذ القرار النهائي.')}>
             <div className="flex items-center gap-2">
               <NumberInput defaultValue={5} max={30} />
-              <span className="text-sm text-gray-500">days</span>
+              <span className="text-sm text-gray-500">{tr('days', 'أيام')}</span>
             </div>
           </SettingRow>
-          <SettingRow label="SLA breach email notifications" description="Send email alerts when an SLA is breached.">
+          <SettingRow label={tr('SLA breach email notifications', 'إشعارات البريد عند تجاوز المهلة')} description={tr('Send email alerts when an SLA is breached.', 'إرسال تنبيهات بالبريد الإلكتروني عند تجاوز مهلة مستوى الخدمة.')}>
             <Toggle checked={slaEmail} onChange={() => setSlaEmail((v) => !v)} />
           </SettingRow>
         </CardContent>
@@ -466,16 +566,16 @@ function PlatformSettingsTab() {
       {/* Scoring & Visibility */}
       <Card>
         <CardHeader className="px-4 pt-4 pb-2">
-          <CardTitle className="text-base font-semibold text-gray-900">Scoring &amp; Visibility</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-900">{tr('Scoring & Visibility', 'التقييم والظهور')}</CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4 divide-y divide-gray-100">
-          <SettingRow label="Show idea scores to innovators" description="Innovators can see the evaluation score their ideas received.">
+          <SettingRow label={tr('Show idea scores to innovators', 'إظهار تقييم الأفكار للمبتكرين')} description={tr('Innovators can see the evaluation score their ideas received.', 'يمكن للمبتكرين الاطلاع على درجة التقييم التي حصلت عليها أفكارهم.')}>
             <Toggle checked={showScores} onChange={() => setShowScores((v) => !v)} />
           </SettingRow>
-          <SettingRow label="Public leaderboard" description="Display a ranked leaderboard of top innovators on the platform.">
+          <SettingRow label={tr('Public leaderboard', 'لوحة المتصدرين العامة')} description={tr('Display a ranked leaderboard of top innovators on the platform.', 'عرض لوحة ترتيب لأفضل المبتكرين على المنصة.')}>
             <Toggle checked={publicLeaderboard} onChange={() => setPublicLeaderboard((v) => !v)} />
           </SettingRow>
-          <SettingRow label="Allow idea upvoting" description="Employees can upvote ideas they find valuable.">
+          <SettingRow label={tr('Allow idea upvoting', 'السماح بالتصويت للأفكار')} description={tr('Employees can upvote ideas they find valuable.', 'يمكن للموظفين التصويت للأفكار التي يرونها ذات قيمة.')}>
             <Toggle checked={upvoting} onChange={() => setUpvoting((v) => !v)} />
           </SettingRow>
         </CardContent>
@@ -486,18 +586,21 @@ function PlatformSettingsTab() {
         <CardHeader className="px-4 pt-4 pb-2">
           <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
             <BrainCircuit className="size-4 text-[#008755]" />
-            AI Controls
+            {tr('AI Controls', 'ضوابط الذكاء الاصطناعي')}
           </CardTitle>
         </CardHeader>
         <CardContent className="px-4 pb-4 divide-y divide-gray-100">
           <SettingRow
-            label="AI Assistance"
-            description="When off, AI suggestions, similarity checks, and drafting are disabled platform-wide — submission, review, and decision actions continue to work normally."
+            label={tr('AI Assistance', 'مساعدة الذكاء الاصطناعي')}
+            description={tr(
+              'When off, AI suggestions, similarity checks, and drafting are disabled platform-wide — submission, review, and decision actions continue to work normally.',
+              'عند الإيقاف، يتم تعطيل اقتراحات الذكاء الاصطناعي وفحص التشابه والصياغة على مستوى المنصة، مع استمرار عمل إجراءات التقديم والمراجعة واتخاذ القرار بشكل طبيعي.',
+            )}
           >
             <div className="flex items-center gap-2">
               <Toggle checked={aiAssist} onChange={() => setAiAssist((v) => !v)} />
               <span className={cn('text-xs font-medium', aiAssist ? 'text-[#008755]' : 'text-gray-400')}>
-                {aiAssist ? 'On' : 'Off'}
+                {aiAssist ? tr('On', 'مفعّل') : tr('Off', 'معطّل')}
               </span>
             </div>
           </SettingRow>
@@ -507,7 +610,7 @@ function PlatformSettingsTab() {
       <div className="flex justify-end">
         <Button className="gap-2 bg-[#008755] hover:bg-[#005844] text-white">
           <Save className="size-4" />
-          Save Changes
+          {tr('Save Changes', 'حفظ التغييرات')}
         </Button>
       </div>
     </div>
@@ -515,6 +618,8 @@ function PlatformSettingsTab() {
 }
 
 function CategoryManagementTab() {
+  const { tr } = useLanguage();
+  const td = useDataTr();
   const [categories, setCategories] = useState<Category[]>(CATEGORIES);
 
   function toggleCategory(id: number) {
@@ -524,10 +629,10 @@ function CategoryManagementTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-600">{categories.length} categories configured</p>
+        <p className="text-sm text-gray-600">{categories.length} {tr('categories configured', 'فئات مُعدّة')}</p>
         <Button className="gap-2 bg-[#008755] hover:bg-[#005844] text-white">
           <PlusCircle className="size-4" />
-          Add Category
+          {tr('Add Category', 'إضافة فئة')}
         </Button>
       </div>
 
@@ -536,11 +641,11 @@ function CategoryManagementTab() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b bg-gray-50">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-10">Icon</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Category Name</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">Ideas</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide w-10">{tr('Icon', 'الأيقونة')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Category Name', 'اسم الفئة')}</th>
+                <th className="px-4 py-3 text-end text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Ideas', 'الأفكار')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Status', 'الحالة')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Actions', 'الإجراءات')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -553,19 +658,19 @@ function CategoryManagementTab() {
                         <Icon className="size-4" />
                       </div>
                     </td>
-                    <td className="px-4 py-3 font-medium text-gray-900">{cat.name}</td>
-                    <td className="px-4 py-3 text-right text-gray-700 font-medium">{cat.ideaCount}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">{td(cat.name)}</td>
+                    <td className="px-4 py-3 text-end text-gray-700 font-medium">{cat.ideaCount}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Toggle checked={cat.active} onChange={() => toggleCategory(cat.id)} />
                         <span className={cn('text-xs', cat.active ? 'text-green-700' : 'text-gray-400')}>
-                          {cat.active ? 'Active' : 'Inactive'}
+                          {cat.active ? td('Active') : td('Inactive')}
                         </span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-gray-500 hover:text-[#008755]">
+                        <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-gray-500 hover:text-[#008755]" aria-label={tr('Edit', 'تعديل')}>
                           <Edit2 className="size-3.5" />
                         </Button>
                         <Button size="sm" variant="ghost" className="h-7 w-7 p-0 text-gray-500 hover:text-[#E4002B]">
@@ -587,6 +692,8 @@ function CategoryManagementTab() {
 type LogLevelFilter = 'All' | LogLevel;
 
 function SystemLogsTab() {
+  const { tr } = useLanguage();
+  const td = useDataTr();
   const [search, setSearch] = useState('');
   const [levelFilter, setLevelFilter] = useState<LogLevelFilter>('All');
   const [dateFrom, setDateFrom] = useState('');
@@ -596,7 +703,9 @@ function SystemLogsTab() {
     const matchSearch =
       log.event.toLowerCase().includes(search.toLowerCase()) ||
       log.user.toLowerCase().includes(search.toLowerCase()) ||
-      log.details.toLowerCase().includes(search.toLowerCase());
+      log.details.toLowerCase().includes(search.toLowerCase()) ||
+      td(log.event).includes(search) ||
+      td(log.details).includes(search);
     const matchLevel = levelFilter === 'All' || log.level === levelFilter;
     return matchSearch && matchLevel;
   });
@@ -608,12 +717,12 @@ function SystemLogsTab() {
       {/* Filter Bar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
           <Input
-            placeholder="Search logs…"
+            placeholder={tr('Search logs…', 'ابحث في السجلات…')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="ps-9"
           />
         </div>
 
@@ -629,7 +738,7 @@ function SystemLogsTab() {
                   : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300',
               )}
             >
-              {lvl}
+              {td(lvl)}
             </button>
           ))}
         </div>
@@ -650,9 +759,9 @@ function SystemLogsTab() {
           />
         </div>
 
-        <Button variant="outline" size="sm" className="gap-2 ml-auto">
+        <Button variant="outline" size="sm" className="gap-2 ms-auto">
           <Download className="size-3.5" />
-          Export
+          {tr('Export', 'تصدير')}
         </Button>
       </div>
 
@@ -662,11 +771,11 @@ function SystemLogsTab() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b bg-gray-50">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Timestamp</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Level</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Event</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">User</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Details</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">{tr('Timestamp', 'الوقت')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Level', 'المستوى')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Event', 'الحدث')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('User', 'المستخدم')}</th>
+                <th className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Details', 'التفاصيل')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -676,20 +785,25 @@ function SystemLogsTab() {
                   <td className="px-4 py-3">
                     <LogLevelBadge level={log.level} />
                   </td>
-                  <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{log.event}</td>
-                  <td className="px-4 py-3 text-xs text-gray-600 max-w-[180px] truncate">{log.user}</td>
-                  <td className="px-4 py-3 text-xs text-gray-500 max-w-[300px]">{log.details}</td>
+                  <td className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{td(log.event)}</td>
+                  <td className="px-4 py-3 text-xs text-gray-600 max-w-[180px] truncate">{td(log.user)}</td>
+                  <td className="px-4 py-3 text-xs text-gray-500 max-w-[300px]">{td(log.details)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           {filtered.length === 0 && (
-            <div className="py-10 text-center text-sm text-gray-400">No log entries match your filters.</div>
+            <div className="py-10 text-center text-sm text-gray-400">{tr('No log entries match your filters.', 'لا توجد سجلات مطابقة لعوامل التصفية.')}</div>
           )}
         </div>
       </Card>
 
-      <p className="text-xs text-gray-400 text-right">Showing {filtered.length} of {SYSTEM_LOGS.length} entries</p>
+      <p className="text-xs text-gray-400 text-end">
+        {tr(
+          `Showing ${filtered.length} of ${SYSTEM_LOGS.length} entries`,
+          `عرض ${filtered.length} من أصل ${SYSTEM_LOGS.length} سجلاً`,
+        )}
+      </p>
     </div>
   );
 }
@@ -697,22 +811,23 @@ function SystemLogsTab() {
 // ─── Main Export ───────────────────────────────────────────────────────────────
 
 export function AdminSettingsPage({ user, role, onNavigate }: PageProps) {
+  const { tr } = useLanguage();
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto w-full">
       {/* Page Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Admin Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{tr('Admin Settings', 'إعدادات المسؤول')}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Manage platform users, settings, and system configuration.
+            {tr('Manage platform users, settings, and system configuration.', 'إدارة مستخدمي المنصة والإعدادات وتهيئة النظام.')}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-gray-500 hidden sm:inline">Signed in as</span>
+          <span className="text-xs text-gray-500 hidden sm:inline">{tr('Signed in as', 'مسجّل الدخول باسم')}</span>
           <div className="flex size-8 items-center justify-center rounded-full bg-[#008755]/10 text-[#008755] text-xs font-bold">
             {user.initials}
           </div>
-          <span className="hidden sm:inline text-sm font-medium text-gray-700">{user.name}</span>
+          <span className="hidden sm:inline text-sm font-medium text-gray-700">{tr(user.name, user.nameAr)}</span>
         </div>
       </div>
 
@@ -721,23 +836,23 @@ export function AdminSettingsPage({ user, role, onNavigate }: PageProps) {
         <TabsList className="w-full sm:w-auto">
           <TabsTrigger value="users" className="gap-1.5">
             <Users className="size-4" />
-            <span className="hidden sm:inline">User Management</span>
-            <span className="sm:hidden">Users</span>
+            <span className="hidden sm:inline">{tr('User Management', 'إدارة المستخدمين')}</span>
+            <span className="sm:hidden">{tr('Users', 'المستخدمون')}</span>
           </TabsTrigger>
           <TabsTrigger value="settings" className="gap-1.5">
             <Settings className="size-4" />
-            <span className="hidden sm:inline">Platform Settings</span>
-            <span className="sm:hidden">Settings</span>
+            <span className="hidden sm:inline">{tr('Platform Settings', 'إعدادات المنصة')}</span>
+            <span className="sm:hidden">{tr('Settings', 'الإعدادات')}</span>
           </TabsTrigger>
           <TabsTrigger value="categories" className="gap-1.5">
             <Tag className="size-4" />
-            <span className="hidden sm:inline">Category Management</span>
-            <span className="sm:hidden">Categories</span>
+            <span className="hidden sm:inline">{tr('Category Management', 'إدارة الفئات')}</span>
+            <span className="sm:hidden">{tr('Categories', 'الفئات')}</span>
           </TabsTrigger>
           <TabsTrigger value="logs" className="gap-1.5">
             <ScrollText className="size-4" />
-            <span className="hidden sm:inline">System Logs</span>
-            <span className="sm:hidden">Logs</span>
+            <span className="hidden sm:inline">{tr('System Logs', 'سجلات النظام')}</span>
+            <span className="sm:hidden">{tr('Logs', 'السجلات')}</span>
           </TabsTrigger>
         </TabsList>
 

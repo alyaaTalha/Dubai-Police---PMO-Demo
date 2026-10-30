@@ -1,0 +1,225 @@
+import { useCallback } from 'react';
+import { useLanguage } from '../../i18n/LanguageContext';
+
+// Arabic translations for the Sandbox Platform seed data (sandboxData.ts / SandboxStore.ts).
+// Keyed by the English value so data shapes stay unchanged — render with `ts(value)`.
+export const SANDBOX_AR: Record<string, string> = {
+  // ── Project types ──
+  'R&D': 'البحث والتطوير',
+  'Research & Development': 'البحث والتطوير',
+  'Innovation': 'الابتكار',
+  'Knowledge': 'المعرفة',
+
+  // ── Statuses ──
+  'Ongoing': 'قيد التنفيذ',
+  'Completed': 'مكتمل',
+  'Delayed': 'متأخر',
+  'Pending Approval': 'بانتظار الموافقة',
+  'Rejected': 'مرفوض',
+
+  // ── Stages & sublabels ──
+  'Idea': 'فكرة',
+  'Feasibility Study': 'دراسة الجدوى',
+  'Approval': 'الاعتماد',
+  'Development': 'التطوير',
+  'Sandbox': 'البيئة التجريبية',
+  'Intake': 'الاستلام',
+  'Assessing': 'التقييم',
+  'Governance': 'الحوكمة',
+  'Building': 'البناء',
+  'Piloting': 'التجريب',
+
+  // ── Evaluation criteria ──
+  'Scientific Merit': 'القيمة العلمية',
+  'Technical Feasibility': 'الجدوى الفنية',
+  'Research Capability': 'القدرة البحثية',
+  'Cost Efficiency': 'كفاءة التكلفة',
+  'IP / Publication Potential': 'إمكانية الملكية الفكرية / النشر',
+  'Novelty': 'الأصالة',
+  'Strategic Alignment': 'المواءمة الاستراتيجية',
+  'Expected Impact': 'الأثر المتوقع',
+  'Implementation Readiness': 'جاهزية التنفيذ',
+  'Scalability': 'قابلية التوسع',
+  'Content Quality': 'جودة المحتوى',
+  'Reusability': 'قابلية إعادة الاستخدام',
+  'Institutional Value': 'القيمة المؤسسية',
+  'Accessibility': 'سهولة الوصول',
+  'Maintenance Plan': 'خطة الصيانة',
+
+  // ── Score verdicts ──
+  'Strong': 'قوي',
+  'Approve': 'موافقة',
+  'Revise': 'مراجعة',
+  'Reject': 'رفض',
+
+  // ── TRL labels ──
+  'Basic principles observed': 'رصد المبادئ الأساسية',
+  'Technology concept formulated': 'صياغة المفهوم التقني',
+  'Proof of concept': 'إثبات المفهوم',
+  'Validated in lab': 'التحقق في المختبر',
+  'Validated in relevant environment': 'التحقق في بيئة ذات صلة',
+  'Demonstrated in relevant environment': 'العرض في بيئة ذات صلة',
+  'Prototype in operational environment': 'نموذج أولي في بيئة تشغيلية',
+  'System complete & qualified': 'نظام مكتمل ومؤهل',
+  'Proven in operations': 'مثبت في العمليات',
+
+  // ── Knowledge classes ──
+  'Class 7+': 'الفئة 7+',
+  'Class 7': 'الفئة 7',
+  'Class 6': 'الفئة 6',
+  'Class 5': 'الفئة 5',
+
+  // ── Departments ──
+  'Digital Transformation': 'التحول الرقمي',
+  'Operations': 'العمليات',
+  'Forensics': 'الأدلة الجنائية',
+  'Community Affairs': 'شؤون المجتمع',
+  'Legal Affairs': 'الشؤون القانونية',
+  'Traffic': 'المرور',
+  'Customer Happiness': 'إسعاد المتعاملين',
+  'Logistics': 'الخدمات اللوجستية',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Strategic Planning': 'التخطيط الاستراتيجي',
+
+  // ── People ──
+  'Dr. Layla Ahmed': 'د. ليلى أحمد',
+  'Dr. Hessa Al Blooshi': 'د. حصة البلوشي',
+  'Omar Al Zaabi': 'عمر الزعابي',
+  'Eng. Sara Al Neyadi': 'م. سارة النيادي',
+  'Fatima Al Mansoori': 'فاطمة المنصوري',
+  'Saeed Al Ketbi': 'سعيد الكتبي',
+  'Mariam Al Suwaidi': 'مريم السويدي',
+  'Aisha Al Suwaidi': 'عائشة السويدي',
+  'Khalid Al Rashid': 'خالد الراشد',
+  'Mohammed Hassan': 'محمد حسن',
+
+  // ── Partners ──
+  'Dubai Future Foundation': 'مؤسسة دبي للمستقبل',
+  'Khalifa University': 'جامعة خليفة',
+  'Interpol Innovation Lab': 'مختبر الإنتربول للابتكار',
+  'Patsnap': 'باتسناب',
+  'Smart Dubai Ventures': 'دبي الذكية للمشاريع',
+  'GITEX Innovation Council': 'مجلس جيتكس للابتكار',
+  'Mohammed Bin Rashid Space Centre': 'مركز محمد بن راشد للفضاء',
+  'UAE University': 'جامعة الإمارات',
+  'Europol Tech Exchange': 'منصة يوروبول للتبادل التقني',
+  'Government': 'حكومي',
+  'Academic': 'أكاديمي',
+  'International': 'دولي',
+  'Technology Vendor': 'مورد تقني',
+  'Industry Body': 'هيئة صناعية',
+  'UAE': 'الإمارات',
+  'Global': 'عالمي',
+
+  // ── Projects ──
+  'Predictive Threat Modeling Engine': 'محرك النمذجة التنبؤية للتهديدات',
+  'Autonomous Patrol Drone Study': 'دراسة طائرات الدوريات ذاتية القيادة',
+  'Forensic DNA Rapid-Analysis Method': 'طريقة التحليل السريع للحمض النووي الجنائي',
+  'Behavioral Risk Prediction Study': 'دراسة التنبؤ بالمخاطر السلوكية',
+  'Quantum-Resistant Encryption Pilot': 'تجربة التشفير المقاوم للحوسبة الكمية',
+  'Next-Gen Body Camera Optics': 'بصريات كاميرات الجسم من الجيل التالي',
+  'Smart Evidence Room (RFID)': 'غرفة الأدلة الذكية (RFID)',
+  'AI Complaint Triage Engine': 'محرك فرز الشكاوى بالذكاء الاصطناعي',
+  'Digital Twin — Traffic Network': 'التوأم الرقمي — شبكة المرور',
+  'Multilingual Virtual Help Assistant': 'المساعد الافتراضي متعدد اللغات',
+  'Predictive Vehicle Maintenance': 'الصيانة التنبؤية للمركبات',
+  'Smart Queue Management': 'الإدارة الذكية للطوابير',
+  'Drone-Assisted Crowd Analytics': 'تحليلات الحشود بمساعدة الطائرات المسيّرة',
+  'Institutional Case-Law Knowledge Base': 'قاعدة المعرفة المؤسسية للسوابق القضائية',
+  'Officer Field Manual Digitization': 'رقمنة الدليل الميداني للضباط',
+  'Cross-Agency Threat Intelligence Library': 'مكتبة استخبارات التهديدات المشتركة بين الجهات',
+  'Community Policing Best-Practice Archive': 'أرشيف أفضل ممارسات الشرطة المجتمعية',
+  'National Forensics Knowledge Standard': 'المعيار الوطني لمعرفة الأدلة الجنائية',
+  'Legacy Records Migration Study': 'دراسة ترحيل السجلات القديمة',
+
+  // ── Project descriptions ──
+  'Machine-learning engine forecasting incident hotspots from historical and environmental signals.': 'محرك تعلّم آلي يتنبأ بمواقع تركّز الحوادث استناداً إلى البيانات التاريخية والمؤشرات البيئية.',
+  'Feasibility assessment of autonomous aerial patrol units across designated districts.': 'تقييم جدوى وحدات الدوريات الجوية ذاتية القيادة في المناطق المحددة.',
+  'Reducing forensic DNA turnaround from 48 hours to under 6 hours.': 'تقليص زمن تحليل الحمض النووي الجنائي من 48 ساعة إلى أقل من 6 ساعات.',
+  'Longitudinal study on early behavioral indicators for community intervention programmes.': 'دراسة طولية حول المؤشرات السلوكية المبكرة لبرامج التدخل المجتمعي.',
+  'Pilot deployment of post-quantum cryptography across internal communication channels.': 'نشر تجريبي للتشفير ما بعد الكمي عبر قنوات الاتصال الداخلية.',
+  'Low-light optical research for next generation officer-worn recording devices.': 'أبحاث بصرية للإضاءة المنخفضة لأجهزة التسجيل المحمولة للضباط من الجيل التالي.',
+  'Fully digital evidence room with RFID tracking, eliminating manual custody logs.': 'غرفة أدلة رقمية بالكامل مع تتبع RFID تلغي سجلات الحفظ اليدوية.',
+  'NLP triage routing public complaints 40% faster than the manual process.': 'فرز بمعالجة اللغة الطبيعية يوجّه شكاوى الجمهور أسرع بنسبة 40% من العملية اليدوية.',
+  'Real-time digital twin simulating traffic interventions before field deployment.': 'توأم رقمي آني يحاكي التدخلات المرورية قبل تطبيقها ميدانياً.',
+  'Arabic/English conversational assistant for public service enquiries.': 'مساعد محادثة بالعربية والإنجليزية لاستفسارات الخدمات العامة.',
+  'IoT sensor network predicting fleet maintenance needs before failure.': 'شبكة مستشعرات إنترنت الأشياء تتنبأ باحتياجات صيانة الأسطول قبل حدوث الأعطال.',
+  'Reduced average service centre wait time from 25 to 9 minutes.': 'خفض متوسط وقت الانتظار في مراكز الخدمة من 25 إلى 9 دقائق.',
+  'Aerial analytics for large-event crowd density and flow management.': 'تحليلات جوية لإدارة كثافة الحشود وحركتها في الفعاليات الكبرى.',
+  'Searchable repository of internal case-law precedent and legal opinions.': 'مستودع قابل للبحث للسوابق القضائية الداخلية والآراء القانونية.',
+  'Full digitization of operational field manuals with offline mobile access.': 'رقمنة كاملة للأدلة الميدانية التشغيلية مع إمكانية الوصول عبر الهاتف دون اتصال.',
+  'Shared intelligence knowledge base across partner agencies.': 'قاعدة معرفة استخباراتية مشتركة بين الجهات الشريكة.',
+  'Curated archive of community engagement programmes and measured outcomes.': 'أرشيف منسّق لبرامج المشاركة المجتمعية ونتائجها المقاسة.',
+  'Federal-level standard for forensic documentation and methodology.': 'معيار اتحادي لتوثيق الأدلة الجنائية ومنهجياتها.',
+  'Superseded by the enterprise records modernization programme.': 'تم استبداله ببرنامج تحديث السجلات المؤسسية.',
+
+  // ── IP register ──
+  'Patent': 'براءة اختراع',
+  'Trademark': 'علامة تجارية',
+  'Intellectual Work': 'مصنف فكري',
+  'Granted': 'ممنوحة',
+  'Under Approval': 'قيد الاعتماد',
+  'AI-Powered Threat Detection Algorithm': 'خوارزمية كشف التهديدات بالذكاء الاصطناعي',
+  'Smart Evidence Chain-of-Custody Protocol': 'بروتوكول سلسلة حفظ الأدلة الذكية',
+  'Post-Quantum Key Exchange Method': 'طريقة تبادل المفاتيح ما بعد الكمية',
+  'Rapid DNA Sequencing Protocol': 'بروتوكول التسلسل السريع للحمض النووي',
+  'Automated Complaint Routing Method': 'طريقة التوجيه الآلي للشكاوى',
+  'Dynamic Queue Allocation System': 'نظام التخصيص الديناميكي للطوابير',
+  'Predictive Patrol Routing Method': 'طريقة التوجيه التنبؤي للدوريات',
+  'Sandbox Platform Wordmark': 'العلامة النصية لمنصة البيئة التجريبية',
+  'Innovation Programme Emblem': 'شعار برنامج الابتكار',
+  'Smart Policing Identity Suite': 'حزمة هوية الشرطة الذكية',
+  'Field Operations Handbook': 'دليل العمليات الميدانية',
+  'Community Engagement Playbook': 'دليل المشاركة المجتمعية',
+
+  // ── Reports ──
+  'R&D Portfolio Report': 'تقرير محفظة البحث والتطوير',
+  'Innovation Classification Report': 'تقرير تصنيف الابتكار',
+  'Patents & Trademarks Report': 'تقرير براءات الاختراع والعلامات التجارية',
+  'Partner Collaboration Report': 'تقرير التعاون مع الشركاء',
+  'Institutional Readiness Report': 'تقرير الجاهزية المؤسسية',
+  'Annual Innovation Index Submission': 'تقديم مؤشر الابتكار السنوي',
+  'Full breakdown of research projects, budget allocation and study output.': 'تفصيل كامل لمشاريع البحث وتخصيص الميزانية ومخرجات الدراسات.',
+  'GIMI-aligned IN1/IN2/IN3 classification across all innovation projects.': 'تصنيف IN1/IN2/IN3 المتوافق مع GIMI لجميع مشاريع الابتكار.',
+  'Status of every filed IP asset, granted and under approval.': 'حالة جميع أصول الملكية الفكرية المودعة، الممنوحة وقيد الاعتماد.',
+  'Active partnerships, co-funding and joint project contributions.': 'الشراكات النشطة والتمويل المشترك والمساهمات في المشاريع المشتركة.',
+  'Innovation readiness rate and technology investment trends.': 'معدل جاهزية الابتكار واتجاهات الاستثمار التقني.',
+  'Consolidated indicators formatted for national index submission.': 'مؤشرات موحدة ومنسقة لتقديمها إلى المؤشر الوطني.',
+
+  // ── Audit trail ──
+  'Patent granted': 'منح براءة اختراع',
+  'Evaluation submitted': 'تقديم تقييم',
+  'Stage advanced': 'الانتقال إلى مرحلة تالية',
+  'Partner agreement signed': 'توقيع اتفاقية شراكة',
+  'Project rejected': 'رفض مشروع',
+  'Report generated': 'إنشاء تقرير',
+  'Project registered': 'تسجيل مشروع',
+  'Newly registered project awaiting feasibility assessment.': 'مشروع مسجّل حديثاً بانتظار تقييم الجدوى.',
+  'Smart Evidence Chain-of-Custody Protocol approved by the IP office': 'اعتماد بروتوكول سلسلة حفظ الأدلة الذكية من مكتب الملكية الفكرية',
+  'Eng. Sara Al Neyadi scored Smart Evidence Room (RFID) at 94/100': 'قيّمت م. سارة النيادي غرفة الأدلة الذكية (RFID) بدرجة 94/100',
+  'Quantum-Resistant Encryption Pilot moved from Development to Sandbox': 'انتقلت تجربة التشفير المقاوم للحوسبة الكمية من التطوير إلى البيئة التجريبية',
+  'Khalifa University added to 2 additional R&D projects': 'إضافة جامعة خليفة إلى مشروعين إضافيين للبحث والتطوير',
+  'Legacy Records Migration Study closed — superseded by records modernization': 'إغلاق دراسة ترحيل السجلات القديمة — تم استبدالها بتحديث السجلات',
+  'Annual Innovation Index Submission produced by Aisha Al Suwaidi': 'أعدّت عائشة السويدي تقديم مؤشر الابتكار السنوي',
+  '2 hours ago': 'منذ ساعتين',
+  'Yesterday, 16:42': 'أمس، 16:42',
+  '2 days ago': 'منذ يومين',
+  '3 days ago': 'منذ 3 أيام',
+  '5 days ago': 'منذ 5 أيام',
+  'Just now': 'الآن',
+
+  // ── Page labels (SANDBOX_PAGE_LABELS) ──
+  'Home': 'الرئيسية',
+  'Intellectual Property': 'الملكية الفكرية',
+  'Partners': 'الشركاء',
+  'Project Evaluation': 'تقييم المشاريع',
+  'Reports': 'التقارير',
+  'Virtual Assistant': 'المساعد الافتراضي',
+  'Project Record': 'سجل المشروع',
+};
+
+/** Hook returning `ts(value)` — translates a Sandbox data value to Arabic when Arabic is active. */
+export function useSandboxTr() {
+  const { lang } = useLanguage();
+  return useCallback((en: string) => (lang === 'ar' ? SANDBOX_AR[en] ?? en : en), [lang]);
+}

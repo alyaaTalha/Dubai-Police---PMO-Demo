@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Home, Send, FileText, Globe, Trophy, Newspaper, Map,
   ClipboardList, GitBranch, Archive,
@@ -27,90 +27,108 @@ import { Badge } from '../ui/badge';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { cn } from '../ui/utils';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 // ── Sample users ─────────────────────────────────────────────────────────────
 export type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
 
 export const IDEAS_USERS: Record<IdeasRole, {
-  name: string; role: string; subtitle: string; xp: number; initials: string; chip: string;
+  name: string; nameAr: string; role: string; roleAr: string; subtitle: string; subtitleAr: string;
+  xp: number; initials: string; chip: string; chipAr: string;
 }> = {
   innovator: {
     name: 'Fatima Al Mansoori',
+    nameAr: 'فاطمة المنصوري',
     role: 'Innovator',
+    roleAr: 'مبتكر',
     subtitle: 'Innovation Architect · Digital Transformation',
+    subtitleAr: 'مهندسة الابتكار · التحول الرقمي',
     xp: 1240,
     initials: 'FA',
     chip: 'INNOVATOR',
+    chipAr: 'مبتكر',
   },
   coordinator: {
     name: 'Khalid Al Rashid',
+    nameAr: 'خالد الراشد',
     role: 'Primary Coordinator',
+    roleAr: 'المنسق الرئيسي',
     subtitle: 'Innovation Office',
+    subtitleAr: 'مكتب الابتكار',
     xp: 3180,
     initials: 'KR',
     chip: 'PRIMARY COORDINATOR',
+    chipAr: 'المنسق الرئيسي',
   },
   director: {
     name: 'Aisha Al Suwaidi',
+    nameAr: 'عائشة السويدي',
     role: 'Department Director',
+    roleAr: 'مدير الإدارة',
     subtitle: 'Community Affairs',
+    subtitleAr: 'شؤون المجتمع',
     xp: 5460,
     initials: 'AS',
     chip: 'DEPARTMENT DIRECTOR',
+    chipAr: 'مدير الإدارة',
   },
   admin: {
     name: 'Khalid Al Marri',
+    nameAr: 'خالد المري',
     role: 'System Admin',
+    roleAr: 'مسؤول النظام',
     subtitle: 'Innovation Platform',
+    subtitleAr: 'منصة الابتكار',
     xp: 6300,
     initials: 'KM',
     chip: 'SYSTEM ADMIN',
+    chipAr: 'مسؤول النظام',
   },
 };
 
 // ── Nav structure ─────────────────────────────────────────────────────────────
-type NavItem = { id: string; label: string; icon: React.ElementType; badge?: number };
-type NavSection = { id: string; label: string; roles: IdeasRole[]; items: NavItem[] };
+type NavItem = { id: string; label: string; labelAr: string; icon: React.ElementType; badge?: number };
+type NavSection = { id: string; label: string; labelAr: string; roles: IdeasRole[]; items: NavItem[] };
 
 const NAV_SECTIONS: NavSection[] = [
   {
-    id: 'general', label: 'GENERAL',
+    id: 'general', label: 'GENERAL', labelAr: 'عام',
     roles: ['innovator', 'coordinator', 'director', 'admin'],
     items: [
-      { id: 'home',              label: 'Home',               icon: Home },
-      { id: 'submit-idea',       label: 'Submit Idea',        icon: Send },
-      { id: 'my-ideas',          label: 'My Ideas',           icon: FileText },
-      { id: 'innovation-360',    label: 'Innovation 360',     icon: Globe },
-      { id: 'challenges',        label: 'Challenges',         icon: Trophy },
-      { id: 'innovation-news',   label: 'Innovation News',    icon: Newspaper },
-      { id: 'innovation-journey',label: 'Innovation Journey', icon: Map },
+      { id: 'home',              label: 'Home', labelAr: 'الرئيسية',               icon: Home },
+      { id: 'submit-idea',       label: 'Submit Idea', labelAr: 'تقديم فكرة',        icon: Send },
+      { id: 'my-ideas',          label: 'My Ideas', labelAr: 'أفكاري',           icon: FileText },
+      { id: 'innovation-360',    label: 'Innovation 360', labelAr: 'الابتكار 360',     icon: Globe },
+      { id: 'challenges',        label: 'Challenges', labelAr: 'التحديات',         icon: Trophy },
+      { id: 'innovation-news',   label: 'Innovation News', labelAr: 'أخبار الابتكار',    icon: Newspaper },
+      { id: 'innovation-journey',label: 'Innovation Journey', labelAr: 'رحلة الابتكار', icon: Map },
     ],
   },
   {
-    id: 'coordinator', label: 'COORDINATOR',
+    id: 'coordinator', label: 'COORDINATOR', labelAr: 'المنسق',
     roles: ['coordinator', 'admin'],
     items: [
-      { id: 'review-ideas', label: 'Review Ideas', icon: ClipboardList },
-      { id: 'clustering',   label: 'Clustering',   icon: GitBranch },
-      { id: 'idea-vault',   label: 'Idea Vault',   icon: Archive },
+      { id: 'review-ideas', label: 'Review Ideas', labelAr: 'مراجعة الأفكار', icon: ClipboardList },
+      { id: 'clustering',   label: 'Clustering', labelAr: 'تجميع الأفكار',   icon: GitBranch },
+      { id: 'idea-vault',   label: 'Idea Vault', labelAr: 'خزينة الأفكار',   icon: Archive },
     ],
   },
   {
-    id: 'director', label: 'DIRECTOR',
+    id: 'director', label: 'DIRECTOR', labelAr: 'المدير',
     roles: ['director', 'admin'],
     items: [
-      { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { id: 'discover',  label: 'Discover',  icon: Compass },
-      { id: 'pipeline',  label: 'Pipeline',  icon: GitPullRequest },
-      { id: 'insights',  label: 'Insights',  icon: BarChart2 },
+      { id: 'dashboard', label: 'Dashboard', labelAr: 'لوحة المعلومات', icon: LayoutDashboard },
+      { id: 'discover',  label: 'Discover', labelAr: 'استكشاف',  icon: Compass },
+      { id: 'pipeline',  label: 'Pipeline', labelAr: 'مسار الأفكار',  icon: GitPullRequest },
+      { id: 'insights',  label: 'Insights', labelAr: 'الرؤى والتحليلات',  icon: BarChart2 },
     ],
   },
   {
-    id: 'admin', label: 'ADMIN',
+    id: 'admin', label: 'ADMIN', labelAr: 'الإدارة',
     roles: ['admin'],
     items: [
-      { id: 'admin-settings', label: 'Admin Settings', icon: Settings },
-      { id: 'notifications',  label: 'Notifications',  icon: Bell, badge: 3 },
+      { id: 'admin-settings', label: 'Admin Settings', labelAr: 'إعدادات الإدارة', icon: Settings },
+      { id: 'notifications',  label: 'Notifications', labelAr: 'الإشعارات',  icon: Bell, badge: 3 },
     ],
   },
 ];
@@ -124,6 +142,25 @@ export const PAGE_LABELS: Record<string, string> = {
   'admin-settings': 'Admin Settings', notifications: 'Notifications',
 };
 
+export const PAGE_LABELS_AR: Record<string, string> = {
+  'Home': 'الرئيسية',
+  'Submit Idea': 'تقديم فكرة',
+  'My Ideas': 'أفكاري',
+  'Innovation 360': 'الابتكار 360',
+  'Challenges': 'التحديات',
+  'Innovation News': 'أخبار الابتكار',
+  'Innovation Journey': 'رحلة الابتكار',
+  'Review Ideas': 'مراجعة الأفكار',
+  'Clustering': 'تجميع الأفكار',
+  'Idea Vault': 'خزينة الأفكار',
+  'Dashboard': 'لوحة المعلومات',
+  'Discover': 'استكشاف',
+  'Pipeline': 'مسار الأفكار',
+  'Insights': 'الرؤى والتحليلات',
+  'Admin Settings': 'إعدادات الإدارة',
+  'Notifications': 'الإشعارات',
+};
+
 // ── Sidebar — styled exactly like PMO panels ──────────────────────────────────
 interface SidebarProps {
   role: IdeasRole;
@@ -134,11 +171,12 @@ interface SidebarProps {
 }
 
 function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: SidebarProps) {
+  const { tr } = useLanguage();
   const user = IDEAS_USERS[role];
   const visibleSections = NAV_SECTIONS.filter(s => s.roles.includes(role));
 
   return (
-    <aside className="w-60 bg-white border-r border-border flex flex-col h-full flex-shrink-0 overflow-hidden">
+    <aside className="w-60 bg-white border-e border-border flex flex-col h-full flex-shrink-0 overflow-hidden">
 
       {/* Back to PMO */}
       {onBack && (
@@ -146,8 +184,8 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
           onClick={onBack}
           className="flex items-center gap-1.5 px-4 py-2 text-[11px] text-muted-foreground hover:text-[#008755] border-b border-border bg-muted/30 w-full transition-colors"
         >
-          <ArrowLeft className="h-3 w-3" />
-          <span>Back to PMO</span>
+          <ArrowLeft className="h-3 w-3 rtl:rotate-180" />
+          <span>{tr('Back to PMO', 'العودة إلى مكتب إدارة المشاريع')}</span>
         </button>
       )}
 
@@ -158,8 +196,8 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
             <Lightbulb className="h-4 w-4 text-white" />
           </div>
           <div>
-            <p className="text-sm   text-foreground leading-tight">Ideas Platform</p>
-            <p className="text-[11px] text-muted-foreground leading-tight">Innovation System</p>
+            <p className="text-sm   text-foreground leading-tight">{tr('Ideas Platform', 'منصة الأفكار')}</p>
+            <p className="text-[11px] text-muted-foreground leading-tight">{tr('Innovation System', 'نظام الابتكار')}</p>
           </div>
         </div>
       </div>
@@ -173,14 +211,14 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <p className="text-xs   text-foreground truncate">{user.name}</p>
-            <p className="text-[11px] text-muted-foreground truncate">{user.role}</p>
+            <p className="text-xs   text-foreground truncate">{tr(user.name, user.nameAr)}</p>
+            <p className="text-[11px] text-muted-foreground truncate">{tr(user.role, user.roleAr)}</p>
           </div>
         </div>
         <div className="mt-2 flex items-center gap-1.5">
           <Star className="h-3 w-3 text-amber-400 fill-amber-400 flex-shrink-0" />
           <span className="text-[11px]   text-[#008755]">
-            {user.xp.toLocaleString()} XP
+            {user.xp.toLocaleString()} {tr('XP', 'نقطة خبرة')}
           </span>
         </div>
       </div>
@@ -190,7 +228,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
         {visibleSections.map(section => (
           <div key={section.id}>
             <p className="text-[10px]   text-muted-foreground tracking-widest px-2 py-1 uppercase">
-              {section.label}
+              {tr(section.label, section.labelAr)}
             </p>
             <div className="space-y-0.5">
               {section.items.map(item => {
@@ -201,7 +239,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
                     key={item.id}
                     onClick={() => onNavigate(item.id)}
                     className={cn(
-                      'w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors text-left',
+                      'w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-sm transition-colors text-start',
                       isActive
                         ? 'bg-[#008755] text-white'
                         : 'text-foreground hover:bg-[#008755]/10 hover:text-[#008755]'
@@ -209,7 +247,7 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
                   >
                     <Icon className={cn('h-4 w-4 flex-shrink-0', isActive ? 'text-white' : 'text-muted-foreground group-hover:text-[#008755]')} />
                     <span className={cn('flex-1 truncate font-["Dubai",_sans-serif]', isActive && 'font-["Dubai:Medium",_sans-serif]')}>
-                      {item.label}
+                      {tr(item.label, item.labelAr)}
                     </span>
                     {item.badge !== undefined && (
                       <Badge
@@ -232,30 +270,30 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
       {/* Submit callout — matches PMO banner card gradient */}
       <div className="mx-3 mb-3 rounded-lg bg-gradient-to-br from-[#008755] to-[#005844] p-3 text-white">
         <p className="text-xs   leading-snug mb-2">
-          Have a great idea? Share it with the team.
+          {tr('Have a great idea? Share it with the team.', 'لديك فكرة رائعة؟ شاركها مع الفريق.')}
         </p>
         <button
           onClick={() => onNavigate('submit-idea')}
           className="flex items-center gap-1 text-[11px] text-white/80 hover:text-white transition-colors"
         >
-          Submit now <ArrowRight className="h-3 w-3" />
+          {tr('Submit now', 'قدّمها الآن')} <ArrowRight className="h-3 w-3 rtl:rotate-180" />
         </button>
       </div>
 
       {/* Demo role selector — matches PMO's Select style */}
       <div className="px-3 pb-3 pt-2 border-t border-border">
         <p className="text-[10px] text-muted-foreground mb-1.5   uppercase tracking-wider">
-          Demo Role
+          {tr('Demo Role', 'الدور التجريبي')}
         </p>
         <Select value={role} onValueChange={v => onRoleChange(v as IdeasRole)}>
           <SelectTrigger className="h-8 text-xs">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="innovator"    className="text-xs">Innovator</SelectItem>
-            <SelectItem value="coordinator"  className="text-xs">Primary Coordinator</SelectItem>
-            <SelectItem value="director"     className="text-xs">Department Director</SelectItem>
-            <SelectItem value="admin"        className="text-xs">System Admin</SelectItem>
+            <SelectItem value="innovator"    className="text-xs">{tr('Innovator', 'مبتكر')}</SelectItem>
+            <SelectItem value="coordinator"  className="text-xs">{tr('Primary Coordinator', 'المنسق الرئيسي')}</SelectItem>
+            <SelectItem value="director"     className="text-xs">{tr('Department Director', 'مدير الإدارة')}</SelectItem>
+            <SelectItem value="admin"        className="text-xs">{tr('System Admin', 'مسؤول النظام')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -265,7 +303,8 @@ function IdeasSidebar({ role, activePage, onNavigate, onRoleChange, onBack }: Si
 
 // ── Placeholder page ──────────────────────────────────────────────────────────
 function PlaceholderPage({ pageId }: { pageId: string }) {
-  const label = PAGE_LABELS[pageId] || pageId;
+  const { tr } = useLanguage();
+  const label = PAGE_LABELS[pageId] ? tr(PAGE_LABELS[pageId], PAGE_LABELS_AR[PAGE_LABELS[pageId]]) : pageId;
   return (
     <div className="flex flex-col items-center justify-center h-full text-center px-8">
       <div className="h-14 w-14 rounded-2xl bg-[#008755]/10 flex items-center justify-center mb-4">
@@ -273,7 +312,7 @@ function PlaceholderPage({ pageId }: { pageId: string }) {
       </div>
       <h2 className="  text-lg text-foreground mb-1">{label}</h2>
       <p className="text-sm text-muted-foreground max-w-xs">
-        This page will be built in the next prompt.
+        {tr('This page will be built in the next prompt.', 'سيتم إنشاء هذه الصفحة في المرحلة التالية.')}
       </p>
     </div>
   );
@@ -292,13 +331,28 @@ export function IdeasPlatformShell({ setBreadcrumbs, onBack, onConvertToProject,
   const [role, setRole] = useState<IdeasRole>('innovator');
   const [activePage, setActivePage] = useState(initialPage ?? 'home');
 
+  const { tr, lang } = useLanguage();
+  // Page whose breadcrumbs this shell currently owns (null until the user navigates inside the shell).
+  const [crumbPage, setCrumbPage] = useState<string | null>(null);
+  const onBackRef = useRef(onBack);
+  onBackRef.current = onBack;
+
+  // Rebuild breadcrumbs whenever the page or the language changes so labels stay translated.
+  // ('Home' / 'Ideas Platform' are translated by the Header via i18n/labels.ts.)
+  useEffect(() => {
+    if (crumbPage === null) return;
+    const goBack = () => onBackRef.current?.();
+    const pageLabel = PAGE_LABELS[crumbPage];
+    setBreadcrumbs?.([
+      { label: 'Home', onClick: goBack },
+      { label: 'Ideas Platform', onClick: () => { setActivePage('home'); setCrumbPage(null); setBreadcrumbs?.([{ label: 'Home', onClick: goBack }, { label: 'Ideas Platform' }]); } },
+      { label: pageLabel ? tr(pageLabel, PAGE_LABELS_AR[pageLabel]) : crumbPage },
+    ]);
+  }, [crumbPage, tr, lang, setBreadcrumbs]);
+
   const handleNavigate = (id: string) => {
     setActivePage(id);
-    setBreadcrumbs?.([
-      { label: 'Home', onClick: onBack },
-      { label: 'Ideas Platform', onClick: () => { setActivePage('home'); setBreadcrumbs?.([{ label: 'Home', onClick: onBack }, { label: 'Ideas Platform' }]); } },
-      { label: PAGE_LABELS[id] || id },
-    ]);
+    setCrumbPage(id);
   };
 
   const handleRoleChange = (newRole: IdeasRole) => {

@@ -3,32 +3,34 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { Brain, Sparkles, AlertTriangle, Clock, FileText, BarChart3, Send, TrendingUp } from 'lucide-react';
 
 export function AgenticAIPanel() {
+  const { tr, isRTL } = useLanguage();
   const [chatInput, setChatInput] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'insights' | 'chat'>('chat');
 
   const aiInsights = [
     {
-      category: 'Projects at Risk',
-      priority: 'High',
-      description: '5 projects flagged for deadline breach this quarter',
+      category: tr('Projects at Risk', 'مشاريع معرّضة للخطر'),
+      priority: tr('High', 'عالية'),
+      description: tr('5 projects flagged for deadline breach this quarter', 'تم رصد 5 مشاريع معرّضة لتجاوز المواعيد النهائية هذا الربع'),
       color: 'red',
       icon: AlertTriangle,
     },
     {
-      category: 'Pending Approvals',
-      priority: 'Medium',
-      description: '12 approval steps overdue by more than 7 days',
+      category: tr('Pending Approvals', 'اعتمادات معلّقة'),
+      priority: tr('Medium', 'متوسطة'),
+      description: tr('12 approval steps overdue by more than 7 days', '12 خطوة اعتماد متأخرة لأكثر من 7 أيام'),
       color: 'amber',
       icon: Clock,
     },
     {
-      category: 'On-Track Projects',
-      priority: 'Trending',
-      description: 'Completion rate up 18% compared to last quarter',
+      category: tr('On-Track Projects', 'مشاريع وفق الخطة'),
+      priority: tr('Trending', 'في تصاعد'),
+      description: tr('Completion rate up 18% compared to last quarter', 'ارتفع معدل الإنجاز بنسبة 18% مقارنة بالربع الماضي'),
       color: 'green',
       icon: TrendingUp,
     },
@@ -36,44 +38,50 @@ export function AgenticAIPanel() {
 
   const aiActions = [
     {
-      label: 'Generate PMO Weekly Report',
+      label: tr('Generate PMO Weekly Report', 'إنشاء التقرير الأسبوعي لمكتب إدارة المشاريع'),
       icon: FileText,
-      description: 'Comprehensive summary of all active projects',
+      description: tr('Comprehensive summary of all active projects', 'ملخص شامل لجميع المشاريع النشطة'),
     },
     {
-      label: 'Summarize Overdue Approvals',
+      label: tr('Summarize Overdue Approvals', 'تلخيص الاعتمادات المتأخرة'),
       icon: Clock,
-      description: 'Identify bottlenecks across workflow stages',
+      description: tr('Identify bottlenecks across workflow stages', 'تحديد الاختناقات عبر مراحل سير العمل'),
     },
     {
-      label: 'Compare Phase Progress by Quarter',
+      label: tr('Compare Phase Progress by Quarter', 'مقارنة تقدم المراحل حسب الربع'),
       icon: BarChart3,
-      description: 'Ideation to implementation trend analysis',
+      description: tr('Ideation to implementation trend analysis', 'تحليل الاتجاه من توليد الأفكار إلى التنفيذ'),
     },
   ];
 
   const chatMessages = [
     {
       type: 'ai',
-      content: "Hello! I'm your PMO assistant. You can ask me about project health, approval bottlenecks, phase progress, team workloads, or request reports. What would you like to know?",
+      content: tr("Hello! I'm your PMO assistant. You can ask me about project health, approval bottlenecks, phase progress, team workloads, or request reports. What would you like to know?", 'مرحباً! أنا مساعدك في مكتب إدارة المشاريع. يمكنك سؤالي عن سلامة المشاريع، واختناقات الاعتماد، وتقدم المراحل، وأعباء عمل الفرق، أو طلب التقارير. ماذا تود أن تعرف؟'),
     },
     {
       type: 'user',
-      content: 'Which projects are stuck in the approval stage?',
+      content: tr('Which projects are stuck in the approval stage?', 'ما المشاريع المتوقفة في مرحلة الاعتماد؟'),
     },
     {
       type: 'ai',
-      content: `I found 4 projects currently stalled in an approval step for more than 14 days:
+      content: tr(`I found 4 projects currently stalled in an approval step for more than 14 days:
 • Smart Infrastructure Initiative — BRD review, 18 days
 • Digital HR Transformation — Legal feasibility, 21 days
 • E-Services Portal Upgrade — FSD review, 15 days
 • Data Governance Framework — Directional approval, 31 days
 
-Would you like me to escalate these or generate a report?`,
+Would you like me to escalate these or generate a report?`, `وجدت 4 مشاريع متوقفة حالياً في خطوة اعتماد لأكثر من 14 يوماً:
+• مبادرة البنية التحتية الذكية — مراجعة وثيقة متطلبات الأعمال، 18 يوماً
+• التحول الرقمي للموارد البشرية — الجدوى القانونية، 21 يوماً
+• تطوير بوابة الخدمات الإلكترونية — مراجعة وثيقة المواصفات الوظيفية، 15 يوماً
+• إطار حوكمة البيانات — الاعتماد التوجيهي، 31 يوماً
+
+هل تود أن أصعّد هذه المشاريع أو أنشئ تقريراً؟`),
     },
     {
       type: 'user',
-      content: 'Generate a report for the overdue ones',
+      content: tr('Generate a report for the overdue ones', 'أنشئ تقريراً للمشاريع المتأخرة'),
     },
     {
       type: 'ai',
@@ -94,10 +102,10 @@ Would you like me to escalate these or generate a report?`,
       <SheetTrigger asChild>
         <Button variant="ghost" className="gap-2">
           <Brain className="h-4 w-4" />
-          <span className="hidden sm:inline">Ask AI</span>
+          <span className="hidden sm:inline">{tr('Ask AI', 'اسأل الذكاء الاصطناعي')}</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[420px] p-0 flex flex-col">
+      <SheetContent side={isRTL ? 'left' : 'right'} className="w-[420px] p-0 flex flex-col">
         <SheetHeader className="p-4 pb-3 border-b">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded-lg bg-[#008755]/10">
@@ -106,15 +114,15 @@ Would you like me to escalate these or generate a report?`,
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <SheetTitle className="text-base font-['Dubai:Medium',_'Dubai'] text-[#1f2937]">
-                  PMO AI Assistant
+                  {tr('PMO AI Assistant', 'المساعد الذكي لمكتب إدارة المشاريع')}
                 </SheetTitle>
                 <Badge className="gap-1 bg-green-100 text-green-700 border-green-300 hover:bg-green-100">
                   <div className="h-1.5 w-1.5 rounded-full bg-green-600" />
-                  Active
+                  {tr('Active', 'نشط')}
                 </Badge>
               </div>
               <SheetDescription className="text-xs text-muted-foreground">
-                Your intelligent project management companion
+                {tr('Your intelligent project management companion', 'رفيقك الذكي في إدارة المشاريع')}
               </SheetDescription>
             </div>
           </div>
@@ -131,7 +139,7 @@ Would you like me to escalate these or generate a report?`,
                   : 'border-transparent text-muted-foreground hover:text-[#1f2937]'
               }`}
             >
-              Insights
+              {tr('Insights', 'الرؤى')}
             </button>
             <button
               onClick={() => setActiveTab('chat')}
@@ -141,7 +149,7 @@ Would you like me to escalate these or generate a report?`,
                   : 'border-transparent text-muted-foreground hover:text-[#1f2937]'
               }`}
             >
-              Ask AI
+              {tr('Ask AI', 'اسأل الذكاء الاصطناعي')}
             </button>
           </div>
         </div>
@@ -154,7 +162,7 @@ Would you like me to escalate these or generate a report?`,
               <div>
                 <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#1f2937] mb-3 flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#008755]" />
-                  AI Insights Summary
+                  {tr('AI Insights Summary', 'ملخص رؤى الذكاء الاصطناعي')}
                 </h3>
                 <div className="space-y-2">
                   {aiInsights.map((insight, index) => {
@@ -162,12 +170,12 @@ Would you like me to escalate these or generate a report?`,
                     return (
                       <div
                         key={index}
-                        className={`p-3 rounded-lg border-l-4 ${
+                        className={`p-3 rounded-lg border-s-4 ${
                           insight.color === 'red'
-                            ? 'bg-red-50 border-l-red-500'
+                            ? 'bg-red-50 border-s-red-500'
                             : insight.color === 'amber'
-                            ? 'bg-amber-50 border-l-amber-500'
-                            : 'bg-green-50 border-l-green-500'
+                            ? 'bg-amber-50 border-s-amber-500'
+                            : 'bg-green-50 border-s-green-500'
                         }`}
                       >
                         <div className="flex items-start justify-between gap-2 mb-1">
@@ -194,7 +202,7 @@ Would you like me to escalate these or generate a report?`,
                             {insight.priority}
                           </Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground ml-6">{insight.description}</p>
+                        <p className="text-xs text-muted-foreground ms-6">{insight.description}</p>
                       </div>
                     );
                   })}
@@ -205,7 +213,7 @@ Would you like me to escalate these or generate a report?`,
               <div>
                 <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#1f2937] mb-3 flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#008755]" />
-                  AI Actions
+                  {tr('AI Actions', 'إجراءات الذكاء الاصطناعي')}
                 </h3>
                 <div className="space-y-2">
                   {aiActions.map((action, index) => {
@@ -213,7 +221,7 @@ Would you like me to escalate these or generate a report?`,
                     return (
                       <button
                         key={index}
-                        className="w-full p-3 rounded-lg border bg-white hover:bg-accent transition-colors text-left"
+                        className="w-full p-3 rounded-lg border bg-white hover:bg-accent transition-colors text-start"
                       >
                         <div className="flex items-start gap-3">
                           <div className="p-2 rounded-md bg-[#008755]/10">
@@ -272,7 +280,7 @@ Would you like me to escalate these or generate a report?`,
               <div className="flex gap-2 mb-2">
                 <input
                   type="text"
-                  placeholder="Ask anything about your projects…"
+                  placeholder={tr('Ask anything about your projects…', 'اسأل أي شيء عن مشاريعك…')}
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -284,11 +292,11 @@ Would you like me to escalate these or generate a report?`,
                   disabled={!chatInput.trim()}
                   className="bg-[#008755] hover:bg-[#008755]/90 flex-shrink-0"
                 >
-                  <Send className="h-4 w-4" />
+                  <Send className="h-4 w-4 rtl:-scale-x-100" />
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                AI responses are based on live project data
+                {tr('AI responses are based on live project data', 'تستند إجابات الذكاء الاصطناعي إلى بيانات المشاريع الحية')}
               </p>
             </div>
           </>

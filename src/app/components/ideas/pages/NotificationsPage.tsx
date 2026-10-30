@@ -8,6 +8,7 @@ import { Card, CardContent } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../ui/tabs';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
 
@@ -18,6 +19,10 @@ interface User {
   xp: number;
   initials: string;
   chip: string;
+  nameAr?: string;
+  roleAr?: string;
+  subtitleAr?: string;
+  chipAr?: string;
 }
 
 interface PageProps {
@@ -36,9 +41,11 @@ interface Notification {
   type: NotifType;
   icon: React.ElementType;
   title: string;
+  titleAr: string;
   timeAgo: string;
   sortMinutes: number; // for interleaved sort
   actionLabel: string;
+  actionLabelAr: string;
   actionId: string;
 }
 
@@ -51,9 +58,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'success',
     icon: CheckCircle2,
     title: 'Your idea "AI Queue Management" has been approved',
+    titleAr: 'تمت الموافقة على فكرتك "إدارة الطوابير بالذكاء الاصطناعي"',
     timeAgo: '2h ago',
     sortMinutes: 120,
     actionLabel: 'View Idea',
+    actionLabelAr: 'عرض الفكرة',
     actionId: 'idea-ai-queue',
   },
   {
@@ -62,9 +71,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'action',
     icon: MessageSquare,
     title: 'Reviewer requested more information on "Smart Patrol Routing"',
+    titleAr: 'طلب المراجع مزيداً من المعلومات حول "التوجيه الذكي للدوريات"',
     timeAgo: '5h ago',
     sortMinutes: 300,
     actionLabel: 'Respond Now',
+    actionLabelAr: 'الرد الآن',
     actionId: 'idea-smart-patrol',
   },
   {
@@ -73,9 +84,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'alert',
     icon: Bell,
     title: 'Challenge closing soon: "Digital Evidence Management" — closes in 2 days',
+    titleAr: 'تحدٍّ يغلق قريباً: "إدارة الأدلة الرقمية" — يغلق خلال يومين',
     timeAgo: '1d ago',
     sortMinutes: 1440,
     actionLabel: 'View Challenge',
+    actionLabelAr: 'عرض التحدي',
     actionId: 'challenge-digital-evidence',
   },
   {
@@ -84,9 +97,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'info',
     icon: Zap,
     title: 'Similar idea detected: Your idea overlaps with "Smart Evidence Portal" submitted in March',
+    titleAr: 'تم رصد فكرة مشابهة: فكرتك تتداخل مع "بوابة الأدلة الذكية" المقدّمة في مارس',
     timeAgo: '2d ago',
     sortMinutes: 2880,
     actionLabel: 'Compare Ideas',
+    actionLabelAr: 'مقارنة الأفكار',
     actionId: 'compare-ideas',
   },
   {
@@ -95,9 +110,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'info',
     icon: Trophy,
     title: 'You earned the "First Approval" badge',
+    titleAr: 'حصلت على شارة "الموافقة الأولى"',
     timeAgo: '3d ago',
     sortMinutes: 4320,
     actionLabel: 'View Profile',
+    actionLabelAr: 'عرض الملف الشخصي',
     actionId: 'profile',
   },
 
@@ -108,9 +125,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'action',
     icon: ClipboardList,
     title: '5 new ideas pending your review',
+    titleAr: '5 أفكار جديدة بانتظار مراجعتك',
     timeAgo: '1h ago',
     sortMinutes: 60,
     actionLabel: 'Review Ideas',
+    actionLabelAr: 'مراجعة الأفكار',
     actionId: 'review-ideas',
   },
   {
@@ -119,9 +138,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'info',
     icon: GitMerge,
     title: 'Idea cluster ready: 3 similar AI-related ideas need clustering',
+    titleAr: 'مجموعة أفكار جاهزة: 3 أفكار متشابهة متعلقة بالذكاء الاصطناعي بحاجة إلى التجميع',
     timeAgo: '3h ago',
     sortMinutes: 180,
     actionLabel: 'View Cluster',
+    actionLabelAr: 'عرض المجموعة',
     actionId: 'idea-cluster',
   },
   {
@@ -130,9 +151,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'success',
     icon: CheckCircle2,
     title: 'Department Director approved the "Smart Patrol Routing" idea',
+    titleAr: 'وافق مدير الإدارة على فكرة "التوجيه الذكي للدوريات"',
     timeAgo: '6h ago',
     sortMinutes: 360,
     actionLabel: 'View Idea',
+    actionLabelAr: 'عرض الفكرة',
     actionId: 'idea-smart-patrol',
   },
   {
@@ -141,9 +164,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'alert',
     icon: Clock,
     title: 'Review deadline approaching: 8 ideas due for review by Sep 10',
+    titleAr: 'اقتراب الموعد النهائي للمراجعة: 8 أفكار مستحقة المراجعة بحلول 10 سبتمبر',
     timeAgo: '1d ago',
     sortMinutes: 1440,
     actionLabel: 'Review Now',
+    actionLabelAr: 'المراجعة الآن',
     actionId: 'review-deadline',
   },
 
@@ -154,9 +179,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'action',
     icon: ArrowUp,
     title: '3 ideas escalated for your decision',
+    titleAr: 'تم تصعيد 3 أفكار لاتخاذ قرارك',
     timeAgo: '2h ago',
     sortMinutes: 120,
     actionLabel: 'Review Pipeline',
+    actionLabelAr: 'مراجعة مسار الأفكار',
     actionId: 'pipeline',
   },
   {
@@ -165,9 +192,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'info',
     icon: BarChart2,
     title: 'Monthly innovation report is ready',
+    titleAr: 'تقرير الابتكار الشهري جاهز',
     timeAgo: '1d ago',
     sortMinutes: 1440,
     actionLabel: 'View Report',
+    actionLabelAr: 'عرض التقرير',
     actionId: 'innovation-report',
   },
   {
@@ -176,9 +205,11 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'success',
     icon: Medal,
     title: 'Your department ranked #2 in Ideas Adopted this month',
+    titleAr: 'حلّت إدارتك في المركز الثاني في الأفكار المعتمدة هذا الشهر',
     timeAgo: '2d ago',
     sortMinutes: 2880,
     actionLabel: 'View Leaderboard',
+    actionLabelAr: 'عرض لوحة المتصدرين',
     actionId: 'leaderboard',
   },
   {
@@ -187,19 +218,32 @@ const ALL_NOTIFICATIONS: Notification[] = [
     type: 'action',
     icon: CheckSquare,
     title: 'Coordinator submitted 12 ideas for your approval',
+    titleAr: 'قدّم المنسق 12 فكرة لاعتمادك',
     timeAgo: '3d ago',
     sortMinutes: 4320,
     actionLabel: 'Approve / Reject',
+    actionLabelAr: 'اعتماد / رفض',
     actionId: 'approve-ideas',
   },
 ];
 
+const TIME_AGO_AR: Record<string, string> = {
+  '1h ago': 'منذ ساعة',
+  '2h ago': 'منذ ساعتين',
+  '3h ago': 'منذ 3 ساعات',
+  '5h ago': 'منذ 5 ساعات',
+  '6h ago': 'منذ 6 ساعات',
+  '1d ago': 'منذ يوم',
+  '2d ago': 'منذ يومين',
+  '3d ago': 'منذ 3 أيام',
+};
+
 // ── Border colors by type ──────────────────────────────────────────────────────
 const TYPE_BORDER: Record<NotifType, string> = {
-  success: 'border-l-4 border-[#008755]',
-  action:  'border-l-4 border-amber-400',
-  alert:   'border-l-4 border-[#E4002B]',
-  info:    'border-l-4 border-blue-400',
+  success: 'border-s-4 border-[#008755]',
+  action:  'border-s-4 border-amber-400',
+  alert:   'border-s-4 border-[#E4002B]',
+  info:    'border-s-4 border-blue-400',
 };
 
 const TYPE_ICON_COLOR: Record<NotifType, string> = {
@@ -221,6 +265,7 @@ function NotificationRow({
   onRead: (id: string) => void;
   onNavigate: (id: string) => void;
 }) {
+  const { tr } = useLanguage();
   const Icon = notif.icon;
 
   return (
@@ -242,9 +287,9 @@ function NotificationRow({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <p className={cn('text-sm leading-snug', !isRead ? 'font-semibold text-[#1a1a1a]' : 'text-[#444]')}>
-              {notif.title}
+              {tr(notif.title, notif.titleAr)}
             </p>
-            <span className="text-xs text-[#8D9093] flex-shrink-0 mt-0.5">{notif.timeAgo}</span>
+            <span className="text-xs text-[#8D9093] flex-shrink-0 mt-0.5">{tr(notif.timeAgo, TIME_AGO_AR[notif.timeAgo])}</span>
           </div>
 
           <div className="flex items-center gap-2 mt-2">
@@ -253,7 +298,7 @@ function NotificationRow({
               onClick={() => onNavigate(notif.actionId)}
               className="h-7 px-3 text-xs bg-[#008755] hover:bg-[#005844] text-white rounded-lg"
             >
-              {notif.actionLabel}
+              {tr(notif.actionLabel, notif.actionLabelAr)}
             </Button>
 
             {!isRead && (
@@ -261,7 +306,7 @@ function NotificationRow({
                 onClick={() => onRead(notif.id)}
                 className="text-xs text-[#8D9093] hover:text-[#005844] transition-colors underline underline-offset-2"
               >
-                Mark as read
+                {tr('Mark as read', 'تعيين كمقروء')}
               </button>
             )}
           </div>
@@ -283,11 +328,12 @@ function NotificationList({
   onRead: (id: string) => void;
   onNavigate: (id: string) => void;
 }) {
+  const { tr } = useLanguage();
   if (notifications.length === 0) {
     return (
       <div className="flex flex-col items-center py-16 text-[#8D9093]">
         <BellRing className="w-10 h-10 mb-3 opacity-30" />
-        <p className="text-sm">No notifications to show</p>
+        <p className="text-sm">{tr('No notifications to show', 'لا توجد إشعارات لعرضها')}</p>
       </div>
     );
   }
@@ -309,6 +355,7 @@ function NotificationList({
 
 // ── Main page ──────────────────────────────────────────────────────────────────
 export function NotificationsPage({ user, role, onNavigate }: PageProps) {
+  const { tr } = useLanguage();
   // All notifications start as unread
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
 
@@ -349,10 +396,10 @@ export function NotificationsPage({ user, role, onNavigate }: PageProps) {
               className="text-2xl text-[#005844] tracking-tight"
               style={{ fontFamily: "'Dubai Medium', sans-serif" }}
             >
-              Notifications
+              {tr('Notifications', 'الإشعارات')}
             </h1>
             {unreadCount > 0 && (
-              <p className="text-sm text-[#8D9093] mt-0.5">{unreadCount} unread</p>
+              <p className="text-sm text-[#8D9093] mt-0.5">{unreadCount} {tr('unread', 'غير مقروءة')}</p>
             )}
           </div>
           <Button
@@ -361,8 +408,8 @@ export function NotificationsPage({ user, role, onNavigate }: PageProps) {
             onClick={() => markAllRead(roleNotifications.map((n) => n.id))}
             className="text-xs border-[#008755] text-[#008755] hover:bg-[#008755]/5"
           >
-            <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
-            Mark all as read
+            <CheckCircle2 className="w-3.5 h-3.5 me-1.5" />
+            {tr('Mark all as read', 'تعيين الكل كمقروء')}
           </Button>
         </div>
 
@@ -370,16 +417,16 @@ export function NotificationsPage({ user, role, onNavigate }: PageProps) {
         <Tabs defaultValue="all">
           <TabsList className="bg-gray-100 rounded-lg p-1 w-full sm:w-auto">
             <TabsTrigger value="all" className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#008755] data-[state=active]:shadow-sm rounded-md px-4">
-              All Roles
+              {tr('All Roles', 'جميع الأدوار')}
             </TabsTrigger>
             <TabsTrigger value="innovator" className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#008755] data-[state=active]:shadow-sm rounded-md px-4">
-              Innovator
+              {tr('Innovator', 'المبتكر')}
             </TabsTrigger>
             <TabsTrigger value="coordinator" className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#008755] data-[state=active]:shadow-sm rounded-md px-4">
-              Coordinator
+              {tr('Coordinator', 'المنسق')}
             </TabsTrigger>
             <TabsTrigger value="director" className="text-xs data-[state=active]:bg-white data-[state=active]:text-[#008755] data-[state=active]:shadow-sm rounded-md px-4">
-              Director
+              {tr('Director', 'المدير')}
             </TabsTrigger>
           </TabsList>
 
@@ -433,10 +480,10 @@ export function NotificationsPage({ user, role, onNavigate }: PageProps) {
             className="text-2xl text-[#005844] tracking-tight"
             style={{ fontFamily: "'Dubai Medium', sans-serif" }}
           >
-            Notifications
+            {tr('Notifications', 'الإشعارات')}
           </h1>
           {unreadCount > 0 && (
-            <p className="text-sm text-[#8D9093] mt-0.5">{unreadCount} unread</p>
+            <p className="text-sm text-[#8D9093] mt-0.5">{unreadCount} {tr('unread', 'غير مقروءة')}</p>
           )}
         </div>
         <Button
@@ -445,8 +492,8 @@ export function NotificationsPage({ user, role, onNavigate }: PageProps) {
           onClick={() => markAllRead(roleNotifications.map((n) => n.id))}
           className="text-xs border-[#008755] text-[#008755] hover:bg-[#008755]/5"
         >
-          <CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />
-          Mark all as read
+          <CheckCircle2 className="w-3.5 h-3.5 me-1.5" />
+          {tr('Mark all as read', 'تعيين الكل كمقروء')}
         </Button>
       </div>
 

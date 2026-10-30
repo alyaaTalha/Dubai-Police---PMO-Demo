@@ -1,11 +1,14 @@
 "use client";
 
 import { Toaster as Sonner, ToasterProps } from "sonner";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 const Toaster = ({ ...props }: ToasterProps) => {
+  const { dir } = useLanguage();
   return (
     <Sonner
       theme="light"
+      dir={dir}
       className="toaster group"
       style={
         {

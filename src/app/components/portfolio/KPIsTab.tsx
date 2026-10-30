@@ -12,8 +12,35 @@ import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useState } from "react";
+import { useLanguage } from "../../i18n/LanguageContext";
+
+// Arabic display values for the mock KPI data (keys stay English for filtering).
+const AR: Record<string, string> = {
+  "Procurement from SMEs Rate": "نسبة المشتريات من المشاريع الصغيرة والمتوسطة",
+  "Global Livability and safe city ranking": "التصنيف العالمي لجودة الحياة والمدينة الآمنة",
+  "Budget Performance": "أداء الميزانية",
+  "Compliance Index": "مؤشر الامتثال",
+  "% of Role Amendment Requests Completed Within SLA": "نسبة طلبات تعديل الأدوار المنجزة ضمن اتفاقية مستوى الخدمة",
+  "Percentage of customer retention": "نسبة الاحتفاظ بالمتعاملين",
+  "Effectiveness in engaging with OGAs": "فاعلية التواصل مع الجهات الحكومية الأخرى",
+  "Administration Affairs": "الشؤون الإدارية",
+  "Director General Division": "مكتب المدير العام",
+  "Statistics Department": "إدارة الإحصاء",
+  "Organizational Development": "التطوير المؤسسي",
+  "Client Happiness Management": "إدارة إسعاد المتعاملين",
+  "External Relations Department": "إدارة العلاقات الخارجية",
+  "Outcomes": "النتائج",
+  "Internal Processes": "العمليات الداخلية",
+  "Customer": "المتعاملون",
+  "Learning & Growth": "التعلم والنمو",
+  "Active": "نشط",
+  "Inactive": "غير نشط",
+  "Draft": "مسودة",
+};
 
 export function KPIsTab() {
+  const { tr } = useLanguage();
+  const ta = (value: string) => tr(value, AR[value]);
   const [view, setView] = useState<"table" | "grid">("table");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBusinessUnit, setSelectedBusinessUnit] = useState("all");
@@ -113,7 +140,9 @@ export function KPIsTab() {
     const matchesSearch = searchQuery === "" || 
       kpi.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       kpi.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      kpi.department.toLowerCase().includes(searchQuery.toLowerCase());
+      kpi.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (AR[kpi.name] ?? "").includes(searchQuery) ||
+      (AR[kpi.department] ?? "").includes(searchQuery);
     
     const matchesBusinessUnit = selectedBusinessUnit === "all" || kpi.department === selectedBusinessUnit;
     const matchesStatus = selectedStatus === "all" || kpi.status === selectedStatus;
@@ -138,13 +167,13 @@ export function KPIsTab() {
           <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">
             {/* Search Input */}
             <div className="relative flex-1 w-full lg:max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search KPIs by Name, Code or Department..."
+                placeholder={tr("Search KPIs by Name, Code or Department...", "ابحث عن المؤشرات بالاسم أو الرمز أو الإدارة...")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-background"
+                className="ps-9 bg-background"
               />
             </div>
 
@@ -153,49 +182,49 @@ export function KPIsTab() {
               {/* Business Unit Filter */}
               <Select value={selectedBusinessUnit} onValueChange={setSelectedBusinessUnit}>
                 <SelectTrigger className="w-[180px] bg-background">
-                  <SelectValue placeholder="Business Unit" />
+                  <SelectValue placeholder={tr("Business Unit", "وحدة العمل")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Business Units</SelectItem>
-                  <SelectItem value="Administration Affairs">Administration Affairs</SelectItem>
-                  <SelectItem value="Statistics Department">Statistics Department</SelectItem>
-                  <SelectItem value="Organizational Development">Organizational Development</SelectItem>
-                  <SelectItem value="Client Happiness Management">Client Happiness Management</SelectItem>
-                  <SelectItem value="External Relations Department">External Relations Department</SelectItem>
+                  <SelectItem value="all">{tr("All Business Units", "جميع وحدات العمل")}</SelectItem>
+                  <SelectItem value="Administration Affairs">{ta("Administration Affairs")}</SelectItem>
+                  <SelectItem value="Statistics Department">{ta("Statistics Department")}</SelectItem>
+                  <SelectItem value="Organizational Development">{ta("Organizational Development")}</SelectItem>
+                  <SelectItem value="Client Happiness Management">{ta("Client Happiness Management")}</SelectItem>
+                  <SelectItem value="External Relations Department">{ta("External Relations Department")}</SelectItem>
                 </SelectContent>
               </Select>
 
               {/* Status Filter */}
               <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                 <SelectTrigger className="w-[150px] bg-background">
-                  <SelectValue placeholder="Status" />
+                  <SelectValue placeholder={tr("Status", "الحالة")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
-                  <SelectItem value="Draft">Draft</SelectItem>
+                  <SelectItem value="all">{tr("All Statuses", "جميع الحالات")}</SelectItem>
+                  <SelectItem value="Active">{ta("Active")}</SelectItem>
+                  <SelectItem value="Inactive">{ta("Inactive")}</SelectItem>
+                  <SelectItem value="Draft">{ta("Draft")}</SelectItem>
                 </SelectContent>
               </Select>
 
               {/* Perspective Filter */}
               <Select value={selectedPerspective} onValueChange={setSelectedPerspective}>
                 <SelectTrigger className="w-[180px] bg-background">
-                  <SelectValue placeholder="All Perspectives" />
+                  <SelectValue placeholder={tr("All Perspectives", "جميع المحاور")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Perspectives</SelectItem>
-                  <SelectItem value="Outcomes">Outcomes</SelectItem>
-                  <SelectItem value="Internal Processes">Internal Processes</SelectItem>
-                  <SelectItem value="Customer">Customer</SelectItem>
-                  <SelectItem value="Learning & Growth">Learning & Growth</SelectItem>
+                  <SelectItem value="all">{tr("All Perspectives", "جميع المحاور")}</SelectItem>
+                  <SelectItem value="Outcomes">{ta("Outcomes")}</SelectItem>
+                  <SelectItem value="Internal Processes">{ta("Internal Processes")}</SelectItem>
+                  <SelectItem value="Customer">{ta("Customer")}</SelectItem>
+                  <SelectItem value="Learning & Growth">{ta("Learning & Growth")}</SelectItem>
                 </SelectContent>
               </Select>
 
               {/* Date Picker Placeholder */}
               <Button variant="outline" size="default" className="gap-2">
                 <CalendarIcon className="h-4 w-4" />
-                dd/mm/yyyy
+                {tr("dd/mm/yyyy", "يوم/شهر/سنة")}
               </Button>
 
               {/* View Toggle Buttons */}
@@ -222,7 +251,10 @@ export function KPIsTab() {
 
           {/* Results Count */}
           <div className="mt-3 text-sm text-[#008755]">
-            Showing 1 - {filteredKpis.length} of {kpis.length} KPIs
+            {tr(
+              `Showing 1 - ${filteredKpis.length} of ${kpis.length} KPIs`,
+              `عرض 1 - ${filteredKpis.length} من أصل ${kpis.length} مؤشرات`
+            )}
           </div>
         </CardContent>
       </Card>
@@ -235,30 +267,30 @@ export function KPIsTab() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b bg-muted/30">
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">KPI Name</th>
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">Department</th>
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">Perspective</th>
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground min-w-[250px]">Achievement</th>
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">Target</th>
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">Actual</th>
-                    <th className="text-left py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">Trend</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">{tr("KPI Name", "اسم المؤشر")}</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">{tr("Department", "الإدارة")}</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">{tr("Perspective", "المحور")}</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground min-w-[250px]">{tr("Achievement", "نسبة الإنجاز")}</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">{tr("Target", "المستهدف")}</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">{tr("Actual", "الفعلي")}</th>
+                    <th className="text-start py-3 px-3 text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground">{tr("Trend", "الاتجاه")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredKpis.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="text-center p-6 text-muted-foreground">
-                        No KPIs found matching your criteria.
+                        {tr("No KPIs found matching your criteria.", "لا توجد مؤشرات مطابقة لمعايير البحث.")}
                       </td>
                     </tr>
                   ) : (
                     filteredKpis.map((kpi) => (
                       <tr key={kpi.id} className="border-b hover:bg-muted/30 transition-colors">
-                        <td className="py-3 px-3 text-sm text-[#1f2937]">{kpi.name}</td>
+                        <td className="py-3 px-3 text-sm text-[#1f2937]">{ta(kpi.name)}</td>
                         <td className="py-3 px-3">
                           <div className="flex items-center gap-2 text-sm text-[#1f2937]">
                             <Building2 className="h-4 w-4 text-muted-foreground" />
-                            {kpi.department}
+                            {ta(kpi.department)}
                           </div>
                         </td>
                         <td className="py-3 px-3">
@@ -266,7 +298,7 @@ export function KPIsTab() {
                             variant="outline" 
                             className="text-xs bg-[#008755]/10 text-[#008755] border-[#008755]/20"
                           >
-                            {kpi.perspective}
+                            {ta(kpi.perspective)}
                           </Badge>
                         </td>
                         <td className="py-3 px-3">
@@ -281,7 +313,7 @@ export function KPIsTab() {
                                 {/* Scale labels */}
                                 <div className="absolute inset-0 flex items-center justify-between px-1 text-[10px] text-gray-500 z-10">
                                   <span>0</span>
-                                  <span className="ml-auto">140%</span>
+                                  <span className="ms-auto">140%</span>
                                 </div>
                                 {/* Colored segments background - full width */}
                                 <div className="absolute inset-0 flex">
@@ -300,7 +332,7 @@ export function KPIsTab() {
                                 <div 
                                   className="absolute top-0 bottom-0 w-1 z-20" 
                                   style={{ 
-                                    left: `${Math.min(kpi.achievement / 140 * 100, 100)}%`,
+                                    insetInlineStart: `${Math.min(kpi.achievement / 140 * 100, 100)}%`,
                                     backgroundColor: getAchievementColor(kpi.achievement),
                                     boxShadow: '0 0 4px rgba(0,0,0,0.3)'
                                   }}
@@ -314,7 +346,7 @@ export function KPIsTab() {
                         <td className="py-3 px-3">
                           <div className="flex items-center gap-1 text-xs text-[#357743]">
                             <ArrowUp className="h-3 w-3" />
-                            <span className="font-['Dubai:Medium',_'Dubai']">Up</span>
+                            <span className="font-['Dubai:Medium',_'Dubai']">{tr("Up", "صعود")}</span>
                           </div>
                         </td>
                       </tr>
@@ -332,7 +364,7 @@ export function KPIsTab() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredKpis.length === 0 ? (
             <div className="col-span-full text-center p-12 text-muted-foreground">
-              No KPIs found matching your criteria.
+              {tr("No KPIs found matching your criteria.", "لا توجد مؤشرات مطابقة لمعايير البحث.")}
             </div>
           ) : (
             filteredKpis.map((kpi) => (
@@ -340,26 +372,26 @@ export function KPIsTab() {
                 <CardContent className="pt-4 pb-4">
                   {/* KPI Name */}
                   <h3 className="font-['Dubai:Medium',_'Dubai'] text-[#1f2937] mb-3 text-sm min-h-[40px]">
-                    {kpi.name}
+                    {ta(kpi.name)}
                   </h3>
 
                   {/* Department and Perspective */}
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Building2 className="h-3 w-3" />
-                      <span>{kpi.department}</span>
+                      <span>{ta(kpi.department)}</span>
                     </div>
                     <Badge 
                       variant="outline" 
                       className="text-xs bg-[#008755]/10 text-[#008755] border-[#008755]/20"
                     >
-                      {kpi.perspective}
+                      {ta(kpi.perspective)}
                     </Badge>
                   </div>
 
                   {/* Achievement Gauge */}
                   <div className="mb-3">
-                    <div className="text-xs text-muted-foreground mb-1">Achievement</div>
+                    <div className="text-xs text-muted-foreground mb-1">{tr("Achievement", "نسبة الإنجاز")}</div>
                     <div className="flex items-start gap-2">
                       <div className="flex-1">
                         {/* Achievement percentage text */}
@@ -371,7 +403,7 @@ export function KPIsTab() {
                           {/* Scale labels */}
                           <div className="absolute inset-0 flex items-center justify-between px-1 text-[10px] text-gray-500 z-10">
                             <span>0</span>
-                            <span className="ml-auto">140%</span>
+                            <span className="ms-auto">140%</span>
                           </div>
                           {/* Colored segments background - full width */}
                           <div className="absolute inset-0 flex">
@@ -390,7 +422,7 @@ export function KPIsTab() {
                           <div 
                             className="absolute top-0 bottom-0 w-1 z-20" 
                             style={{ 
-                              left: `${Math.min(kpi.achievement / 140 * 100, 100)}%`,
+                              insetInlineStart: `${Math.min(kpi.achievement / 140 * 100, 100)}%`,
                               backgroundColor: getAchievementColor(kpi.achievement),
                               boxShadow: '0 0 4px rgba(0,0,0,0.3)'
                             }}
@@ -403,18 +435,18 @@ export function KPIsTab() {
                   {/* Target, Actual, Trend */}
                   <div className="grid grid-cols-3 gap-2 pt-3 border-t">
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Target</div>
+                      <div className="text-xs text-muted-foreground mb-1">{tr("Target", "المستهدف")}</div>
                       <div className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#1f2937]">{kpi.target.toFixed(2)}%</div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Actual</div>
+                      <div className="text-xs text-muted-foreground mb-1">{tr("Actual", "الفعلي")}</div>
                       <div className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#008755]">{kpi.actual.toFixed(2)}%</div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground mb-1">Trend</div>
+                      <div className="text-xs text-muted-foreground mb-1">{tr("Trend", "الاتجاه")}</div>
                       <div className="flex items-center gap-1 text-xs text-[#357743]">
                         <ArrowUp className="h-3 w-3" />
-                        <span className="font-['Dubai:Medium',_'Dubai']">Up</span>
+                        <span className="font-['Dubai:Medium',_'Dubai']">{tr("Up", "صعود")}</span>
                       </div>
                     </div>
                   </div>

@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 
 interface HomePageProps {
@@ -39,10 +40,10 @@ interface HomePageProps {
 
 // Mock tasks data
 const tasks = [
-  { id: 1, title: 'Review Q4 Performance Reports', status: 'in-progress', priority: 'high', dueDate: '2025-10-28' },
-  { id: 2, title: 'Update Strategic Objectives for 2026', status: 'open', priority: 'medium', dueDate: '2025-10-30' },
-  { id: 3, title: 'Approve Department KPIs', status: 'completed', priority: 'high', dueDate: '2025-10-25' },
-  { id: 4, title: 'Conduct Mid-Year Review Meeting', status: 'open', priority: 'low', dueDate: '2025-11-05' },
+  { id: 1, title: 'Review Q4 Performance Reports', titleAr: 'مراجعة تقارير أداء الربع الرابع', status: 'in-progress', priority: 'high', dueDate: '2025-10-28' },
+  { id: 2, title: 'Update Strategic Objectives for 2026', titleAr: 'تحديث الأهداف الاستراتيجية لعام 2026', status: 'open', priority: 'medium', dueDate: '2025-10-30' },
+  { id: 3, title: 'Approve Department KPIs', titleAr: 'اعتماد مؤشرات الأداء الرئيسية للإدارات', status: 'completed', priority: 'high', dueDate: '2025-10-25' },
+  { id: 4, title: 'Conduct Mid-Year Review Meeting', titleAr: 'عقد اجتماع مراجعة منتصف العام', status: 'open', priority: 'low', dueDate: '2025-11-05' },
 ];
 
 // Mock announcements data
@@ -50,25 +51,34 @@ const announcements = [
   {
     id: 1,
     title: 'Q4 Performance Evaluation Cycle Now Open',
+    titleAr: 'دورة تقييم أداء الربع الرابع مفتوحة الآن',
     description: 'The deadline for Excellence in Public Service nominations has been extended to March 15th.',
+    descriptionAr: 'تم تمديد الموعد النهائي لترشيحات التميز في الخدمة العامة حتى 15 مارس.',
     timestamp: '2 days ago',
+    timestampAr: 'منذ يومين',
     badges: []
   },
   {
     id: 2,
     title: 'New Strategic Initiative Added: "Smart Trade 2030"',
+    titleAr: 'إضافة مبادرة استراتيجية جديدة: «التجارة الذكية 2030»',
     description: 'A new corporate initiative has been added under the STG Dashboard for Dubai Customs innovation roadmap.',
+    descriptionAr: 'تمت إضافة مبادرة مؤسسية جديدة ضمن لوحة STG لخارطة طريق الابتكار في جمارك دبي.',
     timestamp: '1 week ago',
+    timestampAr: 'منذ أسبوع',
     badges: []
   },
   {
     id: 3,
     title: 'Policy Update — KPI Review Process',
+    titleAr: 'تحديث السياسات — آلية مراجعة مؤشرات الأداء الرئيسية',
     description: 'The process for KPI approval and quarterly reviews has been updated to enhance governance.',
+    descriptionAr: 'تم تحديث آلية اعتماد مؤشرات الأداء الرئيسية والمراجعات الربعية لتعزيز الحوكمة.',
     timestamp: '3 days ago',
+    timestampAr: 'منذ 3 أيام',
     badges: [
-      { label: 'Policy', variant: 'default' as const },
-      { label: 'Guidelines', variant: 'secondary' as const }
+      { label: 'Policy', labelAr: 'سياسة', variant: 'default' as const },
+      { label: 'Guidelines', labelAr: 'إرشادات', variant: 'secondary' as const }
     ]
   }
 ];
@@ -78,24 +88,61 @@ const recentActivity = [
   {
     id: 1,
     text: 'Target completion adjusted from Q2 2026 → Q1 2026, reflecting improved project progress',
+    textAr: 'تم تعديل موعد الإنجاز المستهدف من الربع الثاني 2026 إلى الربع الأول 2026، بما يعكس تحسّن تقدم المشروع',
     timestamp: '5 hours ago',
+    timestampAr: 'منذ 5 ساعات',
     type: 'update'
   },
   {
     id: 2,
     text: 'The Performance Management System now displays live progress indicators for departmental KPIs',
+    textAr: 'يعرض نظام إدارة الأداء الآن مؤشرات تقدم مباشرة لمؤشرات الأداء الرئيسية للإدارات',
     timestamp: '1 day ago',
+    timestampAr: 'منذ يوم',
     type: 'info'
   },
   {
     id: 3,
     text: 'Latest performance results show exceptional alignment with strategic goals, marking a +7% improvement',
+    textAr: 'تُظهر أحدث نتائج الأداء مواءمة استثنائية مع الأهداف الاستراتيجية، محققةً تحسناً بنسبة +7%',
     timestamp: '2 days ago',
+    timestampAr: 'منذ يومين',
     type: 'success'
   }
 ];
 
+// Arabic labels for chart series (division names are used as data keys, so translate only at render time)
+const DIVISION_AR: Record<string, string> = {
+  'Customs Development': 'تطوير الجمارك',
+  'Customs Inspection': 'التفتيش الجمركي',
+  'Finance and Administrative affairs': 'الشؤون المالية والإدارية',
+  'Human Resources': 'الموارد البشرية',
+  'Director General': 'المدير العام',
+  'Policy and Legislation': 'السياسات والتشريعات',
+};
+
+const MONTH_AR: Record<string, string> = {
+  Jan: 'يناير', Feb: 'فبراير', Mar: 'مارس', Apr: 'أبريل', May: 'مايو', Jun: 'يونيو',
+  Jul: 'يوليو', Aug: 'أغسطس', Sep: 'سبتمبر', Oct: 'أكتوبر', Nov: 'نوفمبر', Dec: 'ديسمبر',
+};
+
+/** Translate a chart period label ("Q1 2025", "Jan 2025", "2025") to Arabic. */
+function periodAr(period: string): string {
+  const [first, year] = period.split(' ');
+  if (!year) return period;
+  if (/^Q\d$/.test(first)) return `الربع ${first.slice(1)} ${year}`;
+  return `${MONTH_AR[first] ?? first} ${year}`;
+}
+
 export function HomePage({ onNavigate }: HomePageProps) {
+  const { tr, isRTL } = useLanguage();
+  const fmtPeriod = (value: any) => (isRTL ? periodAr(String(value)) : String(value));
+  const frequencyLabel = (f: string) =>
+    f === 'annual' ? tr('Annual', 'سنوي') : f === 'quarterly' ? tr('Quarterly', 'ربع سنوي') : f === 'monthly' ? tr('Monthly', 'شهري') : f;
+  const statusLabel = (st: string) =>
+    st === 'in-progress' ? tr('In Progress', 'قيد التنفيذ') : st === 'open' ? tr('Open', 'مفتوحة') : st === 'completed' ? tr('Completed', 'مكتملة') : st;
+  const priorityLabel = (pr: string) =>
+    pr === 'high' ? tr('High', 'عالية') : pr === 'medium' ? tr('Medium', 'متوسطة') : pr === 'low' ? tr('Low', 'منخفضة') : pr;
   const [selectedYear, setSelectedYear] = useState(2025);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [prioritySort, setPrioritySort] = useState<'asc' | 'desc' | null>(null);
@@ -190,13 +237,13 @@ export function HomePage({ onNavigate }: HomePageProps) {
     <div className="h-full overflow-hidden flex">
       {/* Main Content Area - Scrollable */}
       <div className="flex-1 overflow-auto">
-        <div className="space-y-3 p-3 pr-0">
+        <div className="space-y-3 p-3 pe-0">
           {/* Hero Banner with CTA */}
           <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
             <img
               src={heroDecoration}
               alt=""
-              className="absolute -top-16 -right-16 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
+              className="absolute -top-16 -end-16 rtl:-scale-x-100 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
             />
             {/* <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" /> */}
             <CardContent className="pt-3 pb-3 relative z-10">
@@ -208,64 +255,64 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     </div>
                     <div>
                       <h1 className="text-xl   mb-0.5">
-                        Good Morning, User
+                        {tr('Good Morning, User', 'صباح الخير، المستخدم')}
                       </h1>
                       <p className="text-white/90 text-sm">
-                        Strategy and Performance Management System
+                        {tr('Strategy and Performance Management System', 'نظام إدارة الاستراتيجية والأداء')}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <div
-                      className="flex flex-col items-center gap-1.5 cursor-pointer group"
+                      className="flex flex-col items-center gap-1.5  group"
                       // onClick={() => onNavigate('performance')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center group-hover:bg-[#008755] transition-colors">
+                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
                           <BarChart3 className="h-4 w-4 text-white" />
                         </div>
                       </div>
-                      <p className="text-xs text-white font-[Dubai]">Performance</p>
+                      <p className="text-xs text-white font-[Dubai]">{tr('Performance', 'الأداء')}</p>
                     </div>
 
                     <div
-                      className="flex flex-col items-center gap-1.5 cursor-pointer group"
+                      className="flex flex-col items-center gap-1.5  group"
                       // onClick={() => onNavigate('strategy')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center group-hover:bg-[#008755] transition-colors">
+                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
                           <Target className="h-4 w-4 text-white" />
                         </div>
                       </div>
-                      <p className="text-xs text-white font-[Dubai]">Strategy</p>
+                      <p className="text-xs text-white font-[Dubai]">{tr('Strategy', 'الاستراتيجية')}</p>
                     </div>
 
                     <div
-                      className="flex flex-col items-center gap-1.5 cursor-pointer group"
+                      className="flex flex-col items-center gap-1.5  group"
                       // onClick={() => onNavigate('partnership')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center group-hover:bg-[#008755] transition-colors">
+                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
                           <Users className="h-4 w-4 text-white" />
                         </div>
                       </div>
-                      <p className="text-xs text-white font-[Dubai]">Partnership</p>
+                      <p className="text-xs text-white font-[Dubai]">{tr('Partnership', 'الشراكات')}</p>
                     </div>
 
                     <div
-                      className="flex flex-col items-center gap-1.5 cursor-pointer group"
+                      className="flex flex-col items-center gap-1.5  group"
                       // onClick={() => onNavigate('voc')}
                     >
                       <div className="relative size-[40px]">
                         <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center group-hover:bg-[#008755] transition-colors">
+                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
                           <FileText className="h-4 w-4 text-white" />
                         </div>
                       </div>
-                      <p className="text-xs text-white font-[Dubai]">VOC</p>
+                      <p className="text-xs text-white font-[Dubai]">{tr('VOC', 'صوت المتعامل')}</p>
                     </div>
 
                     <div
@@ -278,7 +325,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                           <Briefcase className="h-4 w-4 text-white" />
                         </div>
                       </div>
-                      <p className="text-xs text-white font-[Dubai]">Sandbox</p>
+                      <p className="text-xs text-white font-[Dubai]">{tr('Sandbox', 'البيئة التجريبية')}</p>
                     </div>
 
                     <div
@@ -291,7 +338,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                           <Lightbulb className="h-4 w-4 text-white" />
                         </div>
                       </div>
-                      <p className="text-xs text-white font-[Dubai]">Ideas</p>
+                      <p className="text-xs text-white font-[Dubai]">{tr('Ideas', 'الأفكار')}</p>
                     </div>
                   </div>
                 </div>
@@ -300,8 +347,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <div className="absolute inset-0 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
                       <div className="text-center">
                         <div className="text-3xl   mb-0.5">2025</div>
-                        <div className="text-xs text-white/80">Active Year</div>
-                        <div className="text-[10px] text-white/60">Q1 - Q4</div>
+                        <div className="text-xs text-white/80">{tr('Active Year', 'السنة الحالية')}</div>
+                        <div className="text-[10px] text-white/60">{tr('Q1 - Q4', 'الربع 1 - الربع 4')}</div>
                       </div>
                     </div>
                   </div>
@@ -313,7 +360,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
           {/* Quick Access Cards */}
           <div>
             <h2 className="text-lg   text-[#1f2937] mb-1.5 font-[Dubai] font-normal">
-              Quick Access
+              {tr('Quick Access', 'الوصول السريع')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
               <Card
@@ -325,14 +372,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <BarChart3 className="h-5 w-5" />
                   </div>
                   <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    Performance Dashboard
+                    {tr('Performance Dashboard', 'لوحة الأداء')}
                   </h3>
                   <p className="text-xs text-muted-foreground mb-2">
-                    Monitor KPIs and track organizational performance
+                    {tr('Monitor KPIs and track organizational performance', 'رصد مؤشرات الأداء الرئيسية ومتابعة الأداء المؤسسي')}
                   </p>
                   <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>Open Dashboard</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
+                    <span>{tr('Open Dashboard', 'فتح اللوحة')}</span>
+                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
                   </div>
                 </CardContent>
               </Card>
@@ -346,14 +393,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <Target className="h-5 w-5" />
                   </div>
                   <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    Scorecards
+                    {tr('Scorecards', 'بطاقات الأداء')}
                   </h3>
                   <p className="text-xs text-muted-foreground mb-2">
-                    View all organizational scorecards and metrics
+                    {tr('View all organizational scorecards and metrics', 'عرض جميع بطاقات الأداء والمقاييس المؤسسية')}
                   </p>
                   <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>View Scorecards</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
+                    <span>{tr('View Scorecards', 'عرض بطاقات الأداء')}</span>
+                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
                   </div>
                 </CardContent>
               </Card>
@@ -367,14 +414,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <Activity className="h-5 w-5" />
                   </div>
                   <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    Strategy
+                    {tr('Strategy', 'الاستراتيجية')}
                   </h3>
                   <p className="text-xs text-muted-foreground mb-2">
-                    Strategic planning and alignment tools
+                    {tr('Strategic planning and alignment tools', 'أدوات التخطيط والمواءمة الاستراتيجية')}
                   </p>
                   <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>View Strategy</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
+                    <span>{tr('View Strategy', 'عرض الاستراتيجية')}</span>
+                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
                   </div>
                 </CardContent>
               </Card>
@@ -385,14 +432,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <FileText className="h-5 w-5" />
                   </div>
                   <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    Reports
+                    {tr('Reports', 'التقارير')}
                   </h3>
                   <p className="text-xs text-muted-foreground mb-2">
-                    Generate and export performance reports
+                    {tr('Generate and export performance reports', 'إنشاء تقارير الأداء وتصديرها')}
                   </p>
                   <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>View Reports</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
+                    <span>{tr('View Reports', 'عرض التقارير')}</span>
+                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
                   </div>
                 </CardContent>
               </Card>
@@ -406,14 +453,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <Lightbulb className="h-5 w-5" />
                   </div>
                   <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    Ideas Platform
+                    {tr('Ideas Platform', 'منصة الأفكار')}
                   </h3>
                   <p className="text-xs text-muted-foreground mb-2">
-                    Submit, review and track innovation ideas
+                    {tr('Submit, review and track innovation ideas', 'تقديم أفكار الابتكار ومراجعتها ومتابعتها')}
                   </p>
                   <div className="flex items-center text-[#26D07C] text-xs  ">
-                    <span>Open Platform</span>
-                    <ArrowRight className="h-3 w-3 ml-1" />
+                    <span>{tr('Open Platform', 'فتح المنصة')}</span>
+                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
                   </div>
                 </CardContent>
               </Card>
@@ -421,9 +468,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </div>
 
           {/* Performance Trend */}
-          <div className="pr-6">
+          <div className="pe-6">
             <h2 className="text-lg   text-[#1f2937] mb-1.5 font-[Dubai]">
-              Performance Trend
+              {tr('Performance Trend', 'اتجاه الأداء')}
             </h2>
             <Card>
               <CardHeader>
@@ -431,38 +478,40 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle className="  font-[Dubai]">
-                        Division Performance Trends
+                        {tr('Division Performance Trends', 'اتجاهات أداء القطاعات')}
                       </CardTitle>
                       <CardDescription>
-                        Performance score trends by division - {frequency.charAt(0).toUpperCase() + frequency.slice(1)} view from {yearFrom} to {yearTo}
+                        {isRTL
+                          ? `اتجاهات درجات الأداء حسب القطاع - عرض ${frequencyLabel(frequency)} من ${yearFrom} إلى ${yearTo}`
+                          : `Performance score trends by division - ${frequency.charAt(0).toUpperCase() + frequency.slice(1)} view from ${yearFrom} to ${yearTo}`}
                       </CardDescription>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-[Dubai]">Frequency:</span>
+                      <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Frequency:', 'التكرار:')}</span>
                       <Select value={frequency} onValueChange={setFrequency}>
                         <SelectTrigger className="w-[120px] h-8">
-                          <SelectValue placeholder="Frequency" />
+                          <SelectValue placeholder={tr('Frequency', 'التكرار')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="annual">Annual</SelectItem>
-                          <SelectItem value="quarterly">Quarterly</SelectItem>
-                          <SelectItem value="monthly">Monthly</SelectItem>
+                          <SelectItem value="annual">{tr('Annual', 'سنوي')}</SelectItem>
+                          <SelectItem value="quarterly">{tr('Quarterly', 'ربع سنوي')}</SelectItem>
+                          <SelectItem value="monthly">{tr('Monthly', 'شهري')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-[Dubai]">Year From:</span>
+                      <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Year From:', 'من سنة:')}</span>
                       <Select value={yearFrom.toString()} onValueChange={(value) => {
                         const newFrom = Number(value);
                         setYearFrom(newFrom);
                         if (newFrom > yearTo) setYearTo(newFrom);
                       }}>
                         <SelectTrigger className="w-[100px] h-8">
-                          <SelectValue placeholder="From" />
+                          <SelectValue placeholder={tr('From', 'من')} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="2020">2020</SelectItem>
@@ -476,14 +525,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-[Dubai]">Year To:</span>
+                      <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Year To:', 'إلى سنة:')}</span>
                       <Select value={yearTo.toString()} onValueChange={(value) => {
                         const newTo = Number(value);
                         setYearTo(newTo);
                         if (newTo < yearFrom) setYearFrom(newTo);
                       }}>
                         <SelectTrigger className="w-[100px] h-8">
-                          <SelectValue placeholder="To" />
+                          <SelectValue placeholder={tr('To', 'إلى')} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="2020">2020</SelectItem>
@@ -502,17 +551,20 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 <ResponsiveContainer width="100%" height={250}>
                   <LineChart
                     data={performanceData}
-                    margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                    margin={isRTL ? { top: 5, right: 0, left: 30, bottom: 5 } : { top: 5, right: 30, left: 0, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis
                       dataKey="period"
                       stroke="#6b7280"
+                      reversed={isRTL}
+                      tickFormatter={fmtPeriod}
                       style={{ fontSize: '12px', fontFamily: 'Dubai, sans-serif' }}
                     />
                     <YAxis
                       stroke="#6b7280"
                       domain={[60, 100]}
+                      orientation={isRTL ? 'right' : 'left'}
                       style={{ fontSize: '12px', fontFamily: 'Dubai, sans-serif' }}
                     />
                     <Tooltip
@@ -522,6 +574,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         borderRadius: '6px',
                         fontFamily: 'Dubai, sans-serif'
                       }}
+                      labelFormatter={fmtPeriod}
                     />
                     <Legend
                       wrapperStyle={{
@@ -529,12 +582,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         fontFamily: 'Dubai, sans-serif'
                       }}
                     />
-                    <Line key="customs-dev" type="monotone" dataKey="Customs Development" stroke="#00B0AA" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="customs-inspect" type="monotone" dataKey="Customs Inspection" stroke="#BB9956" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="finance-admin" type="monotone" dataKey="Finance and Administrative affairs" stroke="#008755" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="hr" type="monotone" dataKey="Human Resources" stroke="#005844" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="director-gen" type="monotone" dataKey="Director General" stroke="#115E67" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="policy-leg" type="monotone" dataKey="Policy and Legislation" stroke="#FFBE9F" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line key="customs-dev" type="monotone" dataKey="Customs Development" name={tr('Customs Development', DIVISION_AR['Customs Development'])} stroke="#00B0AA" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line key="customs-inspect" type="monotone" dataKey="Customs Inspection" name={tr('Customs Inspection', DIVISION_AR['Customs Inspection'])} stroke="#BB9956" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line key="finance-admin" type="monotone" dataKey="Finance and Administrative affairs" name={tr('Finance and Administrative affairs', DIVISION_AR['Finance and Administrative affairs'])} stroke="#008755" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line key="hr" type="monotone" dataKey="Human Resources" name={tr('Human Resources', DIVISION_AR['Human Resources'])} stroke="#005844" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line key="director-gen" type="monotone" dataKey="Director General" name={tr('Director General', DIVISION_AR['Director General'])} stroke="#115E67" strokeWidth={2} dot={{ r: 4 }} />
+                    <Line key="policy-leg" type="monotone" dataKey="Policy and Legislation" name={tr('Policy and Legislation', DIVISION_AR['Policy and Legislation'])} stroke="#FFBE9F" strokeWidth={2} dot={{ r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </CardContent>
@@ -542,36 +595,36 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </div>
 
           {/* Task List */}
-          <div className="pr-6">
+          <div className="pe-6">
             <div className="flex items-center justify-between mb-1.5">
               <h2 className="text-lg font-['Dubai:Medium'] text-[#1f2937] font-[Dubai]">
-                Task List
+                {tr('Task List', 'قائمة المهام')}
               </h2>
               <Button variant="ghost" size="sm" className="text-[#008755]">
-                View All
-                <ChevronRight className="h-4 w-4 ml-1" />
+                {tr('View All', 'عرض الكل')}
+                <ChevronRight className="h-4 w-4 ms-1 rtl:rotate-180" />
               </Button>
             </div>
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground font-[Dubai]">Filter:</span>
+                    <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Filter:', 'تصفية:')}</span>
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
                       <SelectTrigger className="w-[130px] h-8">
-                        <SelectValue placeholder="Status" />
+                        <SelectValue placeholder={tr('Status', 'الحالة')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Status</SelectItem>
-                        <SelectItem value="open">Open</SelectItem>
-                        <SelectItem value="in-progress">In Progress</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
+                        <SelectItem value="all">{tr('All Status', 'جميع الحالات')}</SelectItem>
+                        <SelectItem value="open">{tr('Open', 'مفتوحة')}</SelectItem>
+                        <SelectItem value="in-progress">{tr('In Progress', 'قيد التنفيذ')}</SelectItem>
+                        <SelectItem value="completed">{tr('Completed', 'مكتملة')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground font-[Dubai]">Sort:</span>
+                    <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Sort:', 'ترتيب:')}</span>
                     <Button
                       variant="outline"
                       size="sm"
@@ -587,8 +640,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         }
                       }}
                     >
-                      Priority
-                      <ArrowUpDown className="h-3 w-3 ml-1" />
+                      {tr('Priority', 'الأولوية')}
+                      <ArrowUpDown className="h-3 w-3 ms-1" />
                     </Button>
                     <Button
                       variant="outline"
@@ -605,8 +658,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         }
                       }}
                     >
-                      Date
-                      <ArrowUpDown className="h-3 w-3 ml-1" />
+                      {tr('Date', 'التاريخ')}
+                      <ArrowUpDown className="h-3 w-3 ms-1" />
                     </Button>
                   </div>
                 </div>
@@ -623,7 +676,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         <div className="flex items-start justify-between gap-2">
                           <p className={`font-['Dubai:Medium',_'Dubai'] ${task.status === 'completed' ? 'text-muted-foreground' : 'text-[#1f2937]'
                             }`}>
-                            {task.title}
+                            {tr(task.title, task.titleAr)}
                           </p>
                           <div className="flex gap-2">
                             <Badge
@@ -637,7 +690,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                               }}
                               className="min-w-[90px] justify-center"
                             >
-                              {task.status === 'in-progress' ? 'In Progress' : task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                              {isRTL ? statusLabel(task.status) : (task.status === 'in-progress' ? 'In Progress' : task.status.charAt(0).toUpperCase() + task.status.slice(1))}
                             </Badge>
                             <Badge
                               style={{
@@ -648,13 +701,13 @@ export function HomePage({ onNavigate }: HomePageProps) {
                               }}
                               className="min-w-[80px] justify-center"
                             >
-                              {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                              {isRTL ? priorityLabel(task.priority) : task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                             </Badge>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                           <Calendar className="h-3 w-3" />
-                          <span>Due: {task.dueDate}</span>
+                          <span>{tr('Due:', 'تاريخ الاستحقاق:')} {task.dueDate}</span>
                         </div>
                       </div>
                     </div>
@@ -665,9 +718,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </div>
 
           {/* Insights Section */}
-          <div className="pr-6">
+          <div className="pe-6">
             <h2 className="text-lg   text-[#1f2937] mb-1.5 font-[Dubai]">
-              Insights
+              {tr('Insights', 'رؤى')}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Performance Insights */}
@@ -677,22 +730,22 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <div className="h-8 w-8 rounded-lg bg-[#008755]/10 flex items-center justify-center">
                       <Lightbulb className="h-4 w-4 text-[#008755]" />
                     </div>
-                    <CardTitle className="text-base">Performance Insights</CardTitle>
+                    <CardTitle className="text-base">{tr('Performance Insights', 'رؤى الأداء')}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
                     <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0" />
-                      <span>Overall performance has improved by 12% compared to last quarter</span>
+                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
+                      <span>{tr('Overall performance has improved by 12% compared to last quarter', 'تحسّن الأداء العام بنسبة 12% مقارنة بالربع السابق')}</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0" />
-                      <span>Customer satisfaction metrics exceeded targets by 7%</span>
+                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
+                      <span>{tr('Customer satisfaction metrics exceeded targets by 7%', 'تجاوزت مؤشرات رضا المتعاملين المستهدفات بنسبة 7%')}</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0" />
-                      <span>3 departments require attention for below-target KPIs</span>
+                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
+                      <span>{tr('3 departments require attention for below-target KPIs', '3 إدارات تتطلب المتابعة بسبب مؤشرات أداء دون المستهدف')}</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -705,22 +758,22 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     <div className="h-8 w-8 rounded-lg bg-[#008755]/10 flex items-center justify-center">
                       <Lightbulb className="h-4 w-4 text-[#008755]" />
                     </div>
-                    <CardTitle className="text-base">Strategy Insights</CardTitle>
+                    <CardTitle className="text-base">{tr('Strategy Insights', 'رؤى الاستراتيجية')}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
                     <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0" />
-                      <span>Strategic alignment improved across all divisions</span>
+                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
+                      <span>{tr('Strategic alignment improved across all divisions', 'تحسّنت المواءمة الاستراتيجية في جميع القطاعات')}</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0" />
-                      <span>Innovation initiatives show 85% completion rate</span>
+                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
+                      <span>{tr('Innovation initiatives show 85% completion rate', 'تُظهر مبادرات الابتكار نسبة إنجاز 85%')}</span>
                     </li>
                     <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0" />
-                      <span>2 new strategic objectives added for Q1 2026</span>
+                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
+                      <span>{tr('2 new strategic objectives added for Q1 2026', 'إضافة هدفين استراتيجيين جديدين للربع الأول 2026')}</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -731,7 +784,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
       </div>
 
       {/* Fixed Right Sidebar */}
-      <div className="w-80 border-l bg-gray-50 overflow-auto flex-shrink-0">
+      <div className="w-80 border-s bg-gray-50 overflow-auto flex-shrink-0">
         <div className="p-6 space-y-8 bg-white">
           {/* Announcements */}
           <div>
@@ -743,7 +796,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </svg>
               </div>
               <h3 className="  text-[#008755] font-[Dubai]">
-                Announcements
+                {tr('Announcements', 'الإعلانات')}
               </h3>
             </div>
             <div className="space-y-2">
@@ -751,10 +804,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 <Card key={announcement.id} className="border border-gray-200 bg-white rounded-xl">
                   <CardContent className="p-3">
                     <h4 className="  text-sm text-[#1a1a1a] mb-1.5 leading-snug font-[Dubai]">
-                      {announcement.title}
+                      {tr(announcement.title, announcement.titleAr)}
                     </h4>
                     <p className="text-xs text-[#666666] mb-2 leading-relaxed">
-                      {announcement.description}
+                      {tr(announcement.description, announcement.descriptionAr)}
                     </p>
                     {announcement.badges.length > 0 && (
                       <div className="flex gap-2 mb-2">
@@ -766,7 +819,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                                 : 'bg-[#ffb088] text-white hover:bg-[#ffb088]'
                               }`}
                           >
-                            {badge.label}
+                            {tr(badge.label, badge.labelAr)}
                           </Badge>
                         ))}
                       </div>
@@ -778,7 +831,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         <line x1="8" x2="8" y1="2" y2="6" />
                         <line x1="3" x2="21" y1="10" y2="10" />
                       </svg>
-                      <span>{announcement.timestamp}</span>
+                      <span>{tr(announcement.timestamp, announcement.timestampAr)}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -796,7 +849,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </svg>
               </div>
               <h3 className="  text-[#008755] font-[Dubai]">
-                Recent Activity
+                {tr('Recent Activity', 'النشاط الأخير')}
               </h3>
             </div>
             <div className="bg-[#f5f8fa] rounded-xl p-4">
@@ -811,14 +864,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     </div>
                     <div className="flex-1">
                       <p className="text-xs text-[#1a1a1a] mb-1.5 leading-relaxed">
-                        {activity.text}
+                        {tr(activity.text, activity.textAr)}
                       </p>
                       <div className="flex items-center gap-1.5 text-[11px] text-[#999999]">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
                           <circle cx="12" cy="12" r="10" />
                           <polyline points="12 6 12 12 16 14" />
                         </svg>
-                        <span>{activity.timestamp}</span>
+                        <span>{tr(activity.timestamp, activity.timestampAr)}</span>
                       </div>
                     </div>
                   </div>

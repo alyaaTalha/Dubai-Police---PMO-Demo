@@ -14,6 +14,7 @@ import { Input } from '../../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Progress } from '../../ui/progress';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
@@ -29,6 +30,10 @@ interface User {
   xp: number;
   initials: string;
   chip: string;
+  nameAr?: string;
+  roleAr?: string;
+  subtitleAr?: string;
+  chipAr?: string;
 }
 
 interface PageProps {
@@ -155,6 +160,86 @@ function getAiReply(question: string): string {
   return "Based on your pipeline data, here are the most relevant results for your query. You currently have 6 ideas awaiting decision, 2 of which are overdue. Your department funnel shows a 47% drop at the Director Review stage — clearing your queue would unlock significant downstream throughput.";
 }
 
+// ── Arabic display translations (keyed by English value; render-time only) ──────
+const AR: Record<string, string> = {
+  // Departments
+  'Community Affairs': 'شؤون المجتمع',
+  'Digital Transformation': 'التحول الرقمي',
+  'Operations': 'العمليات',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Legal Affairs': 'الشؤون القانونية',
+  'Strategic Planning': 'التخطيط الاستراتيجي',
+  // Idea titles
+  'Smart Queue Management': 'الإدارة الذكية للطوابير',
+  'Community Feedback Loop Automation': 'أتمتة حلقة ملاحظات المجتمع',
+  'Predictive Patrol Scheduling': 'الجدولة التنبؤية للدوريات',
+  'Digital Training Badge System': 'نظام الشارات الرقمية للتدريب',
+  'Mobile Field Report Digitization': 'رقمنة التقارير الميدانية عبر الهاتف',
+  'E-Grievance Resolution Tracker': 'متتبع حل الشكاوى الإلكترونية',
+  'Blockchain Evidence Chain': 'سلسلة الأدلة بتقنية البلوك تشين',
+  'Officer Wellness Check Platform': 'منصة فحص صحة وعافية الضباط',
+  'AI-Powered Evidence Cataloging': 'فهرسة الأدلة بالذكاء الاصطناعي',
+  'Unified Digital Front Door': 'البوابة الرقمية الموحدة',
+  'Predictive Maintenance for Fleet': 'الصيانة التنبؤية للأسطول',
+  'Smart Training Pathway Engine': 'محرك المسارات التدريبية الذكية',
+  // People
+  'Fatima Al Mansoori': 'فاطمة المنصوري',
+  'Hessa Al Blooshi': 'حصة البلوشي',
+  'Omar Al Zaabi': 'عمر الزعابي',
+  'Saeed Al Ketbi': 'سعيد الكتبي',
+  'Khalid Al Nuaimi': 'خالد النعيمي',
+  'Maryam Al Rashdi': 'مريم الراشدي',
+  'Ahmed Al Suwaidi': 'أحمد السويدي',
+  // Dates
+  'Jul 30, 2025': '30 يوليو 2025',
+  'Jul 27, 2025': '27 يوليو 2025',
+  'Jul 24, 2025': '24 يوليو 2025',
+  'Aug 1, 2025': '1 أغسطس 2025',
+  'Jul 29, 2025': '29 يوليو 2025',
+  'Jul 23, 2025': '23 يوليو 2025',
+  // Impact areas
+  'Safety & Security': 'السلامة والأمن',
+  'Customer Experience': 'تجربة المتعاملين',
+  'Cost Reduction': 'خفض التكاليف',
+  'Productivity': 'الإنتاجية',
+  'Operational Efficiency': 'الكفاءة التشغيلية',
+  // High-potential descriptions
+  'Reduces evidence handling time by 60% using computer vision classification.': 'يقلل وقت التعامل مع الأدلة بنسبة 60% باستخدام التصنيف بالرؤية الحاسوبية.',
+  'One citizen portal replacing 14 separate service entry points.': 'بوابة موحدة للمتعاملين تحل محل 14 نقطة دخول منفصلة للخدمات.',
+  'Predicted to cut unplanned vehicle downtime by 40% annually.': 'من المتوقع أن تخفض فترات توقف المركبات غير المخطط لها بنسبة 40% سنوياً.',
+  'Personalised L&D journeys boosting completion rates by 35%.': 'رحلات تعلم وتطوير مخصصة ترفع معدلات الإكمال بنسبة 35%.',
+  // Statuses / funnel stages
+  'Submitted': 'مقدمة',
+  'Under Review': 'قيد المراجعة',
+  'Approved': 'معتمدة',
+  'Rejected': 'مرفوضة',
+  'Implemented': 'منفذة',
+  'Director Review': 'مراجعة المدير',
+  'Feasibility': 'دراسة الجدوى',
+  // Levels / AI recommendation
+  'High': 'مرتفع',
+  'Medium': 'متوسط',
+  'Low': 'منخفض',
+  'Approve': 'اعتماد',
+  'Review': 'مراجعة',
+  'Reject': 'رفض',
+  // AI prompt chips
+  'Which ideas have the most strategic alignment?': 'ما الأفكار الأكثر توافقاً مع الاستراتيجية؟',
+  'Show me overdue decisions': 'اعرض القرارات المتأخرة',
+  "What's blocking the funnel this month?": 'ما الذي يعيق مسار الأفكار هذا الشهر؟',
+  // AI replies
+  "There are 2 overdue ideas in your queue:\n1. Predictive Patrol Scheduling (Omar Al Zaabi, Operations) — waiting 8 days.\n2. E-Grievance Resolution Tracker (Fatima Al Mansoori, Digital Transformation) — waiting 9 days, SLA-breached.\nBoth require immediate action to meet the 7-day decision commitment.":
+    'توجد فكرتان متأخرتان في قائمتك:\n1. الجدولة التنبؤية للدوريات (عمر الزعابي، العمليات) — بانتظار القرار منذ 8 أيام.\n2. متتبع حل الشكاوى الإلكترونية (فاطمة المنصوري، التحول الرقمي) — بانتظار القرار منذ 9 أيام، وتجاوزت اتفاقية مستوى الخدمة.\nكلتاهما تتطلبان إجراءً فورياً للالتزام بمهلة القرار البالغة 7 أيام.',
+  "The biggest bottleneck this month is the Director Review stage. 47% of ideas drop between Under Review (24) and Director Review (12) — 13 ideas are stalled. Clearing your 6-item pending queue would directly resolve this congestion.":
+    'أكبر عائق هذا الشهر هو مرحلة مراجعة المدير. تنخفض 47% من الأفكار بين مرحلة قيد المراجعة (24) ومراجعة المدير (12) — وهناك 13 فكرة متوقفة. إن البت في قائمتك المعلقة المكونة من 6 أفكار سيعالج هذا الازدحام مباشرة.',
+  "Top 3 ideas with High strategic alignment:\n1. Smart Queue Management — Low effort, AI recommends Approve.\n2. Community Feedback Loop Automation — Medium effort, strong community impact.\n3. Digital Training Badge System — Low effort, aligns with HR modernisation goals.\nAll three are awaiting your decision this week.":
+    'أفضل 3 أفكار ذات توافق استراتيجي مرتفع:\n1. الإدارة الذكية للطوابير — جهد منخفض، ويوصي الذكاء الاصطناعي بالاعتماد.\n2. أتمتة حلقة ملاحظات المجتمع — جهد متوسط، وأثر مجتمعي قوي.\n3. نظام الشارات الرقمية للتدريب — جهد منخفض، ويتوافق مع أهداف تحديث الموارد البشرية.\nجميعها بانتظار قرارك هذا الأسبوع.',
+  "Your current pipeline has 8 ideas in active stages. 6 are pending your decision, 2 have been converted to projects this month. Average decision time is 4.1 days against a 3-day target — consider batch-reviewing the pending queue today.":
+    'يضم مسار أفكارك الحالي 8 أفكار في مراحل نشطة. 6 منها بانتظار قرارك، وتم تحويل فكرتين إلى مشاريع هذا الشهر. متوسط وقت القرار 4.1 أيام مقابل مستهدف 3 أيام — يُنصح بمراجعة القائمة المعلقة دفعة واحدة اليوم.',
+  "Based on your pipeline data, here are the most relevant results for your query. You currently have 6 ideas awaiting decision, 2 of which are overdue. Your department funnel shows a 47% drop at the Director Review stage — clearing your queue would unlock significant downstream throughput.":
+    'استناداً إلى بيانات مسار أفكارك، إليك النتائج الأكثر صلة باستفسارك. لديك حالياً 6 أفكار بانتظار القرار، منها فكرتان متأخرتان. يُظهر مسار إدارتك انخفاضاً بنسبة 47% في مرحلة مراجعة المدير — والبت في قائمتك سيرفع الإنتاجية في المراحل اللاحقة بشكل ملحوظ.',
+};
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function fitColor(level: FitLevel) {
   if (level === 'High')   return 'bg-emerald-100 text-emerald-800';
@@ -218,6 +303,8 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
   const [aiInput, setAiInput] = useState('');
   const [chatHistory, setChatHistory] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const { tr, isRTL } = useLanguage();
+  const L = (s: string) => tr(s, AR[s]);
 
   const stats = DEPT_STATS[dept] ?? DEPT_STATS['Community Affairs'];
   const pendingIdeas = ideas.filter((i) => i.status === 'pending');
@@ -300,10 +387,10 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl   font-semibold text-gray-900">
-            Director Dashboard
+            {tr('Director Dashboard', 'لوحة معلومات المدير')}
           </h1>
           <p className="text-sm text-gray-500 mt-0.5">
-            Welcome back, <span className="font-medium text-gray-700">{user.name}</span> — here's your decision overview for today.
+            {tr('Welcome back, ', 'مرحباً بعودتك، ')}<span className="font-medium text-gray-700">{tr(user.name, user.nameAr)}</span>{tr(" — here's your decision overview for today.", ' — إليك نظرة عامة على قراراتك لهذا اليوم.')}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -314,7 +401,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
             </SelectTrigger>
             <SelectContent>
               {DEPARTMENTS.map((d) => (
-                <SelectItem key={d} value={d}>{d}</SelectItem>
+                <SelectItem key={d} value={d}>{L(d)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -328,15 +415,15 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500   uppercase tracking-wide">Decisions Made</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">{tr('Decisions Made', 'القرارات المتخذة')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{stats.decisions}</p>
-                <p className="text-xs text-emerald-600 mt-1">+3 from last month</p>
+                <p className="text-xs text-emerald-600 mt-1">{tr('+3 from last month', '+3 عن الشهر الماضي')}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
                 <CheckCircle2 className="w-5 h-5 text-[#008755]" />
               </div>
             </div>
-            <p className="text-[11px] text-gray-400 mt-2">This month</p>
+            <p className="text-[11px] text-gray-400 mt-2">{tr('This month', 'هذا الشهر')}</p>
           </CardContent>
         </Card>
 
@@ -345,15 +432,15 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500   uppercase tracking-wide">Ideas in Pipeline</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">{tr('Ideas in Pipeline', 'الأفكار في المسار')}</p>
                 <p className="text-3xl font-bold text-gray-900 mt-1">{stats.pipeline}</p>
-                <p className="text-xs text-blue-600 mt-1">2 converted to project</p>
+                <p className="text-xs text-blue-600 mt-1">{tr('2 converted to project', 'تحويل فكرتين إلى مشاريع')}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-blue-600" />
               </div>
             </div>
-            <p className="text-[11px] text-gray-400 mt-2">Active stages</p>
+            <p className="text-[11px] text-gray-400 mt-2">{tr('Active stages', 'مراحل نشطة')}</p>
           </CardContent>
         </Card>
 
@@ -362,19 +449,21 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500   uppercase tracking-wide">Avg Decision Time</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">{tr('Avg Decision Time', 'متوسط وقت القرار')}</p>
                 <p className={cn('text-3xl font-bold mt-1', stats.avgDays > 3 ? 'text-amber-600' : 'text-gray-900')}>
-                  {stats.avgDays}d
+                  {stats.avgDays}{tr('d', ' يوم')}
                 </p>
                 <p className={cn('text-xs mt-1', stats.avgDays > 3 ? 'text-amber-600' : 'text-emerald-600')}>
-                  {stats.avgDays > 3 ? `${(stats.avgDays - 3).toFixed(1)}d above target` : 'On target'}
+                  {stats.avgDays > 3
+                    ? tr(`${(stats.avgDays - 3).toFixed(1)}d above target`, `${(stats.avgDays - 3).toFixed(1)} يوم فوق المستهدف`)
+                    : tr('On target', 'ضمن المستهدف')}
                 </p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center">
                 <Clock className="w-5 h-5 text-amber-500" />
               </div>
             </div>
-            <p className="text-[11px] text-gray-400 mt-2">Target: ≤3 days</p>
+            <p className="text-[11px] text-gray-400 mt-2">{tr('Target: ≤3 days', 'المستهدف: ≤3 أيام')}</p>
           </CardContent>
         </Card>
 
@@ -383,24 +472,26 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <CardContent className="p-3">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500   uppercase tracking-wide">Pending Decisions</p>
+                <p className="text-xs text-gray-500   uppercase tracking-wide">{tr('Pending Decisions', 'القرارات المعلقة')}</p>
                 <div className="flex items-center gap-2 mt-1">
                   <p className="text-3xl font-bold text-gray-900">{stats.pending}</p>
                   {stats.overdue > 0 && (
                     <span className="text-xs font-semibold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                      {stats.overdue} overdue
+                      {stats.overdue} {tr('overdue', 'متأخرة')}
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-red-600 mt-1">
-                  {stats.overdue > 0 ? `${stats.overdue} past SLA` : 'All within SLA'}
+                  {stats.overdue > 0
+                    ? tr(`${stats.overdue} past SLA`, `${stats.overdue} تجاوزت اتفاقية مستوى الخدمة`)
+                    : tr('All within SLA', 'جميعها ضمن اتفاقية مستوى الخدمة')}
                 </p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center">
                 <AlertCircle className="w-5 h-5 text-red-500" />
               </div>
             </div>
-            <p className="text-[11px] text-gray-400 mt-2">Require your action</p>
+            <p className="text-[11px] text-gray-400 mt-2">{tr('Require your action', 'تتطلب إجراءً منك')}</p>
           </CardContent>
         </Card>
       </div>
@@ -410,14 +501,14 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
           <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
           <p className="text-sm text-amber-800 flex-1">
-            <span className="font-semibold">2 ideas have been waiting &gt;7 days</span> for a decision ·{' '}
-            <span className="font-semibold text-red-700">1 idea is SLA-breached</span> ·{' '}
-            1 high-potential idea needs your immediate attention
+            <span className="font-semibold">{tr('2 ideas have been waiting >7 days', 'فكرتان بانتظار القرار منذ أكثر من 7 أيام')}</span>{isRTL ? '' : ' for a decision'} ·{' '}
+            <span className="font-semibold text-red-700">{tr('1 idea is SLA-breached', 'فكرة واحدة تجاوزت اتفاقية مستوى الخدمة')}</span> ·{' '}
+            {tr('1 high-potential idea needs your immediate attention', 'فكرة واحدة عالية الإمكانات تحتاج إلى اهتمامك الفوري')}
           </p>
           <button
             onClick={() => setAlertVisible(false)}
             className="text-amber-500 hover:text-amber-700 transition-colors shrink-0"
-            aria-label="Dismiss alert"
+            aria-label={tr('Dismiss alert', 'إغلاق التنبيه')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -429,7 +520,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         <CardHeader className="pb-2 pt-3 px-3">
           <div className="flex items-center gap-2">
             <CardTitle className="text-sm   font-semibold text-gray-900">
-              Needs Your Decision
+              {tr('Needs Your Decision', 'بانتظار قرارك')}
             </CardTitle>
             <span className="text-xs font-bold bg-[#008755] text-white px-2 py-0.5 rounded-full">
               {pendingIdeas.length}
@@ -438,19 +529,19 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         </CardHeader>
         <CardContent className="px-3 pb-3 space-y-3">
           {pendingIdeas.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-6">All caught up — no ideas awaiting decision.</p>
+            <p className="text-sm text-gray-400 text-center py-6">{tr('All caught up — no ideas awaiting decision.', 'لا توجد أفكار بانتظار القرار حالياً.')}</p>
           )}
           {ideas.map((idea) => {
             const ai = aiRecStyle(idea.aiRec);
             const daysColor = idea.days > 7 ? 'text-red-600 bg-red-50' : idea.days > 3 ? 'text-amber-600 bg-amber-50' : 'text-gray-500 bg-gray-100';
             const borderFlash =
               idea.status === 'approved'
-                ? 'border-l-4 border-l-emerald-500 bg-emerald-50/30'
+                ? 'border-s-4 border-s-emerald-500 bg-emerald-50/30'
                 : idea.status === 'rejected'
-                ? 'border-l-4 border-l-red-400 bg-red-50/20 opacity-50'
+                ? 'border-s-4 border-s-red-400 bg-red-50/20 opacity-50'
                 : idea.status === 'info-requested'
-                ? 'border-l-4 border-l-blue-400 bg-blue-50/20 opacity-50'
-                : 'border-l-4 border-l-transparent';
+                ? 'border-s-4 border-s-blue-400 bg-blue-50/20 opacity-50'
+                : 'border-s-4 border-s-transparent';
 
             return (
               <div
@@ -463,22 +554,22 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                 {/* Top: title + meta + tags */}
                 <div className="min-w-0">
                   <div className="flex items-baseline gap-2">
-                    <p className="font-semibold text-sm text-gray-900 truncate">{idea.title}</p>
-                    <p className="text-xs text-gray-500 shrink-0">{idea.submitter} · {idea.dept} · {idea.submitted}</p>
+                    <p className="font-semibold text-sm text-gray-900 truncate">{L(idea.title)}</p>
+                    <p className="text-xs text-gray-500 shrink-0">{L(idea.submitter)} · {L(idea.dept)} · {L(idea.submitted)}</p>
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-1.5">
                     <span className={cn('text-[11px] font-medium px-2 py-0.5 rounded-full', fitColor(idea.strategicFit))}>
-                      Strategic: {idea.strategicFit}
+                      {tr('Strategic', 'التوافق الاستراتيجي')}: {L(idea.strategicFit)}
                     </span>
                     <span className={cn('text-[11px] font-medium px-2 py-0.5 rounded-full', effortColor(idea.effort))}>
-                      Effort: {idea.effort}
+                      {tr('Effort', 'الجهد')}: {L(idea.effort)}
                     </span>
                     <span className={cn('text-[11px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1', ai.cls)}>
                       <Sparkles className="w-3 h-3" />
-                      AI: {idea.aiRec}
+                      {tr('AI', 'الذكاء الاصطناعي')}: {L(idea.aiRec)}
                     </span>
                     <span className={cn('text-[11px] font-medium px-2 py-0.5 rounded-full', daysColor)}>
-                      {idea.days}d waiting
+                      {tr(`${idea.days}d waiting`, `بالانتظار منذ ${idea.days} يوم`)}
                     </span>
                   </div>
                 </div>
@@ -494,8 +585,8 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                     )}
                     onClick={() => setEvaluatingId(prev => prev === idea.id ? null : idea.id)}
                   >
-                    <ClipboardList className="w-3 h-3 mr-1" />
-                    {evaluatingId === idea.id ? 'Close Eval' : 'Evaluate'}
+                    <ClipboardList className="w-3 h-3 me-1" />
+                    {evaluatingId === idea.id ? tr('Close Eval', 'إغلاق التقييم') : tr('Evaluate', 'تقييم')}
                   </Button>
                   <Button
                     size="sm"
@@ -503,7 +594,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                     onClick={() => handleApprove(idea.id)}
                     className="text-xs h-7 px-3 bg-[#008755] hover:bg-[#005844] text-white"
                   >
-                    Approve for Feasibility
+                    {tr('Approve for Feasibility', 'اعتماد لدراسة الجدوى')}
                   </Button>
                   <Button
                     size="sm"
@@ -512,7 +603,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                     onClick={() => handleRequestInfo(idea.id)}
                     className="text-xs h-7 px-3 border-blue-400 text-blue-700 hover:bg-blue-50"
                   >
-                    Request More Info
+                    {tr('Request More Info', 'طلب مزيد من المعلومات')}
                   </Button>
                   <Button
                     size="sm"
@@ -521,7 +612,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                     onClick={() => handleReject(idea.id)}
                     className="text-xs h-7 px-3 border-red-400 text-red-600 hover:bg-red-50"
                   >
-                    Reject
+                    {tr('Reject', 'رفض')}
                   </Button>
 
                   {/* Assign Owner */}
@@ -531,18 +622,18 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                       className="flex items-center gap-1.5 text-xs text-gray-600 border border-gray-200 rounded-md px-2 py-1 hover:bg-gray-50 transition-colors"
                     >
                       <UserCheck className="w-3.5 h-3.5" />
-                      {idea.assignedOwner ?? 'Assign Owner'}
+                      {idea.assignedOwner ? L(idea.assignedOwner) : tr('Assign Owner', 'تعيين مسؤول')}
                       <ChevronDown className="w-3 h-3" />
                     </button>
                     {ownerDropdown === idea.id && (
-                      <div className="absolute right-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-lg w-44 overflow-hidden">
+                      <div className="absolute end-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-lg w-44 overflow-hidden">
                         {OWNERS.map((o) => (
                           <button
                             key={o}
                             onClick={() => assignOwner(idea.id, o)}
-                            className="w-full text-left text-xs px-3 py-2 hover:bg-gray-50 transition-colors"
+                            className="w-full text-start text-xs px-3 py-2 hover:bg-gray-50 transition-colors"
                           >
-                            {o}
+                            {L(o)}
                           </button>
                         ))}
                       </div>
@@ -554,7 +645,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                 {evaluatingId === idea.id && (
                   <EvaluationPanel
                     ideaId={idea.id}
-                    ideaTitle={idea.title}
+                    ideaTitle={L(idea.title)}
                     aiHints={deriveDirectorAiHints(idea.strategicFit, idea.effort, idea.aiRec)}
                     onConfirm={() => {
                       handleApprove(idea.id);
@@ -574,9 +665,9 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         <div className="mb-2">
           <h2 className="text-sm   font-semibold text-gray-900 flex items-center gap-2">
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-            Flagged High-Potential
+            {tr('Flagged High-Potential', 'الأفكار المميزة عالية الإمكانات')}
           </h2>
-          <p className="text-xs text-gray-500 mt-0.5">Ideas your team has starred as breakthrough opportunities.</p>
+          <p className="text-xs text-gray-500 mt-0.5">{tr('Ideas your team has starred as breakthrough opportunities.', 'أفكار ميّزها فريقك كفرص نوعية.')}</p>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {HIGH_POTENTIAL.map((hp) => (
@@ -585,21 +676,21 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                 <div className="flex items-start justify-between mb-2">
                   <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
                 </div>
-                <p className="font-semibold text-sm text-gray-900 leading-snug mb-2">{hp.title}</p>
+                <p className="font-semibold text-sm text-gray-900 leading-snug mb-2">{L(hp.title)}</p>
                 <div className="flex flex-wrap gap-1 mb-2">
                   <span className={cn('text-[10px] font-medium px-2 py-0.5 rounded-full', impactBadgeColor(hp.impact))}>
-                    {hp.impact}
+                    {L(hp.impact)}
                   </span>
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                    {hp.dept}
+                    {L(hp.dept)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 leading-snug mb-2">{hp.desc}</p>
+                <p className="text-xs text-gray-500 leading-snug mb-2">{L(hp.desc)}</p>
                 <button
                   onClick={() => onNavigate('pipeline')}
                   className="text-xs text-[#008755] font-semibold hover:text-[#005844] flex items-center gap-1 transition-colors"
                 >
-                  View in Pipeline <ArrowRight className="w-3 h-3" />
+                  {tr('View in Pipeline', 'عرض في المسار')} <ArrowRight className="w-3 h-3 rtl:rotate-180" />
                 </button>
               </CardContent>
             </Card>
@@ -611,7 +702,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2 pt-3 px-3">
           <CardTitle className="text-sm   font-semibold text-gray-900">
-            Innovation Funnel — {dept}
+            {tr('Innovation Funnel', 'مسار الابتكار')} — {L(dept)}
           </CardTitle>
         </CardHeader>
         <CardContent className="px-3 pb-3">
@@ -644,9 +735,9 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <div className="flex items-center">
             {funnelStages.map((stage, i) => (
               <div key={stage.label} className="flex-1 flex flex-col items-center">
-                <p className="text-[11px] text-gray-600 font-medium text-center leading-tight">{stage.label}</p>
+                <p className="text-[11px] text-gray-600 font-medium text-center leading-tight">{L(stage.label)}</p>
                 {i < funnelStages.length - 1 && (
-                  <ArrowRight className="w-3 h-3 text-gray-300 absolute" style={{ display: 'none' }} />
+                  <ArrowRight className="w-3 h-3 text-gray-300 absolute rtl:rotate-180" style={{ display: 'none' }} />
                 )}
               </div>
             ))}
@@ -657,7 +748,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
             {funnelStages.map((_, i) => (
               <div key={i} className="flex-1 flex items-center justify-center">
                 {i < funnelStages.length - 1 && (
-                  <ArrowRight className="w-3.5 h-3.5 text-gray-300" />
+                  <ArrowRight className="w-3.5 h-3.5 text-gray-300 rtl:rotate-180" />
                 )}
               </div>
             ))}
@@ -667,7 +758,11 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
           <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
             <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
             <p className="text-xs text-amber-800">
-              <span className="font-semibold">Where it's getting stuck:</span> {drop}% drop between Under Review and Director Review — {waiting} ideas waiting at this stage.
+              <span className="font-semibold">{tr("Where it's getting stuck:", 'نقطة التعثر:')}</span>{' '}
+              {tr(
+                `${drop}% drop between Under Review and Director Review — ${waiting} ideas waiting at this stage.`,
+                `انخفاض بنسبة ${drop}% بين مرحلة قيد المراجعة ومراجعة المدير — ${waiting} فكرة بانتظار القرار في هذه المرحلة.`,
+              )}
             </p>
           </div>
         </CardContent>
@@ -679,7 +774,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         <Card className="rounded-xl border border-border bg-white shadow-sm lg:col-span-3">
           <CardHeader className="pb-2 pt-3 px-3">
             <CardTitle className="text-sm   font-semibold text-gray-900">
-              Recent Ideas by Status
+              {tr('Recent Ideas by Status', 'أحدث الأفكار حسب الحالة')}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-3 pb-3">
@@ -687,30 +782,30 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100">
-                    <th className="text-left text-xs text-gray-500 font-medium pb-2">Title</th>
-                    <th className="text-left text-xs text-gray-500 font-medium pb-2">Department</th>
-                    <th className="text-left text-xs text-gray-500 font-medium pb-2">Status</th>
-                    <th className="text-left text-xs text-gray-500 font-medium pb-2">Days</th>
-                    <th className="text-left text-xs text-gray-500 font-medium pb-2"></th>
+                    <th className="text-start text-xs text-gray-500 font-medium pb-2">{tr('Title', 'العنوان')}</th>
+                    <th className="text-start text-xs text-gray-500 font-medium pb-2">{tr('Department', 'الإدارة')}</th>
+                    <th className="text-start text-xs text-gray-500 font-medium pb-2">{tr('Status', 'الحالة')}</th>
+                    <th className="text-start text-xs text-gray-500 font-medium pb-2">{tr('Days', 'الأيام')}</th>
+                    <th className="text-start text-xs text-gray-500 font-medium pb-2"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {RECENT_IDEAS.map((ri, idx) => (
                     <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="py-2 pr-3">
-                        <p className="text-xs font-medium text-gray-800 max-w-[160px] truncate">{ri.title}</p>
+                      <td className="py-2 pe-3">
+                        <p className="text-xs font-medium text-gray-800 max-w-[160px] truncate">{L(ri.title)}</p>
                       </td>
-                      <td className="py-2 pr-3">
-                        <p className="text-xs text-gray-500 max-w-[120px] truncate">{ri.dept}</p>
+                      <td className="py-2 pe-3">
+                        <p className="text-xs text-gray-500 max-w-[120px] truncate">{L(ri.dept)}</p>
                       </td>
-                      <td className="py-2 pr-3">
+                      <td className="py-2 pe-3">
                         <span className={cn('text-[10px] font-medium px-2 py-0.5 rounded-full', statusBadge(ri.status))}>
-                          {ri.status}
+                          {L(ri.status)}
                         </span>
                       </td>
-                      <td className="py-2 pr-3">
+                      <td className="py-2 pe-3">
                         <span className={cn('text-xs', ri.days > 7 ? 'text-red-500 font-semibold' : 'text-gray-500')}>
-                          {ri.days}d
+                          {ri.days}{tr('d', ' يوم')}
                         </span>
                       </td>
                       <td className="py-2">
@@ -718,7 +813,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                           onClick={() => onNavigate('ideas')}
                           className="text-[11px] text-[#008755] hover:underline font-medium"
                         >
-                          View
+                          {tr('View', 'عرض')}
                         </button>
                       </td>
                     </tr>
@@ -733,28 +828,30 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
         <Card className="rounded-xl border border-border bg-white shadow-sm lg:col-span-2">
           <CardHeader className="pb-2 pt-3 px-3">
             <CardTitle className="text-sm   font-semibold text-gray-900">
-              Impact Area Distribution
+              {tr('Impact Area Distribution', 'توزيع مجالات الأثر')}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-2 pb-3">
             <ResponsiveContainer width="100%" height={200}>
               <BarChart
                 layout="vertical"
-                data={IMPACT_DATA}
-                margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
+                data={IMPACT_DATA.map((d) => ({ ...d, area: L(d.area) }))}
+                margin={isRTL ? { top: 0, right: 0, left: 16, bottom: 0 } : { top: 0, right: 16, left: 0, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" tick={{ fontSize: 11 }} />
+                <XAxis type="number" tick={{ fontSize: 11 }} reversed={isRTL} />
                 <YAxis
                   type="category"
                   dataKey="area"
                   tick={{ fontSize: 10 }}
                   width={130}
+                  orientation={isRTL ? 'right' : 'left'}
                 />
                 <Tooltip
                   contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e7eb' }}
+                  formatter={(value: number) => [value, tr('Ideas', 'الأفكار')]}
                 />
-                <Bar dataKey="count" radius={[0, 4, 4, 0]} fill="#008755" />
+                <Bar dataKey="count" radius={isRTL ? [4, 0, 0, 4] : [0, 4, 4, 0]} fill="#008755" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -773,7 +870,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                 <Sparkles className="w-4 h-4 text-[#008755]" />
               </div>
               <CardTitle className="text-sm   font-semibold text-gray-900">
-                Ask about your pipeline
+                {tr('Ask about your pipeline', 'اسأل عن مسار أفكارك')}
               </CardTitle>
             </div>
             {aiOpen ? (
@@ -798,16 +895,16 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                       className={cn(
                         'max-w-[80%] rounded-xl px-3 py-2 text-xs leading-relaxed whitespace-pre-line',
                         msg.role === 'user'
-                          ? 'bg-[#008755] text-white rounded-br-none'
-                          : 'bg-white border border-gray-200 text-gray-700 rounded-bl-none'
+                          ? 'bg-[#008755] text-white rounded-ee-none'
+                          : 'bg-white border border-gray-200 text-gray-700 rounded-es-none'
                       )}
                     >
                       {msg.role === 'ai' && (
                         <span className="flex items-center gap-1 text-[10px] font-semibold text-[#008755] mb-1">
-                          <Sparkles className="w-3 h-3" /> AI Assistant
+                          <Sparkles className="w-3 h-3" /> {tr('AI Assistant', 'المساعد الذكي')}
                         </span>
                       )}
-                      {msg.content}
+                      {L(msg.content)}
                     </div>
                   </div>
                 ))}
@@ -818,7 +915,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
             {/* Input */}
             <div className="flex gap-2">
               <Input
-                placeholder="Ask a question about your ideas pipeline…"
+                placeholder={tr('Ask a question about your ideas pipeline…', 'اطرح سؤالاً حول مسار أفكارك…')}
                 value={aiInput}
                 onChange={(e) => setAiInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleAiSend(); }}
@@ -829,7 +926,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                 onClick={handleAiSend}
                 className="h-9 px-3 bg-[#008755] hover:bg-[#005844] text-white"
               >
-                <Send className="w-4 h-4" />
+                <Send className="w-4 h-4 rtl:-scale-x-100" />
               </Button>
             </div>
 
@@ -845,7 +942,7 @@ export function DirectorDashboardPage({ user, onNavigate }: PageProps) {
                   onClick={() => handlePromptChip(chip)}
                   className="text-xs px-3 py-1.5 rounded-full border border-[#008755]/30 text-[#008755] bg-[#008755]/5 hover:bg-[#008755]/10 transition-colors font-medium"
                 >
-                  {chip}
+                  {L(chip)}
                 </button>
               ))}
             </div>

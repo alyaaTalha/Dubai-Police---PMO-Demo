@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, UserCheck, ChevronDown, CheckCircle2, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '../ui/utils';
+import { useLanguage } from '../../i18n/LanguageContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type CriterionId = 'strategic' | 'feasibility' | 'impact' | 'cost' | 'risk';
@@ -21,12 +22,12 @@ interface EvaluationPanelProps {
 }
 
 // ── Static config ─────────────────────────────────────────────────────────────
-const CRITERIA: { id: CriterionId; label: string; weight: number; lowMeans: string }[] = [
-  { id: 'strategic',   label: 'Strategic Alignment', weight: 30, lowMeans: 'Misaligned with pillars' },
-  { id: 'feasibility', label: 'Feasibility',         weight: 25, lowMeans: 'Technically/resourcefully infeasible' },
-  { id: 'impact',      label: 'Expected Impact',     weight: 25, lowMeans: 'Minimal benefit' },
-  { id: 'cost',        label: 'Cost Efficiency',     weight: 10, lowMeans: 'Poor ROI' },
-  { id: 'risk',        label: 'Risk Level',          weight: 10, lowMeans: 'High risk (score 5 = lowest risk)' },
+const CRITERIA: { id: CriterionId; label: string; labelAr: string; weight: number; lowMeans: string; lowMeansAr: string }[] = [
+  { id: 'strategic',   label: 'Strategic Alignment', labelAr: 'التوافق الاستراتيجي', weight: 30, lowMeans: 'Misaligned with pillars', lowMeansAr: 'غير متوافق مع المحاور الاستراتيجية' },
+  { id: 'feasibility', label: 'Feasibility',         labelAr: 'قابلية التنفيذ', weight: 25, lowMeans: 'Technically/resourcefully infeasible', lowMeansAr: 'غير قابل للتنفيذ تقنياً أو من حيث الموارد' },
+  { id: 'impact',      label: 'Expected Impact',     labelAr: 'الأثر المتوقع', weight: 25, lowMeans: 'Minimal benefit', lowMeansAr: 'فائدة محدودة' },
+  { id: 'cost',        label: 'Cost Efficiency',     labelAr: 'كفاءة التكلفة', weight: 10, lowMeans: 'Poor ROI', lowMeansAr: 'عائد ضعيف على الاستثمار' },
+  { id: 'risk',        label: 'Risk Level',          labelAr: 'مستوى المخاطر', weight: 10, lowMeans: 'High risk (score 5 = lowest risk)', lowMeansAr: 'مخاطر عالية (الدرجة 5 = أدنى مخاطر)' },
 ];
 
 const SME_EVALUATORS = [
@@ -38,6 +39,15 @@ const SME_EVALUATORS = [
   'Brig. Salem Al Marri',
 ];
 
+const SME_EVALUATORS_AR: Record<string, string> = {
+  'Dr. Khalid Al Nuaimi': 'د. خالد النعيمي',
+  'Eng. Maryam Al Rashdi': 'م. مريم الراشدي',
+  'Ahmed Al Suwaidi': 'أحمد السويدي',
+  'Lt. Noor Al Shamsi': 'الملازم نور الشامسي',
+  'Dr. Reem Al Falasi': 'د. ريم الفلاسي',
+  'Brig. Salem Al Marri': 'العميد سالم المري',
+};
+
 // ── Component ─────────────────────────────────────────────────────────────────
 export function EvaluationPanel({
   ideaId: _ideaId,
@@ -46,6 +56,7 @@ export function EvaluationPanel({
   onConfirm,
   onClose,
 }: EvaluationPanelProps) {
+  const { tr } = useLanguage();
   const [scores, setScores]           = useState<Partial<Record<CriterionId, number>>>({});
   const [aiHighlighted, setAiHighlighted] = useState<Partial<Record<CriterionId, boolean>>>({});
   const [smeDropdown, setSmeDropdown] = useState<CriterionId | null>(null);
@@ -82,12 +93,12 @@ export function EvaluationPanel({
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-2">
         <CheckCircle2 size={13} className="text-[#008755] shrink-0" />
-        <p className="text-xs font-semibold text-gray-800 flex-1">Structured Evaluation</p>
+        <p className="text-xs font-semibold text-gray-800 flex-1">{tr('Structured Evaluation', 'التقييم المنهجي')}</p>
         <p className="text-[10px] text-gray-400 truncate max-w-[160px] hidden sm:block">{ideaTitle}</p>
         <button
           onClick={onClose}
-          className="ml-auto text-gray-400 hover:text-gray-600 transition-colors shrink-0"
-          aria-label="Close evaluation panel"
+          className="ms-auto text-gray-400 hover:text-gray-600 transition-colors shrink-0"
+          aria-label={tr('Close evaluation panel', 'إغلاق لوحة التقييم')}
         >
           <X size={13} />
         </button>
@@ -106,7 +117,7 @@ export function EvaluationPanel({
 
               {/* Label + weight pill */}
               <div className="flex items-center gap-1.5 w-44 shrink-0">
-                <span className="text-[11px] font-medium text-gray-700">{c.label}</span>
+                <span className="text-[11px] font-medium text-gray-700">{tr(c.label, c.labelAr)}</span>
                 <span className="text-[10px] bg-gray-100 text-gray-500 rounded px-1 py-px whitespace-nowrap">
                   ({c.weight}%)
                 </span>
@@ -118,14 +129,14 @@ export function EvaluationPanel({
                   onClick={() =>
                     setAiHighlighted(prev => ({ ...prev, [c.id]: !prev[c.id] }))
                   }
-                  title={`AI suggests ${hint} — click to highlight, then confirm with a score button`}
+                  title={tr(`AI suggests ${hint} — click to highlight, then confirm with a score button`, `يقترح الذكاء الاصطناعي ${hint} — انقر للتمييز، ثم أكّد باستخدام زر الدرجة`)}
                   className={cn(
                     'inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[10px] rounded px-1.5 py-0.5 transition-all whitespace-nowrap',
                     highlighted && 'ring-2 ring-blue-300'
                   )}
                 >
                   <Sparkles size={9} />
-                  AI: {hint}
+                  {tr('AI', 'ذكاء اصطناعي')}: {hint}
                 </button>
               )}
 
@@ -157,7 +168,7 @@ export function EvaluationPanel({
                 {assignedSme ? (
                   <span className="flex items-center gap-1 text-[10px] text-gray-600 whitespace-nowrap">
                     <UserCheck size={10} className="text-[#008755]" />
-                    {assignedSme}
+                    {tr(assignedSme, SME_EVALUATORS_AR[assignedSme])}
                   </span>
                 ) : (
                   <button
@@ -166,13 +177,13 @@ export function EvaluationPanel({
                     }
                     className="flex items-center gap-0.5 text-[10px] text-gray-400 hover:text-[#008755] transition-colors whitespace-nowrap"
                   >
-                    + Assign SME
+                    + {tr('Assign SME', 'تعيين خبير')}
                     <ChevronDown size={9} />
                   </button>
                 )}
 
                 {smeDropdown === c.id && (
-                  <div className="absolute left-0 top-full mt-1 z-30 bg-white border border-gray-200 rounded-lg shadow-lg w-44 overflow-hidden">
+                  <div className="absolute start-0 top-full mt-1 z-30 bg-white border border-gray-200 rounded-lg shadow-lg w-44 overflow-hidden">
                     {SME_EVALUATORS.map(evaluator => (
                       <button
                         key={evaluator}
@@ -180,9 +191,9 @@ export function EvaluationPanel({
                           setSmeAssigned(prev => ({ ...prev, [c.id]: evaluator }));
                           setSmeDropdown(null);
                         }}
-                        className="w-full text-left text-[11px] px-3 py-1.5 hover:bg-gray-50 transition-colors text-gray-700"
+                        className="w-full text-start text-[11px] px-3 py-1.5 hover:bg-gray-50 transition-colors text-gray-700"
                       >
-                        {evaluator}
+                        {tr(evaluator, SME_EVALUATORS_AR[evaluator])}
                       </button>
                     ))}
                   </div>
@@ -198,7 +209,7 @@ export function EvaluationPanel({
 
         {/* Score readout */}
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold text-gray-700">Overall Score:</span>
+          <span className="text-xs font-semibold text-gray-700">{tr('Overall Score:', 'الدرجة الإجمالية:')}</span>
           <span className={cn('text-sm font-bold tabular-nums', scoreColorClass(overallScore))}>
             {overallScore} / 100
           </span>
@@ -213,7 +224,7 @@ export function EvaluationPanel({
         </div>
 
         <p className="text-[10px] text-gray-400">
-          Weighted average of confirmed criteria. Score flows to Pipeline and Insights.
+          {tr('Weighted average of confirmed criteria. Score flows to Pipeline and Insights.', 'متوسط مرجّح للمعايير المؤكدة. تنتقل الدرجة إلى مسار الأفكار والرؤى والتحليلات.')}
         </p>
 
         {/* Actions */}
@@ -224,14 +235,14 @@ export function EvaluationPanel({
             onClick={handleConfirm}
             className="h-7 px-3 text-xs bg-[#008755] hover:bg-[#005844] text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <CheckCircle2 size={11} className="mr-1" />
-            Confirm Evaluation
+            <CheckCircle2 size={11} className="me-1" />
+            {tr('Confirm Evaluation', 'تأكيد التقييم')}
           </Button>
           <button
             onClick={onClose}
             className="text-xs text-gray-400 underline hover:text-gray-600 transition-colors"
           >
-            Cancel
+            {tr('Cancel', 'إلغاء')}
           </button>
         </div>
       </div>

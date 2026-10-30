@@ -16,6 +16,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   RadarChart, Radar, PolarGrid, PolarAngleAxis, Cell,
 } from 'recharts';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -136,15 +137,137 @@ const auditActionColors: Record<AuditAction, string> = {
   Assigned: 'bg-purple-100 text-purple-700',
 };
 
+// ── Arabic lookup (keyed by English display value) ────────────────────────────
+const AR: Record<string, string> = {
+  // Departments
+  'Digital Transformation': 'التحول الرقمي',
+  Operations: 'العمليات',
+  'Community Affairs': 'شؤون المجتمع',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Legal Affairs': 'الشؤون القانونية',
+  'Strategic Planning': 'التخطيط الاستراتيجي',
+  // Badges
+  'Most Active': 'الأكثر نشاطاً',
+  'Highest Impact': 'الأعلى أثراً',
+  'Fastest Evaluation': 'الأسرع تقييماً',
+  'Best Implementation Rate': 'أفضل معدل تنفيذ',
+  'Most Improved': 'الأكثر تحسناً',
+  // Radar axes
+  Submissions: 'المقترحات المقدمة',
+  Implementation: 'التنفيذ',
+  Participation: 'المشاركة',
+  'Response Time': 'زمن الاستجابة',
+  'Strategic Alignment': 'المواءمة الاستراتيجية',
+  // Periods / tabs
+  month: 'شهر',
+  quarter: 'ربع سنة',
+  year: 'سنة',
+  Rankings: 'التصنيفات',
+  Reports: 'التقارير',
+  'Audit Trail': 'سجل التدقيق',
+  // Report names
+  'Monthly Innovation Summary': 'الملخص الشهري للابتكار',
+  'Department Performance Scorecard': 'بطاقة أداء الإدارات',
+  'Idea-to-Project Conversion Report': 'تقرير تحويل الأفكار إلى مشاريع',
+  'SLA Compliance Report': 'تقرير الالتزام باتفاقية مستوى الخدمة',
+  'Submission Trend Analysis': 'تحليل اتجاهات تقديم المقترحات',
+  'ROI Impact Assessment': 'تقييم أثر العائد على الاستثمار',
+  // Report descriptions
+  'Overview of all ideas submitted, reviewed, and implemented over the past month.':
+    'نظرة عامة على جميع الأفكار المقدمة والمراجَعة والمنفذة خلال الشهر الماضي.',
+  'Comparative scoring across departments on all innovation KPIs.':
+    'تقييم مقارن بين الإدارات وفق جميع مؤشرات أداء الابتكار.',
+  'Tracks the pipeline from submitted idea through to approved project initiation.':
+    'يتتبع مسار الفكرة من تقديمها وحتى اعتماد إطلاقها كمشروع.',
+  'Measures coordinator and director adherence to review SLA windows.':
+    'يقيس مدى التزام المنسقين والمديرين بالمهل الزمنية للمراجعة وفق اتفاقية مستوى الخدمة.',
+  'Time-series breakdown of submission volumes and peak periods by department.':
+    'تحليل زمني لأحجام المقترحات المقدمة وفترات الذروة حسب الإدارة.',
+  'Estimated cost savings and value generated from implemented ideas.':
+    'الوفورات التقديرية في التكاليف والقيمة المتحققة من الأفكار المنفذة.',
+  // Directors
+  'Dir. Khalid Al Mansoori': 'المدير خالد المنصوري',
+  'Dir. Fatima Al Rashidi': 'المديرة فاطمة الراشدي',
+  'Dir. Ahmed Al Zaabi': 'المدير أحمد الزعابي',
+  // Periods
+  'June 2025': 'يونيو 2025',
+  'Q2 2025': 'الربع الثاني 2025',
+  'H1 2025': 'النصف الأول 2025',
+  'FY 2024–25': 'السنة المالية 2024–25',
+  // Actions
+  All: 'الكل',
+  Approved: 'اعتماد',
+  Rejected: 'رفض',
+  Converted: 'تحويل',
+  Commented: 'تعليق',
+  Assigned: 'إسناد',
+  // Date range options
+  'Last 7 days': 'آخر 7 أيام',
+  'Last 30 days': 'آخر 30 يوماً',
+  'Last quarter': 'الربع الأخير',
+  // Audit targets
+  'AI-Powered Patrol Route Optimizer': 'محسّن مسارات الدوريات بالذكاء الاصطناعي',
+  'Community Feedback Kiosk Network': 'شبكة أكشاك ملاحظات المجتمع',
+  'Manual Overtime Logging System': 'نظام التسجيل اليدوي للعمل الإضافي',
+  'Smart Evidence Management Portal': 'بوابة إدارة الأدلة الذكية',
+  'Digital Training Academy v2': 'أكاديمية التدريب الرقمي - الإصدار 2',
+  'Predictive Maintenance for Fleet Vehicles': 'الصيانة التنبؤية لمركبات الأسطول',
+  'Public Safety Awareness Chatbot': 'مساعد محادثة للتوعية بالسلامة العامة',
+  'Cross-Department KPI Dashboard': 'لوحة مؤشرات أداء مشتركة بين الإدارات',
+  'Incident Reporting Mobile App': 'تطبيق الإبلاغ عن الحوادث عبر الهاتف',
+  'Paper-Based Visitor Log Digitization': 'رقمنة سجل الزوار الورقي',
+  'Officer Wellness Check-In App': 'تطبيق متابعة الصحة النفسية للضباط',
+  'Automated SLA Reminder System': 'نظام التذكير الآلي بمهل اتفاقية مستوى الخدمة',
+  'Open Innovation Challenge Framework': 'إطار تحديات الابتكار المفتوح',
+  'Multilingual Idea Submission Portal': 'بوابة تقديم الأفكار متعددة اللغات',
+  'Legacy Database Migration Proposal': 'مقترح ترحيل قواعد البيانات القديمة',
+  // Audit notes
+  'Strong ROI case; proceed to pilot phase.': 'جدوى قوية للعائد على الاستثمار؛ يُنتقل إلى المرحلة التجريبية.',
+  'Elevated to full project — Q3 delivery.': 'رُفعت إلى مشروع متكامل — التسليم في الربع الثالث.',
+  'Superseded by existing HRMS module.': 'استُعيض عنها بوحدة نظام إدارة الموارد البشرية الحالية.',
+  'Needs legal compliance review before approval.': 'تحتاج إلى مراجعة الامتثال القانوني قبل الاعتماد.',
+  'Assigned to Coordinator Saeed for expedited review.': 'أُسندت إلى المنسق سعيد لمراجعة عاجلة.',
+  'Estimated 18% reduction in downtime.': 'خفض متوقع بنسبة 18% في فترات التوقف.',
+  'Aligned with digital outreach strategy.': 'متوافقة مع استراتيجية التواصل الرقمي.',
+  'Request breakdown by sub-unit before final approval.': 'يُطلب تفصيل حسب الوحدات الفرعية قبل الاعتماد النهائي.',
+  'Greenlit as high-priority digital initiative.': 'اعتُمدت كمبادرة رقمية ذات أولوية عالية.',
+  'Existing DMS solution already covers this scope.': 'يغطي نظام إدارة المستندات الحالي هذا النطاق بالفعل.',
+  'Assigned to Coordinator Mariam for psychological safety input.': 'أُسندت إلى المنسقة مريم لإبداء الرأي في جوانب السلامة النفسية.',
+  'Will reduce overdue reviews by estimated 40%.': 'ستخفض المراجعات المتأخرة بنسبة تقديرية تبلغ 40%.',
+  'Recommend piloting with two departments first.': 'يوصى بالتجربة مع إدارتين أولاً.',
+  'Critical for inclusive participation across nationalities.': 'ضرورية لتحقيق مشاركة شاملة لمختلف الجنسيات.',
+  'Scope too broad; resubmit as phased plan.': 'النطاق واسع جداً؛ يُعاد التقديم كخطة على مراحل.',
+};
+
+const AR_MONTHS: Record<string, string> = {
+  Jan: 'يناير', Feb: 'فبراير', Mar: 'مارس', Apr: 'أبريل', May: 'مايو', Jun: 'يونيو',
+  Jul: 'يوليو', Aug: 'أغسطس', Sep: 'سبتمبر', Oct: 'أكتوبر', Nov: 'نوفمبر', Dec: 'ديسمبر',
+};
+
+/** 'Aug 7, 2025 — 14:32' → '7 أغسطس 2025 — 14:32' */
+function arDate(s: string): string {
+  const m = s.match(/^([A-Z][a-z]{2}) (\d{1,2}), (\d{4})(.*)$/);
+  if (!m || !AR_MONTHS[m[1]]) return s;
+  return `${m[2]} ${AR_MONTHS[m[1]]} ${m[3]}${m[4]}`;
+}
+
+function useT() {
+  const { tr, isRTL } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
+  const d = (s: string) => tr(s, arDate(s));
+  return { tr, t, d, isRTL };
+}
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 function BadgeChip({ label }: { label: string }) {
+  const { t } = useT();
   const config = badgeConfig[label];
   if (!config) return null;
   const Icon = config.icon;
   return (
     <span className={cn('inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium', config.className)}>
       <Icon className="w-3 h-3" />
-      {label}
+      {t(label)}
     </span>
   );
 }
@@ -157,6 +280,7 @@ function TrendIcon({ trend }: { trend: 'up' | 'down' | 'same' }) {
 
 // ── TAB 1: Rankings ───────────────────────────────────────────────────────────
 function RankingsTab() {
+  const { tr, t } = useT();
   const [period, setPeriod] = useState<'month' | 'quarter' | 'year'>('quarter');
   const [formulaOpen, setFormulaOpen] = useState(false);
 
@@ -172,7 +296,7 @@ function RankingsTab() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold text-gray-900  ">
-          Department Innovation Rankings
+          {tr('Department Innovation Rankings', 'تصنيف الإدارات في الابتكار')}
         </h2>
         <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
           {(['month', 'quarter', 'year'] as const).map((p) => (
@@ -186,7 +310,7 @@ function RankingsTab() {
                   : 'text-gray-500 hover:text-gray-700'
               )}
             >
-              {p.charAt(0).toUpperCase() + p.slice(1)}
+              {tr(p.charAt(0).toUpperCase() + p.slice(1), AR[p])}
             </button>
           ))}
         </div>
@@ -196,7 +320,7 @@ function RankingsTab() {
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-semibold text-gray-800 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-[#008755]" /> Top Performers
+            <Trophy className="w-5 h-5 text-[#008755]" /> {tr('Top Performers', 'الأفضل أداءً')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -228,10 +352,10 @@ function RankingsTab() {
                     {isFirst && <Trophy className="w-4 h-4 text-[#008755]" />}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-800 leading-snug">{dept.dept}</p>
+                    <p className="text-sm font-semibold text-gray-800 leading-snug">{t(dept.dept)}</p>
                     <p className={cn('text-xl font-bold mt-0.5', isFirst ? 'text-[#008755]' : 'text-gray-700')}>
                       {dept.score}
-                      <span className="text-xs font-normal text-gray-400 ml-1">pts</span>
+                      <span className="text-xs font-normal text-gray-400 ms-1">{tr('pts', 'نقطة')}</span>
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-1 mt-auto pt-1">
@@ -249,21 +373,21 @@ function RankingsTab() {
       {/* Full Rankings Table */}
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-gray-800">Full Department Rankings</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-800">{tr('Full Department Rankings', 'التصنيف الكامل للإدارات')}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-gray-50/80">
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Rank</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Department</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Score</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Submitted</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Implemented</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Participation</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Trend</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Badges</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Rank', 'الترتيب')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Department', 'الإدارة')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Score', 'النتيجة')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Submitted', 'المقدمة')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Implemented', 'المنفذة')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Participation', 'المشاركة')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Trend', 'الاتجاه')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Badges', 'الأوسمة')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -283,7 +407,7 @@ function RankingsTab() {
                         {row.rank}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-medium text-gray-800">{row.dept}</td>
+                    <td className="py-3 px-4 font-medium text-gray-800">{t(row.dept)}</td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex flex-col items-center gap-1">
                         <span className="font-bold text-[#008755]">{row.score}</span>
@@ -314,12 +438,12 @@ function RankingsTab() {
       {/* Scoring Formula (Collapsible) */}
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <button
-          className="w-full flex items-center justify-between px-5 py-4 text-left"
+          className="w-full flex items-center justify-between px-5 py-4 text-start"
           onClick={() => setFormulaOpen((v) => !v)}
         >
           <div className="flex items-center gap-2">
             <Target className="w-4 h-4 text-[#008755]" />
-            <span className="text-sm font-semibold text-gray-800">How Scores Are Calculated</span>
+            <span className="text-sm font-semibold text-gray-800">{tr('How Scores Are Calculated', 'آلية احتساب النتائج')}</span>
           </div>
           {formulaOpen ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
         </button>
@@ -329,30 +453,49 @@ function RankingsTab() {
               <table className="w-full text-sm mb-3">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2 px-3 text-xs font-semibold text-gray-500 uppercase">Component</th>
-                    <th className="text-center py-2 px-3 text-xs font-semibold text-gray-500 uppercase">Weight</th>
-                    <th className="text-left py-2 px-3 text-xs font-semibold text-gray-500 uppercase">Description</th>
+                    <th className="text-start py-2 px-3 text-xs font-semibold text-gray-500 uppercase">{tr('Component', 'المكوّن')}</th>
+                    <th className="text-center py-2 px-3 text-xs font-semibold text-gray-500 uppercase">{tr('Weight', 'الوزن')}</th>
+                    <th className="text-start py-2 px-3 text-xs font-semibold text-gray-500 uppercase">{tr('Description', 'الوصف')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    { component: 'Ideas Submitted', weight: '25%', desc: 'Raw volume of ideas submitted by department members.' },
-                    { component: 'Ideas Implemented', weight: '35%', desc: 'Ideas that reached implementation or project stage.' },
-                    { component: 'Participation Rate', weight: '20%', desc: 'Percentage of eligible staff who submitted at least one idea.' },
-                    { component: 'Avg Review Response Time', weight: '20%', desc: 'Average hours from submission to first coordinator action.' },
+                    {
+                      component: 'Ideas Submitted', componentAr: 'الأفكار المقدمة', weight: '25%',
+                      desc: 'Raw volume of ideas submitted by department members.',
+                      descAr: 'العدد الإجمالي للأفكار التي قدمها منتسبو الإدارة.',
+                    },
+                    {
+                      component: 'Ideas Implemented', componentAr: 'الأفكار المنفذة', weight: '35%',
+                      desc: 'Ideas that reached implementation or project stage.',
+                      descAr: 'الأفكار التي وصلت إلى مرحلة التنفيذ أو التحول إلى مشروع.',
+                    },
+                    {
+                      component: 'Participation Rate', componentAr: 'معدل المشاركة', weight: '20%',
+                      desc: 'Percentage of eligible staff who submitted at least one idea.',
+                      descAr: 'نسبة الموظفين المؤهلين الذين قدموا فكرة واحدة على الأقل.',
+                    },
+                    {
+                      component: 'Avg Review Response Time', componentAr: 'متوسط زمن الاستجابة للمراجعة', weight: '20%',
+                      desc: 'Average hours from submission to first coordinator action.',
+                      descAr: 'متوسط عدد الساعات من التقديم حتى أول إجراء من المنسق.',
+                    },
                   ].map((row) => (
                     <tr key={row.component} className="border-b last:border-0">
-                      <td className="py-2 px-3 font-medium text-gray-800">{row.component}</td>
+                      <td className="py-2 px-3 font-medium text-gray-800">{tr(row.component, row.componentAr)}</td>
                       <td className="py-2 px-3 text-center">
                         <span className="inline-block bg-[#008755]/10 text-[#008755] font-bold rounded px-2 py-0.5 text-xs">{row.weight}</span>
                       </td>
-                      <td className="py-2 px-3 text-gray-500">{row.desc}</td>
+                      <td className="py-2 px-3 text-gray-500">{tr(row.desc, row.descAr)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <p className="text-xs text-gray-400 italic">
-                Scores are normalized within the selected period and updated weekly.
+                {tr(
+                  'Scores are normalized within the selected period and updated weekly.',
+                  'تتم معايرة النتائج ضمن الفترة المحددة وتحديثها أسبوعياً.',
+                )}
               </p>
             </div>
           </CardContent>
@@ -362,7 +505,9 @@ function RankingsTab() {
       {/* Radar Chart */}
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-gray-800">Top 3 Departments — Dimension Comparison</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-800">
+            {tr('Top 3 Departments — Dimension Comparison', 'أفضل 3 إدارات — مقارنة الأبعاد')}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4 mb-3">
@@ -373,20 +518,21 @@ function RankingsTab() {
             ].map((d) => (
               <div key={d.label} className="flex items-center gap-1.5 text-xs text-gray-600">
                 <span className="w-3 h-3 rounded-full inline-block" style={{ backgroundColor: d.color }} />
-                {d.label}
+                {t(d.label)}
               </div>
             ))}
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#e5e7eb" />
-              <PolarAngleAxis dataKey="axis" tick={{ fontSize: 11, fill: '#6b7280' }} />
-              <Radar name="Digital Transformation" dataKey="Digital Transformation" stroke="#008755" fill="#008755" fillOpacity={0.18} strokeWidth={2} />
-              <Radar name="Operations" dataKey="Operations" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={2} />
-              <Radar name="Community Affairs" dataKey="Community Affairs" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.10} strokeWidth={2} />
+              <PolarAngleAxis dataKey="axis" tick={{ fontSize: 11, fill: '#6b7280' }} tickFormatter={(v: string) => t(v)} />
+              <Radar name={t('Digital Transformation')} dataKey="Digital Transformation" stroke="#008755" fill="#008755" fillOpacity={0.18} strokeWidth={2} />
+              <Radar name={t('Operations')} dataKey="Operations" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.15} strokeWidth={2} />
+              <Radar name={t('Community Affairs')} dataKey="Community Affairs" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.10} strokeWidth={2} />
               <Tooltip
                 contentStyle={{ borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 12 }}
                 formatter={(value: number, name: string) => [`${value}`, name]}
+                labelFormatter={(label: string) => t(label)}
               />
             </RadarChart>
           </ResponsiveContainer>
@@ -400,6 +546,7 @@ function RankingsTab() {
 const reportIcons = [FileText, BarChart2, Activity, Clock, LineChart, PieChart];
 
 function ReportsTab() {
+  const { tr, t, d } = useT();
   return (
     <div className="space-y-6">
       {/* Report cards grid */}
@@ -414,14 +561,16 @@ function ReportsTab() {
                     <Icon className="w-5 h-5 text-[#008755]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-semibold text-gray-800 leading-snug">{report.name}</h3>
-                    <p className="text-xs text-gray-400 mt-0.5">Last generated: {report.lastGenerated}</p>
+                    <h3 className="text-sm font-semibold text-gray-800 leading-snug">{t(report.name)}</h3>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {tr('Last generated:', 'آخر إنشاء:')} {d(report.lastGenerated)}
+                    </p>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 leading-relaxed flex-1">{report.description}</p>
+                <p className="text-xs text-gray-500 leading-relaxed flex-1">{t(report.description)}</p>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 w-fit">
                   <Sparkles className="w-3 h-3" />
-                  AI Draft — Review Required
+                  {tr('AI Draft — Review Required', 'مسودة بالذكاء الاصطناعي — تتطلب المراجعة')}
                 </span>
                 <div className="flex items-center gap-2 pt-1">
                   <Button
@@ -429,14 +578,14 @@ function ReportsTab() {
                     variant="outline"
                     className="flex-1 h-8 text-xs border-[#008755] text-[#008755] hover:bg-[#008755]/5"
                   >
-                    Generate Report
+                    {tr('Generate Report', 'إنشاء التقرير')}
                   </Button>
                   <Button
                     size="sm"
                     variant="ghost"
                     className="h-8 px-3 text-xs text-gray-500 hover:text-gray-700"
                   >
-                    <Download className="w-3.5 h-3.5 mr-1" />
+                    <Download className="w-3.5 h-3.5 me-1" />
                     PDF
                   </Button>
                 </div>
@@ -449,29 +598,34 @@ function ReportsTab() {
       {/* Recent report history */}
       <Card className="rounded-xl border border-border bg-white shadow-sm">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-gray-800">Recent Report History</CardTitle>
+          <CardTitle className="text-base font-semibold text-gray-800">{tr('Recent Report History', 'سجل التقارير الأخيرة')}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-gray-50/80">
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Report Name</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Generated By</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Period</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Download</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Report Name', 'اسم التقرير')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Generated By', 'أُنشئ بواسطة')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Date', 'التاريخ')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Period', 'الفترة')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Download', 'تنزيل')}</th>
                 </tr>
               </thead>
               <tbody>
                 {recentReportsHistory.map((row, i) => (
                   <tr key={i} className={cn('border-b last:border-0 hover:bg-gray-50 transition-colors', i % 2 === 0 ? '' : 'bg-muted/20')}>
-                    <td className="py-3 px-4 font-medium text-gray-800">{row.name}</td>
-                    <td className="py-3 px-4 text-gray-600">{row.generatedBy}</td>
-                    <td className="py-3 px-4 text-gray-500">{row.date}</td>
-                    <td className="py-3 px-4 text-gray-500">{row.period}</td>
+                    <td className="py-3 px-4 font-medium text-gray-800">{t(row.name)}</td>
+                    <td className="py-3 px-4 text-gray-600">{t(row.generatedBy)}</td>
+                    <td className="py-3 px-4 text-gray-500">{d(row.date)}</td>
+                    <td className="py-3 px-4 text-gray-500">{t(row.period)}</td>
                     <td className="py-3 px-4 text-center">
-                      <Button size="sm" variant="ghost" className="h-7 px-2 text-[#008755] hover:text-[#005844]">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 px-2 text-[#008755] hover:text-[#005844]"
+                        aria-label={tr('Download', 'تنزيل')}
+                      >
                         <Download className="w-3.5 h-3.5" />
                       </Button>
                     </td>
@@ -488,17 +642,21 @@ function ReportsTab() {
 
 // ── TAB 3: Audit Trail ────────────────────────────────────────────────────────
 function AuditTrailTab() {
+  const { tr, t, d } = useT();
   const [search, setSearch] = useState('');
   const [actionFilter, setActionFilter] = useState('All');
   const [dateRange, setDateRange] = useState('Last 30 days');
 
+  const q = search.toLowerCase();
+  const matches = (s: string) => s.toLowerCase().includes(q) || (AR[s] ?? '').includes(search);
+
   const filtered = allAuditEntries.filter((entry) => {
     const matchSearch =
       search === '' ||
-      entry.target.toLowerCase().includes(search.toLowerCase()) ||
-      entry.director.toLowerCase().includes(search.toLowerCase()) ||
-      entry.department.toLowerCase().includes(search.toLowerCase()) ||
-      entry.notes.toLowerCase().includes(search.toLowerCase());
+      matches(entry.target) ||
+      matches(entry.director) ||
+      matches(entry.department) ||
+      matches(entry.notes);
     const matchAction = actionFilter === 'All' || entry.action === actionFilter;
     // Date range is cosmetic in this mock — all entries are within 30 days
     const withinRange = dateRange !== 'Last 7 days' || entry.id <= 8;
@@ -510,38 +668,38 @@ function AuditTrailTab() {
       {/* Filter bar */}
       <div className="flex flex-wrap gap-3 items-center">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search by idea, director, or department..."
+            placeholder={tr('Search by idea, director, or department...', 'ابحث حسب الفكرة أو المدير أو الإدارة...')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#008755]/30 focus:border-[#008755]"
+            className="w-full ps-9 pe-4 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#008755]/30 focus:border-[#008755]"
           />
         </div>
         <Select value={actionFilter} onValueChange={setActionFilter}>
           <SelectTrigger className="w-44 h-9 text-sm">
-            <SelectValue placeholder="Action Type" />
+            <SelectValue placeholder={tr('Action Type', 'نوع الإجراء')} />
           </SelectTrigger>
           <SelectContent>
             {['All', 'Approved', 'Rejected', 'Converted', 'Commented', 'Assigned'].map((a) => (
-              <SelectItem key={a} value={a}>{a}</SelectItem>
+              <SelectItem key={a} value={a}>{t(a)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
         <Select value={dateRange} onValueChange={setDateRange}>
           <SelectTrigger className="w-40 h-9 text-sm">
-            <SelectValue placeholder="Date Range" />
+            <SelectValue placeholder={tr('Date Range', 'النطاق الزمني')} />
           </SelectTrigger>
           <SelectContent>
-            {['Last 7 days', 'Last 30 days', 'Last quarter'].map((d) => (
-              <SelectItem key={d} value={d}>{d}</SelectItem>
+            {['Last 7 days', 'Last 30 days', 'Last quarter'].map((r) => (
+              <SelectItem key={r} value={r}>{t(r)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <Button variant="outline" size="sm" className="h-9 gap-1.5 ml-auto">
+        <Button variant="outline" size="sm" className="h-9 gap-1.5 ms-auto">
           <Download className="w-3.5 h-3.5" />
-          Export
+          {tr('Export', 'تصدير')}
         </Button>
       </div>
 
@@ -552,18 +710,20 @@ function AuditTrailTab() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-gray-50/80">
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">Timestamp</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Director</th>
-                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Action</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Target Idea / Cluster</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Department</th>
-                  <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">{tr('Timestamp', 'الوقت والتاريخ')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Director', 'المدير')}</th>
+                  <th className="text-center py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Action', 'الإجراء')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Target Idea / Cluster', 'الفكرة / المجموعة المستهدفة')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Department', 'الإدارة')}</th>
+                  <th className="text-start py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wide">{tr('Notes', 'الملاحظات')}</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-10 text-center text-gray-400 text-sm">No audit entries match your filters.</td>
+                    <td colSpan={6} className="py-10 text-center text-gray-400 text-sm">
+                      {tr('No audit entries match your filters.', 'لا توجد سجلات تدقيق تطابق عوامل التصفية.')}
+                    </td>
                   </tr>
                 ) : (
                   filtered.map((entry, i) => (
@@ -571,19 +731,19 @@ function AuditTrailTab() {
                       key={entry.id}
                       className={cn('border-b last:border-0 hover:bg-gray-50 transition-colors', i % 2 === 0 ? '' : 'bg-muted/20')}
                     >
-                      <td className="py-3 px-4 text-gray-500 text-xs whitespace-nowrap font-mono">{entry.timestamp}</td>
-                      <td className="py-3 px-4 text-gray-700 font-medium whitespace-nowrap">{entry.director}</td>
+                      <td className="py-3 px-4 text-gray-500 text-xs whitespace-nowrap font-mono">{d(entry.timestamp)}</td>
+                      <td className="py-3 px-4 text-gray-700 font-medium whitespace-nowrap">{t(entry.director)}</td>
                       <td className="py-3 px-4 text-center">
                         <span className={cn('inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold', auditActionColors[entry.action])}>
-                          {entry.action}
+                          {t(entry.action)}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-gray-800 max-w-[200px]">
-                        <span className="line-clamp-2 leading-snug">{entry.target}</span>
+                        <span className="line-clamp-2 leading-snug">{t(entry.target)}</span>
                       </td>
-                      <td className="py-3 px-4 text-gray-600 whitespace-nowrap">{entry.department}</td>
+                      <td className="py-3 px-4 text-gray-600 whitespace-nowrap">{t(entry.department)}</td>
                       <td className="py-3 px-4 text-gray-500 max-w-[220px]">
-                        <span className="line-clamp-2 text-xs leading-relaxed">{entry.notes}</span>
+                        <span className="line-clamp-2 text-xs leading-relaxed">{t(entry.notes)}</span>
                       </td>
                     </tr>
                   ))
@@ -593,7 +753,10 @@ function AuditTrailTab() {
           </div>
           {filtered.length > 0 && (
             <div className="px-4 py-2 border-t bg-gray-50/50 text-xs text-gray-400">
-              Showing {filtered.length} of {allAuditEntries.length} entries
+              {tr(
+                `Showing ${filtered.length} of ${allAuditEntries.length} entries`,
+                `عرض ${filtered.length} من أصل ${allAuditEntries.length} سجلاً`,
+              )}
             </div>
           )}
         </CardContent>
@@ -607,15 +770,19 @@ type Tab = 'Rankings' | 'Reports' | 'Audit Trail';
 const TABS: Tab[] = ['Rankings', 'Reports', 'Audit Trail'];
 
 export function InsightsPage({ user, role, onNavigate }: PageProps) {
+  const { tr, t } = useT();
   const [activeTab, setActiveTab] = useState<Tab>('Rankings');
 
   return (
     <div className="p-4 space-y-4  ">
       {/* Page header */}
       <div>
-        <h1 className="text-lg font-semibold text-gray-900">Insights</h1>
+        <h1 className="text-lg font-semibold text-gray-900">{tr('Insights', 'الرؤى والتحليلات')}</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Department rankings, innovation reports, and full audit trail.
+          {tr(
+            'Department rankings, innovation reports, and full audit trail.',
+            'تصنيف الإدارات وتقارير الابتكار وسجل التدقيق الكامل.',
+          )}
         </p>
       </div>
 
@@ -632,9 +799,9 @@ export function InsightsPage({ user, role, onNavigate }: PageProps) {
                 : 'text-gray-500 hover:text-gray-700'
             )}
           >
-            {tab}
+            {t(tab)}
             {activeTab === tab && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#008755] rounded-t-full" />
+              <span className="absolute bottom-0 start-0 end-0 h-0.5 bg-[#008755] rounded-t-full" />
             )}
           </button>
         ))}

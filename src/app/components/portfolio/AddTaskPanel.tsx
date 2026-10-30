@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
+import { useLanguage } from "../../i18n/LanguageContext";
 
 interface AddTaskPanelProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface AddTaskPanelProps {
 }
 
 export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milestoneName }: AddTaskPanelProps) {
+  const { tr } = useLanguage();
   const [aiInsightExpanded, setAiInsightExpanded] = useState(false);
   const [formData, setFormData] = useState({
     taskId: `T-${Date.now().toString().slice(-6)}`,
@@ -40,19 +42,19 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
       />
 
       {/* Sliding Panel */}
-      <div className="fixed right-0 top-0 h-full w-[45%] bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="fixed end-0 top-0 h-full w-[45%] bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right rtl:slide-in-from-left duration-300">
         {/* Sticky Header */}
         <div className="sticky top-0 z-10 bg-white border-b border-[#008755]/20 px-6 py-4">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-lg font-['Dubai:Medium',_'Dubai'] text-[#1f2937] mb-1">
-                Add Task
+                {tr("Add Task", "إضافة مهمة")}
               </h2>
               <p className="text-sm text-muted-foreground">
-                Linked to Project: <span className="text-[#008755] font-['Dubai:Medium',_'Dubai']">{projectName}</span>
+                {tr("Linked to Project:", "مرتبطة بالمشروع:")} <span className="text-[#008755] font-['Dubai:Medium',_'Dubai']">{projectName}</span>
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Milestone: {milestoneName}
+                {tr("Milestone:", "المرحلة الرئيسية:")} {milestoneName}
               </p>
             </div>
             <Button
@@ -72,12 +74,12 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
             {/* SECTION 1 - BASIC INFORMATION */}
             <div className="space-y-4">
               <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#008755] uppercase tracking-wide">
-                Basic Information
+                {tr("Basic Information", "المعلومات الأساسية")}
               </h3>
               
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Task ID (Auto-generated)
+                  {tr("Task ID (Auto-generated)", "رقم المهمة (يُنشأ تلقائيًا)")}
                 </label>
                 <input
                   type="text"
@@ -89,20 +91,20 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Task Name <span className="text-[#D83731]">*</span>
+                  {tr("Task Name", "اسم المهمة")} <span className="text-[#D83731]">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.taskName}
                   onChange={(e) => setFormData({ ...formData, taskName: e.target.value })}
-                  placeholder="Enter task name"
+                  placeholder={tr("Enter task name", "أدخل اسم المهمة")}
                   className="w-full px-3 py-2 text-sm border border-muted rounded focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
                 />
               </div>
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Project (Read-only)
+                  {tr("Project (Read-only)", "المشروع (للقراءة فقط)")}
                 </label>
                 <div className="flex items-center gap-2 px-3 py-2 border border-muted rounded bg-muted/10">
                   <span className="text-sm text-[#008755] font-['Dubai:Medium',_'Dubai']">{projectName}</span>
@@ -117,13 +119,13 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
             {/* SECTION 2 - DURATION */}
             <div className="space-y-4">
               <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#008755] uppercase tracking-wide">
-                Duration
+                {tr("Duration", "المدة")}
               </h3>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                    Duration (days)
+                    {tr("Duration (days)", "المدة (أيام)")}
                   </label>
                   <input
                     type="number"
@@ -136,7 +138,7 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
                 <div>
                   <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                    Start Date
+                    {tr("Start Date", "تاريخ البدء")}
                   </label>
                   <input
                     type="date"
@@ -148,7 +150,7 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
                 <div>
                   <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                    Finish Date
+                    {tr("Finish Date", "تاريخ الانتهاء")}
                   </label>
                   <input
                     type="date"
@@ -161,7 +163,7 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
               <div className="bg-[#008755]/5 border border-[#008755]/20 rounded p-3">
                 <p className="text-xs text-[#008755]">
-                  💡 Finish date auto-calculated based on duration and start date.
+                  {tr("💡 Finish date auto-calculated based on duration and start date.", "💡 يُحتسب تاريخ الانتهاء تلقائيًا بناءً على المدة وتاريخ البدء.")}
                 </p>
               </div>
             </div>
@@ -172,13 +174,13 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
             {/* SECTION 3 - PROGRESS & COST */}
             <div className="space-y-4">
               <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#008755] uppercase tracking-wide">
-                Progress & Cost
+                {tr("Progress & Cost", "التقدم والتكلفة")}
               </h3>
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                    % Complete
+                    {tr("% Complete", "نسبة الإنجاز %")}
                   </label>
                   <input
                     type="number"
@@ -193,7 +195,7 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
                 <div>
                   <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                    Budget Cost (AED)
+                    {tr("Budget Cost (AED)", "التكلفة المعتمدة (درهم)")}
                   </label>
                   <input
                     type="number"
@@ -206,7 +208,7 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
                 <div>
                   <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                    Actual Cost (AED)
+                    {tr("Actual Cost (AED)", "التكلفة الفعلية (درهم)")}
                   </label>
                   <input
                     type="number"
@@ -220,7 +222,7 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Task Weight
+                  {tr("Task Weight", "وزن المهمة")}
                 </label>
                 <input
                   type="number"
@@ -233,17 +235,17 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Status <span className="text-[#D83731]">*</span>
+                  {tr("Status", "الحالة")} <span className="text-[#D83731]">*</span>
                 </label>
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   className="w-full px-3 py-2 text-sm border border-muted rounded focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
                 >
-                  <option value="Not Started">Not Started</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Delayed">Delayed</option>
-                  <option value="Completed">Completed</option>
+                  <option value="Not Started">{tr("Not Started", "لم يبدأ")}</option>
+                  <option value="In Progress">{tr("In Progress", "قيد التنفيذ")}</option>
+                  <option value="Delayed">{tr("Delayed", "متأخر")}</option>
+                  <option value="Completed">{tr("Completed", "مكتمل")}</option>
                 </select>
               </div>
             </div>
@@ -254,28 +256,28 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
             {/* SECTION 4 - DEPENDENCIES */}
             <div className="space-y-4">
               <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#008755] uppercase tracking-wide">
-                Dependencies
+                {tr("Dependencies", "الاعتماديات")}
               </h3>
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Predecessors
+                  {tr("Predecessors", "المهام السابقة")}
                 </label>
                 <select
                   multiple
                   className="w-full px-3 py-2 text-sm border border-muted rounded focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755] h-24"
                 >
-                  <option value="T1">T1 - Stakeholder Interviews</option>
-                  <option value="T2">T2 - Requirements Documentation</option>
-                  <option value="T4">T4 - Architecture Design</option>
-                  <option value="T5">T5 - Database Schema Design</option>
+                  <option value="T1">{tr("T1 - Stakeholder Interviews", "T1 - مقابلات أصحاب المصلحة")}</option>
+                  <option value="T2">{tr("T2 - Requirements Documentation", "T2 - توثيق المتطلبات")}</option>
+                  <option value="T4">{tr("T4 - Architecture Design", "T4 - تصميم البنية")}</option>
+                  <option value="T5">{tr("T5 - Database Schema Design", "T5 - تصميم مخطط قاعدة البيانات")}</option>
                 </select>
-                <p className="text-xs text-muted-foreground mt-1">Hold Ctrl/Cmd to select multiple tasks</p>
+                <p className="text-xs text-muted-foreground mt-1">{tr("Hold Ctrl/Cmd to select multiple tasks", "اضغط مع الاستمرار على Ctrl/Cmd لاختيار عدة مهام")}</p>
               </div>
 
               <div className="bg-muted/30 border border-muted rounded p-3">
-                <p className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1">Dependency Chain Preview:</p>
-                <p className="text-xs text-[#008755]">No dependencies selected</p>
+                <p className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1">{tr("Dependency Chain Preview:", "معاينة سلسلة الاعتماديات:")}</p>
+                <p className="text-xs text-[#008755]">{tr("No dependencies selected", "لم يتم اختيار أي اعتماديات")}</p>
               </div>
             </div>
 
@@ -285,40 +287,40 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
             {/* SECTION 5 - ASSIGNMENT */}
             <div className="space-y-4">
               <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#008755] uppercase tracking-wide">
-                Assignment
+                {tr("Assignment", "الإسناد")}
               </h3>
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Assigned To
+                  {tr("Assigned To", "مسندة إلى")}
                 </label>
                 <select
                   multiple
                   className="w-full px-3 py-2 text-sm border border-muted rounded focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755] h-24"
                 >
-                  <option value="sarah">Sarah Ahmed</option>
-                  <option value="ali">Ali Hassan</option>
-                  <option value="fatima">Fatima Ibrahim</option>
-                  <option value="mohammed">Mohammed Ali</option>
-                  <option value="ahmed">Ahmed Khalil</option>
-                  <option value="layla">Layla Mohammed</option>
+                  <option value="sarah">{tr("Sarah Ahmed", "سارة أحمد")}</option>
+                  <option value="ali">{tr("Ali Hassan", "علي حسن")}</option>
+                  <option value="fatima">{tr("Fatima Ibrahim", "فاطمة إبراهيم")}</option>
+                  <option value="mohammed">{tr("Mohammed Ali", "محمد علي")}</option>
+                  <option value="ahmed">{tr("Ahmed Khalil", "أحمد خليل")}</option>
+                  <option value="layla">{tr("Layla Mohammed", "ليلى محمد")}</option>
                 </select>
-                <p className="text-xs text-muted-foreground mt-1">Hold Ctrl/Cmd to select multiple team members</p>
+                <p className="text-xs text-muted-foreground mt-1">{tr("Hold Ctrl/Cmd to select multiple team members", "اضغط مع الاستمرار على Ctrl/Cmd لاختيار عدة أعضاء من الفريق")}</p>
               </div>
 
               <div>
                 <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                  Priority
+                  {tr("Priority", "الأولوية")}
                 </label>
                 <select
                   value={formData.priority}
                   onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
                   className="w-full px-3 py-2 text-sm border border-muted rounded focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
                 >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                  <option value="Critical">Critical</option>
+                  <option value="Low">{tr("Low", "منخفضة")}</option>
+                  <option value="Medium">{tr("Medium", "متوسطة")}</option>
+                  <option value="High">{tr("High", "مرتفعة")}</option>
+                  <option value="Critical">{tr("Critical", "حرجة")}</option>
                 </select>
               </div>
             </div>
@@ -329,15 +331,15 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
             {/* SECTION 6 - AI TASK INSIGHT (Collapsible) */}
             <div className="space-y-3">
               <div 
-                className="flex items-center justify-between cursor-pointer p-3 bg-gradient-to-r from-[#008755]/5 to-white border border-[#008755]/20 rounded hover:bg-[#008755]/10 transition-colors"
+                className="flex items-center justify-between cursor-pointer p-3 bg-gradient-to-r rtl:bg-gradient-to-l from-[#008755]/5 to-white border border-[#008755]/20 rounded hover:bg-[#008755]/10 transition-colors"
                 onClick={() => setAiInsightExpanded(!aiInsightExpanded)}
               >
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-[#008755]" />
                   <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#1f2937]">
-                    AI Task Insight
+                    {tr("AI Task Insight", "رؤى الذكاء الاصطناعي للمهمة")}
                   </h3>
-                  <Badge className="bg-[#008755]/10 text-[#008755] text-xs">Intelligence Layer</Badge>
+                  <Badge className="bg-[#008755]/10 text-[#008755] text-xs">{tr("Intelligence Layer", "طبقة الذكاء")}</Badge>
                 </div>
                 {aiInsightExpanded ? (
                   <ChevronUp className="h-4 w-4 text-muted-foreground" />
@@ -351,28 +353,28 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
                   {/* Predicted Delay Risk */}
                   <div className="p-3 bg-[#F2A200]/5 border border-[#F2A200]/30 rounded">
                     <p className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1">
-                      ⚠️ Predicted Delay Risk
+                      {tr("⚠️ Predicted Delay Risk", "⚠️ خطر التأخير المتوقع")}
                     </p>
-                    <p className="text-sm text-[#F2A200]">Medium Risk - 15% probability of 3-day delay</p>
-                    <p className="text-xs text-muted-foreground mt-1">Based on similar historical tasks</p>
+                    <p className="text-sm text-[#F2A200]">{tr("Medium Risk - 15% probability of 3-day delay", "خطر متوسط - احتمال 15% لتأخير مدته 3 أيام")}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{tr("Based on similar historical tasks", "استنادًا إلى مهام سابقة مماثلة")}</p>
                   </div>
 
                   {/* Recommended Duration */}
                   <div className="p-3 bg-[#008755]/5 border border-[#008755]/30 rounded">
                     <p className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1">
-                      💡 Recommended Duration Adjustment
+                      {tr("💡 Recommended Duration Adjustment", "💡 تعديل المدة المقترح")}
                     </p>
-                    <p className="text-sm text-[#008755]">Add 2-3 buffer days for optimal scheduling</p>
-                    <p className="text-xs text-muted-foreground mt-1">AI analysis suggests extended timeline</p>
+                    <p className="text-sm text-[#008755]">{tr("Add 2-3 buffer days for optimal scheduling", "أضف 2-3 أيام احتياطية لجدولة مثالية")}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{tr("AI analysis suggests extended timeline", "يقترح تحليل الذكاء الاصطناعي تمديد الجدول الزمني")}</p>
                   </div>
 
                   {/* Dependency Conflict */}
                   <div className="p-3 bg-[#357743]/5 border border-[#357743]/30 rounded">
                     <p className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1">
-                      ✓ Dependency Conflict Detection
+                      {tr("✓ Dependency Conflict Detection", "✓ كشف تعارض الاعتماديات")}
                     </p>
-                    <p className="text-sm text-[#357743]">No conflicts detected</p>
-                    <p className="text-xs text-muted-foreground mt-1">Task dependencies are properly aligned</p>
+                    <p className="text-sm text-[#357743]">{tr("No conflicts detected", "لم يتم اكتشاف أي تعارضات")}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{tr("Task dependencies are properly aligned", "اعتماديات المهمة متوافقة بشكل صحيح")}</p>
                   </div>
                 </div>
               )}
@@ -388,19 +390,19 @@ export function AddTaskPanel({ isOpen, onClose, projectName, milestoneId, milest
               onClick={onClose}
               className="border-muted text-muted-foreground hover:bg-muted"
             >
-              Cancel
+              {tr("Cancel", "إلغاء")}
             </Button>
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 className="text-[#008755] hover:bg-[#008755]/10"
               >
-                Save & Add Another
+                {tr("Save & Add Another", "حفظ وإضافة أخرى")}
               </Button>
               <Button
                 className="bg-[#008755] hover:bg-[#006644] text-white"
               >
-                Save Task
+                {tr("Save Task", "حفظ المهمة")}
               </Button>
             </div>
           </div>

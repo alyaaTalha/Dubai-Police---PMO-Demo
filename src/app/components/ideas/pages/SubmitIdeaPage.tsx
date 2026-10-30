@@ -12,10 +12,11 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '../../ui/select';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
-interface User { name: string; role: string; subtitle: string; xp: number; initials: string; chip: string; }
+interface User { name: string; role: string; subtitle: string; xp: number; initials: string; chip: string; nameAr?: string; roleAr?: string; subtitleAr?: string; chipAr?: string; }
 interface PageProps { user: User; role: IdeasRole; onNavigate: (id: string) => void; }
 
 type Mode = null | 'ai' | 'form';
@@ -60,13 +61,68 @@ const CATEGORIES = [
 
 // Simulated duplicate database
 const SIMILAR_IDEAS: { keywords: string[]; title: string; submitter: string; year: number }[] = [
-  { keywords: ['queue', 'waiting', 'service center'], title: 'AI-Powered Citizen Queue System', submitter: 'Fatima Al Mansoori', year: 2023 },
-  { keywords: ['patrol', 'route', 'optimization'], title: 'Smart Patrol Analytics Dashboard', submitter: 'Omar Al Zaabi', year: 2024 },
-  { keywords: ['evidence', 'paperless', 'digital evidence'], title: 'Digital Evidence Repository', submitter: 'Hessa Al Blooshi', year: 2023 },
-  { keywords: ['maintenance', 'vehicle', 'fleet', 'predictive'], title: 'Predictive Fleet Maintenance AI', submitter: 'Khalid Al Ameri', year: 2024 },
+  { keywords: ['queue', 'waiting', 'service center', 'طابور', 'طوابير', 'انتظار', 'مراكز الخدمة'], title: 'AI-Powered Citizen Queue System', submitter: 'Fatima Al Mansoori', year: 2023 },
+  { keywords: ['patrol', 'route', 'optimization', 'دورية', 'دوريات', 'مسار', 'مسارات'], title: 'Smart Patrol Analytics Dashboard', submitter: 'Omar Al Zaabi', year: 2024 },
+  { keywords: ['evidence', 'paperless', 'digital evidence', 'أدلة', 'الأدلة', 'لاورقية'], title: 'Digital Evidence Repository', submitter: 'Hessa Al Blooshi', year: 2023 },
+  { keywords: ['maintenance', 'vehicle', 'fleet', 'predictive', 'صيانة', 'الصيانة', 'مركبات', 'أسطول', 'تنبؤية'], title: 'Predictive Fleet Maintenance AI', submitter: 'Khalid Al Ameri', year: 2024 },
 ];
 
 interface Message { type: 'ai' | 'user'; text: string; }
+
+// ── Arabic lookup (display-only; English values remain logic keys) ─────────────
+const AR: Record<string, string> = {
+  // Step / field labels
+  'Your Idea': 'فكرتك',
+  'Idea Title': 'عنوان الفكرة',
+  'Problem Statement': 'بيان المشكلة',
+  'Proposed Solution': 'الحل المقترح',
+  'Beneficiaries': 'المستفيدون',
+  'Expected Benefits': 'الفوائد المتوقعة',
+  'Area of Expertise': 'مجال الخبرة',
+  'Review & Submit': 'المراجعة والتقديم',
+  // AI prompts
+  'Great! Can you describe the problem this solves?': 'رائع! هل يمكنك وصف المشكلة التي تعالجها هذه الفكرة؟',
+  'How exactly would your solution work?': 'كيف سيعمل الحل الذي تقترحه بالتحديد؟',
+  'Who would benefit from this idea?': 'من سيستفيد من هذه الفكرة؟',
+  'What measurable impact do you expect?': 'ما الأثر القابل للقياس الذي تتوقعه؟',
+  "What's your area of expertise related to this idea?": 'ما مجال خبرتك المرتبط بهذه الفكرة؟',
+  // Example chips
+  'AI-powered queue management at service centers': 'إدارة الطوابير بالذكاء الاصطناعي في مراكز الخدمة',
+  'Smart patrol route optimization using traffic data': 'تحسين مسارات الدوريات الذكية باستخدام بيانات المرور',
+  'Digital evidence management going fully paperless': 'إدارة الأدلة الرقمية والتحول الكامل إلى بيئة لاورقية',
+  'Predictive maintenance for police vehicles': 'الصيانة التنبؤية لمركبات الشرطة',
+  // Departments
+  'Digital Transformation': 'التحول الرقمي',
+  'Operations': 'العمليات',
+  'Community Affairs': 'شؤون المجتمع',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Legal Affairs': 'الشؤون القانونية',
+  'Finance': 'المالية',
+  'Strategic Planning': 'التخطيط الاستراتيجي',
+  // Categories
+  'Technology & Innovation': 'التكنولوجيا والابتكار',
+  'Process Improvement': 'تحسين العمليات',
+  'Customer Experience': 'تجربة المتعاملين',
+  'Safety & Security': 'السلامة والأمن',
+  'Environmental': 'البيئة',
+  'Social Initiative': 'مبادرة مجتمعية',
+  // Similar ideas
+  'AI-Powered Citizen Queue System': 'نظام طوابير المتعاملين المدعوم بالذكاء الاصطناعي',
+  'Smart Patrol Analytics Dashboard': 'لوحة تحليلات الدوريات الذكية',
+  'Digital Evidence Repository': 'مستودع الأدلة الرقمية',
+  'Predictive Fleet Maintenance AI': 'الذكاء الاصطناعي للصيانة التنبؤية للأسطول',
+  // People
+  'Fatima Al Mansoori': 'فاطمة المنصوري',
+  'Omar Al Zaabi': 'عمر الزعابي',
+  'Hessa Al Blooshi': 'حصة البلوشي',
+  'Khalid Al Ameri': 'خالد العامري',
+};
+
+/** Hook returning a translator for values in the AR lookup. */
+function useT() {
+  const { tr } = useLanguage();
+  return (s: string) => tr(s, AR[s]);
+}
 
 // ── Duplicate check logic ─────────────────────────────────────────────────────
 function findSimilar(text: string) {
@@ -102,13 +158,14 @@ function CircularScore({ score }: { score: number }) {
 
 // ── AI chat bubbles ───────────────────────────────────────────────────────────
 function AiBubble({ text }: { text: string }) {
+  const t = useT();
   return (
     <div className="flex items-start gap-2.5">
       <div className="h-7 w-7 rounded-full bg-[#008755] flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
         <Sparkles className="h-3.5 w-3.5 text-white" />
       </div>
-      <div className="bg-[#008755]/10 border-l-2 border-[#008755] rounded-xl p-3 max-w-lg">
-        <p className="text-sm text-foreground leading-relaxed">{text}</p>
+      <div className="bg-[#008755]/10 border-s-2 border-[#008755] rounded-xl p-3 max-w-lg">
+        <p className="text-sm text-foreground leading-relaxed">{t(text)}</p>
       </div>
     </div>
   );
@@ -126,11 +183,13 @@ function UserBubble({ text }: { text: string }) {
 
 // ── Duplicate check tag ───────────────────────────────────────────────────────
 function DuplicateCheckTag({ title }: { title: string }) {
+  const { tr } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
   if (!title || title.length < 10) {
     return (
       <div className="flex items-center gap-1.5 rounded-lg bg-gray-50 border border-gray-200 px-3 py-2">
         <div className="h-1.5 w-1.5 rounded-full bg-gray-300 animate-pulse" />
-        <span className="text-[11px] text-gray-400">Duplicate check — type your title to scan</span>
+        <span className="text-[11px] text-gray-400">{tr('Duplicate check — type your title to scan', 'التحقق من التكرار — اكتب عنوان فكرتك لبدء الفحص')}</span>
       </div>
     );
   }
@@ -142,12 +201,12 @@ function DuplicateCheckTag({ title }: { title: string }) {
       <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2.5 space-y-1">
         <div className="flex items-center gap-1.5">
           <AlertTriangle className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" />
-          <span className="text-[11px]   text-amber-700">Similar idea found</span>
+          <span className="text-[11px]   text-amber-700">{tr('Similar idea found', 'تم العثور على فكرة مشابهة')}</span>
         </div>
-        <p className="text-[11px] text-amber-700 pl-5 leading-snug">
-          "{similar.title}" — {similar.submitter}, {similar.year}
+        <p className="text-[11px] text-amber-700 ps-5 leading-snug">
+          "{t(similar.title)}" — {t(similar.submitter)}, {similar.year}
         </p>
-        <p className="text-[10px] text-amber-500 pl-5">Review before submitting to avoid duplication</p>
+        <p className="text-[10px] text-amber-500 ps-5">{tr('Review before submitting to avoid duplication', 'راجعها قبل التقديم لتجنب التكرار')}</p>
       </div>
     );
   }
@@ -155,7 +214,7 @@ function DuplicateCheckTag({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-1.5 rounded-lg bg-[#008755]/5 border border-[#008755]/20 px-3 py-2">
       <CheckCircle2 className="h-3.5 w-3.5 text-[#008755] flex-shrink-0" />
-      <span className="text-[11px] text-[#008755]  ">No duplicates detected</span>
+      <span className="text-[11px] text-[#008755]  ">{tr('No duplicates detected', 'لم يتم رصد أي تكرار')}</span>
     </div>
   );
 }
@@ -180,6 +239,8 @@ function RightSidebar({
   setCategory: (v: string) => void;
   showAiSuggestions: boolean;
 }) {
+  const { tr } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
   return (
     <div className="flex-[2] p-6 overflow-y-auto">
       <div className="sticky top-0 space-y-3">
@@ -193,9 +254,9 @@ function RightSidebar({
             {/* Circular completeness score */}
             <div className="flex flex-col items-center py-4 border-b border-border mb-4">
               <CircularScore score={completenessScore} />
-              <p className="text-sm   text-foreground mt-3">Idea Completeness</p>
+              <p className="text-sm   text-foreground mt-3">{tr('Idea Completeness', 'اكتمال الفكرة')}</p>
               <p className="text-xs text-muted-foreground mt-0.5 text-center">
-                Fill in all fields to maximise your score
+                {tr('Fill in all fields to maximise your score', 'املأ جميع الحقول لرفع درجتك إلى الحد الأقصى')}
               </p>
             </div>
 
@@ -212,7 +273,7 @@ function RightSidebar({
                       : <Minus className="h-3 w-3 text-muted-foreground" />}
                   </div>
                   <span className={cn('text-xs', checked ? 'text-foreground' : 'text-muted-foreground')}>
-                    {field}
+                    {t(field)}
                   </span>
                 </div>
               ))}
@@ -223,30 +284,30 @@ function RightSidebar({
               <div className="border-t border-border pt-4 mb-4 space-y-3">
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="h-3.5 w-3.5 text-[#008755]" />
-                  <p className="text-xs   text-[#008755]">AI Suggestions</p>
+                  <p className="text-xs   text-[#008755]">{tr('AI Suggestions', 'اقتراحات الذكاء الاصطناعي')}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-muted-foreground mb-1.5">Suggested Department</p>
+                  <p className="text-[11px] text-muted-foreground mb-1.5">{tr('Suggested Department', 'الإدارة المقترحة')}</p>
                   <Select value={department} onValueChange={setDepartment}>
                     <SelectTrigger size="sm" className="text-xs h-8">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {DEPARTMENTS.map(d => (
-                        <SelectItem key={d} value={d} className="text-xs">{d}</SelectItem>
+                        <SelectItem key={d} value={d} className="text-xs">{t(d)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <p className="text-[11px] text-muted-foreground mb-1.5">Suggested Category</p>
+                  <p className="text-[11px] text-muted-foreground mb-1.5">{tr('Suggested Category', 'الفئة المقترحة')}</p>
                   <Select value={category} onValueChange={setCategory}>
                     <SelectTrigger size="sm" className="text-xs h-8">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       {CATEGORIES.map(c => (
-                        <SelectItem key={c} value={c} className="text-xs">{c}</SelectItem>
+                        <SelectItem key={c} value={c} className="text-xs">{t(c)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -258,7 +319,7 @@ function RightSidebar({
             <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
               <Star className="h-4 w-4 text-amber-500 fill-amber-400 flex-shrink-0" />
               <span className="text-xs   text-amber-700">
-                Submitting earns you +150 XP
+                {tr('Submitting earns you +150 XP', 'تقديم الفكرة يمنحك +150 نقطة خبرة')}
               </span>
             </div>
           </CardContent>
@@ -281,6 +342,8 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
   const [category, setCategory] = useState('Technology & Innovation');
   const [messages, setMessages] = useState<Message[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const { tr } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -350,16 +413,16 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
         <div className="h-16 w-16 rounded-2xl bg-[#008755]/10 flex items-center justify-center mb-4">
           <Check className="h-8 w-8 text-[#008755]" />
         </div>
-        <h2 className="  text-xl text-foreground mb-2">Idea Submitted!</h2>
+        <h2 className="  text-xl text-foreground mb-2">{tr('Idea Submitted!', 'تم تقديم الفكرة!')}</h2>
         <p className="text-sm text-muted-foreground max-w-xs mb-3">
-          Your idea has been submitted for review. You'll be notified when it moves forward.
+          {tr("Your idea has been submitted for review. You'll be notified when it moves forward.", 'تم تقديم فكرتك للمراجعة. سيتم إشعارك عند انتقالها إلى المرحلة التالية.')}
         </p>
         <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-4 py-2 mb-6">
           <Star className="h-4 w-4 text-amber-500 fill-amber-400" />
-          <span className="text-sm   text-amber-700">+150 XP Earned!</span>
+          <span className="text-sm   text-amber-700">{tr('+150 XP Earned!', 'حصلت على +150 نقطة خبرة!')}</span>
         </div>
         <Button onClick={() => onNavigate('my-ideas')} className="bg-[#008755] hover:bg-[#005844] text-white gap-1.5">
-          View My Ideas <ChevronRight className="h-4 w-4" />
+          {tr('View My Ideas', 'عرض أفكاري')} <ChevronRight className="h-4 w-4 rtl:rotate-180" />
         </Button>
       </div>
     );
@@ -369,55 +432,55 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
   if (mode === null) {
     return (
       <div className="flex h-full overflow-hidden">
-        <div className="flex-[3] flex flex-col justify-center px-10 border-r border-border">
+        <div className="flex-[3] flex flex-col justify-center px-10 border-e border-border">
           <button
             onClick={() => onNavigate('home')}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-[#008755] transition-colors mb-8 w-fit"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to Home
+            <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+            {tr('Back to Home', 'العودة إلى الرئيسية')}
           </button>
 
-          <h1 className="text-2xl   text-foreground mb-1">Submit an Idea</h1>
+          <h1 className="text-2xl   text-foreground mb-1">{tr('Submit an Idea', 'تقديم فكرة')}</h1>
           <p className="text-sm text-muted-foreground mb-8">
-            How would you like to build your submission?
+            {tr('How would you like to build your submission?', 'كيف تفضّل إعداد طلبك؟')}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
             {/* AI path */}
             <button
               onClick={() => setMode('ai')}
-              className="group text-left rounded-2xl border-2 border-border hover:border-[#008755] bg-white hover:bg-[#008755]/3 p-6 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008755]"
+              className="group text-start rounded-2xl border-2 border-border hover:border-[#008755] bg-white hover:bg-[#008755]/3 p-6 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#008755]"
             >
               <div className="h-10 w-10 rounded-xl bg-[#008755]/10 flex items-center justify-center mb-4 group-hover:bg-[#008755]/20 transition-colors">
                 <MessageSquare className="h-5 w-5 text-[#008755]" />
               </div>
               <div className="flex items-center gap-2 mb-1.5">
-                <p className="text-sm   text-foreground">Guide me with AI</p>
-                <span className="text-[10px] bg-[#008755]/10 text-[#008755] rounded-full px-2 py-0.5 font-medium">Recommended</span>
+                <p className="text-sm   text-foreground">{tr('Guide me with AI', 'أرشدني بالذكاء الاصطناعي')}</p>
+                <span className="text-[10px] bg-[#008755]/10 text-[#008755] rounded-full px-2 py-0.5 font-medium">{tr('Recommended', 'موصى به')}</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Answer a few short questions. AI will shape your idea step by step and suggest department & category.
+                {tr('Answer a few short questions. AI will shape your idea step by step and suggest department & category.', 'أجب عن بضعة أسئلة قصيرة، وسيساعدك الذكاء الاصطناعي على صياغة فكرتك خطوة بخطوة واقتراح الإدارة والفئة المناسبتين.')}
               </p>
               <div className="mt-4 flex items-center gap-1 text-xs text-[#008755]   opacity-0 group-hover:opacity-100 transition-opacity">
-                Let's start <ChevronRight className="h-3.5 w-3.5" />
+                {tr("Let's start", 'لنبدأ')} <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
               </div>
             </button>
 
             {/* Manual form path */}
             <button
               onClick={() => setMode('form')}
-              className="group text-left rounded-2xl border-2 border-border hover:border-gray-400 bg-white hover:bg-gray-50 p-6 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+              className="group text-start rounded-2xl border-2 border-border hover:border-gray-400 bg-white hover:bg-gray-50 p-6 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
             >
               <div className="h-10 w-10 rounded-xl bg-gray-100 flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
                 <FileText className="h-5 w-5 text-gray-600" />
               </div>
-              <p className="text-sm   text-foreground mb-1.5">Fill in the form myself</p>
+              <p className="text-sm   text-foreground mb-1.5">{tr('Fill in the form myself', 'سأملأ النموذج بنفسي')}</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Prefer to write directly? See all fields at once and fill them in your own time.
+                {tr('Prefer to write directly? See all fields at once and fill them in your own time.', 'تفضّل الكتابة مباشرة؟ اعرض جميع الحقول دفعة واحدة واملأها في الوقت الذي يناسبك.')}
               </p>
               <div className="mt-4 flex items-center gap-1 text-xs text-gray-500   opacity-0 group-hover:opacity-100 transition-opacity">
-                Open form <ChevronRight className="h-3.5 w-3.5" />
+                {tr('Open form', 'فتح النموذج')} <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
               </div>
             </button>
           </div>
@@ -431,8 +494,8 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
               <CardContent className="pt-4 pb-4">
                 <div className="flex flex-col items-center py-4 border-b border-border mb-4">
                   <CircularScore score={0} />
-                  <p className="text-sm   text-foreground mt-3">Idea Completeness</p>
-                  <p className="text-xs text-muted-foreground mt-0.5 text-center">Choose a path to get started</p>
+                  <p className="text-sm   text-foreground mt-3">{tr('Idea Completeness', 'اكتمال الفكرة')}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 text-center">{tr('Choose a path to get started', 'اختر طريقة للبدء')}</p>
                 </div>
                 <div className="space-y-2.5 mb-4">
                   {Object.keys(fieldsChecked).map(field => (
@@ -440,13 +503,13 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                       <div className="h-5 w-5 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
                         <Minus className="h-3 w-3 text-muted-foreground" />
                       </div>
-                      <span className="text-xs text-muted-foreground">{field}</span>
+                      <span className="text-xs text-muted-foreground">{t(field)}</span>
                     </div>
                   ))}
                 </div>
                 <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                   <Star className="h-4 w-4 text-amber-500 fill-amber-400 flex-shrink-0" />
-                  <span className="text-xs   text-amber-700">Submitting earns you +150 XP</span>
+                  <span className="text-xs   text-amber-700">{tr('Submitting earns you +150 XP', 'تقديم الفكرة يمنحك +150 نقطة خبرة')}</span>
                 </div>
               </CardContent>
             </Card>
@@ -460,7 +523,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
   if (mode === 'form') {
     return (
       <div className="flex h-full overflow-hidden">
-        <div className="flex-[3] flex flex-col min-w-0 border-r border-border overflow-hidden">
+        <div className="flex-[3] flex flex-col min-w-0 border-e border-border overflow-hidden">
 
           {/* Header */}
           <div className="flex-shrink-0 px-6 pt-6 pb-0">
@@ -468,16 +531,16 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
               onClick={() => setMode(null)}
               className="flex items-center gap-1 text-xs text-muted-foreground hover:text-[#008755] transition-colors mb-4 w-fit"
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Change submission method
+              <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+              {tr('Change submission method', 'تغيير طريقة التقديم')}
             </button>
             <div className="flex items-center gap-2 mb-1">
               <div className="h-6 w-6 rounded-lg bg-gray-100 flex items-center justify-center">
                 <FileText className="h-3.5 w-3.5 text-gray-600" />
               </div>
-              <h1 className="text-xl   text-foreground">Submit an Idea</h1>
+              <h1 className="text-xl   text-foreground">{tr('Submit an Idea', 'تقديم فكرة')}</h1>
             </div>
-            <p className="text-sm text-muted-foreground mb-5">Fill in all fields below at your own pace.</p>
+            <p className="text-sm text-muted-foreground mb-5">{tr('Fill in all fields below at your own pace.', 'املأ جميع الحقول أدناه وفق الوتيرة التي تناسبك.')}</p>
           </div>
 
           {/* Scrollable form */}
@@ -486,10 +549,10 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Title */}
             <div className="space-y-1.5">
               <label className="text-xs   text-foreground">
-                Idea Title <span className="text-red-500">*</span>
+                {tr('Idea Title', 'عنوان الفكرة')} <span className="text-red-500">*</span>
               </label>
               <Input
-                placeholder="Give your idea a short, clear title"
+                placeholder={tr('Give your idea a short, clear title', 'اختر لفكرتك عنوانًا قصيرًا وواضحًا')}
                 value={answers.ideaText}
                 onChange={e => setAnswers(p => ({ ...p, ideaText: e.target.value }))}
                 className="h-9 text-sm"
@@ -499,11 +562,11 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Problem Statement */}
             <div className="space-y-1.5">
               <label className="text-xs   text-foreground">
-                Problem Statement <span className="text-red-500">*</span>
+                {tr('Problem Statement', 'بيان المشكلة')} <span className="text-red-500">*</span>
               </label>
-              <p className="text-[11px] text-muted-foreground">What challenge or gap does this idea address?</p>
+              <p className="text-[11px] text-muted-foreground">{tr('What challenge or gap does this idea address?', 'ما التحدي أو الفجوة التي تعالجها هذه الفكرة؟')}</p>
               <Textarea
-                placeholder="Describe the problem in detail..."
+                placeholder={tr('Describe the problem in detail...', 'صف المشكلة بالتفصيل...')}
                 value={answers.problem}
                 onChange={e => setAnswers(p => ({ ...p, problem: e.target.value }))}
                 className="min-h-[80px] text-sm resize-none"
@@ -513,11 +576,11 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Proposed Solution */}
             <div className="space-y-1.5">
               <label className="text-xs   text-foreground">
-                Proposed Solution <span className="text-red-500">*</span>
+                {tr('Proposed Solution', 'الحل المقترح')} <span className="text-red-500">*</span>
               </label>
-              <p className="text-[11px] text-muted-foreground">How exactly would your solution work?</p>
+              <p className="text-[11px] text-muted-foreground">{tr('How exactly would your solution work?', 'كيف سيعمل الحل الذي تقترحه بالتحديد؟')}</p>
               <Textarea
-                placeholder="Explain how you'd solve it..."
+                placeholder={tr("Explain how you'd solve it...", 'اشرح كيف ستعالجها...')}
                 value={answers.solution}
                 onChange={e => setAnswers(p => ({ ...p, solution: e.target.value }))}
                 className="min-h-[80px] text-sm resize-none"
@@ -527,11 +590,11 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Beneficiaries */}
             <div className="space-y-1.5">
               <label className="text-xs   text-foreground">
-                Beneficiaries <span className="text-red-500">*</span>
+                {tr('Beneficiaries', 'المستفيدون')} <span className="text-red-500">*</span>
               </label>
-              <p className="text-[11px] text-muted-foreground">Who would benefit — citizens, officers, departments?</p>
+              <p className="text-[11px] text-muted-foreground">{tr('Who would benefit — citizens, officers, departments?', 'من سيستفيد — المواطنون، الضباط، الإدارات؟')}</p>
               <Textarea
-                placeholder="e.g. Frontline officers, residents in North district..."
+                placeholder={tr('e.g. Frontline officers, residents in North district...', 'مثال: ضباط الخطوط الأمامية، سكان المنطقة الشمالية...')}
                 value={answers.beneficiaries}
                 onChange={e => setAnswers(p => ({ ...p, beneficiaries: e.target.value }))}
                 className="min-h-[60px] text-sm resize-none"
@@ -541,11 +604,11 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Expected Benefits */}
             <div className="space-y-1.5">
               <label className="text-xs   text-foreground">
-                Expected Benefits <span className="text-red-500">*</span>
+                {tr('Expected Benefits', 'الفوائد المتوقعة')} <span className="text-red-500">*</span>
               </label>
-              <p className="text-[11px] text-muted-foreground">What measurable impact do you expect?</p>
+              <p className="text-[11px] text-muted-foreground">{tr('What measurable impact do you expect?', 'ما الأثر القابل للقياس الذي تتوقعه؟')}</p>
               <Textarea
-                placeholder="e.g. 30% reduction in wait time, cost saving of AED 200K/year..."
+                placeholder={tr('e.g. 30% reduction in wait time, cost saving of AED 200K/year...', 'مثال: خفض زمن الانتظار بنسبة 30%، وتوفير 200 ألف درهم سنويًا...')}
                 value={answers.benefits}
                 onChange={e => setAnswers(p => ({ ...p, benefits: e.target.value }))}
                 className="min-h-[60px] text-sm resize-none"
@@ -555,11 +618,11 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Area of Expertise */}
             <div className="space-y-1.5">
               <label className="text-xs   text-foreground">
-                Area of Expertise <span className="text-red-500">*</span>
+                {tr('Area of Expertise', 'مجال الخبرة')} <span className="text-red-500">*</span>
               </label>
-              <p className="text-[11px] text-muted-foreground">Your relevant background for this idea</p>
+              <p className="text-[11px] text-muted-foreground">{tr('Your relevant background for this idea', 'خلفيتك ذات الصلة بهذه الفكرة')}</p>
               <Input
-                placeholder="e.g. Data Engineering, Field Operations, Legal Compliance..."
+                placeholder={tr('e.g. Data Engineering, Field Operations, Legal Compliance...', 'مثال: هندسة البيانات، العمليات الميدانية، الامتثال القانوني...')}
                 value={answers.expertise}
                 onChange={e => setAnswers(p => ({ ...p, expertise: e.target.value }))}
                 className="h-9 text-sm"
@@ -569,24 +632,24 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             {/* Department + Category */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs   text-foreground">Department</label>
+                <label className="text-xs   text-foreground">{tr('Department', 'الإدارة')}</label>
                 <Select value={department} onValueChange={setDepartment}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                    {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{t(d)}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs   text-foreground">Category</label>
+                <label className="text-xs   text-foreground">{tr('Category', 'الفئة')}</label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                    {CATEGORIES.map(c => <SelectItem key={c} value={c}>{t(c)}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -599,7 +662,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 disabled={completenessScore < 100}
                 className="bg-[#008755] hover:bg-[#005844] text-white gap-1.5 disabled:opacity-50"
               >
-                Submit Idea <ChevronRight className="h-4 w-4" />
+                {tr('Submit Idea', 'تقديم الفكرة')} <ChevronRight className="h-4 w-4 rtl:rotate-180" />
               </Button>
             </div>
           </div>
@@ -622,7 +685,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
   // ── AI conversation path ──────────────────────────────────────────────────
   return (
     <div className="flex h-full overflow-hidden">
-      <div className="flex-[3] flex flex-col min-w-0 border-r border-border overflow-hidden">
+      <div className="flex-[3] flex flex-col min-w-0 border-e border-border overflow-hidden">
 
         {/* Static header */}
         <div className="flex-shrink-0 px-6 pt-6 pb-0">
@@ -630,27 +693,27 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             onClick={() => setMode(null)}
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-[#008755] transition-colors mb-4 w-fit"
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Change submission method
+            <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+            {tr('Change submission method', 'تغيير طريقة التقديم')}
           </button>
 
           <div className="flex items-center gap-2 mb-1">
             <div className="h-6 w-6 rounded-lg bg-[#008755]/10 flex items-center justify-center">
               <MessageSquare className="h-3.5 w-3.5 text-[#008755]" />
             </div>
-            <h1 className="text-xl   text-foreground">Submit an Idea</h1>
+            <h1 className="text-xl   text-foreground">{tr('Submit an Idea', 'تقديم فكرة')}</h1>
           </div>
           <p className="text-sm text-muted-foreground mb-5">
-            AI will guide you step by step.
+            {tr('AI will guide you step by step.', 'سيرشدك الذكاء الاصطناعي خطوة بخطوة.')}
           </p>
 
           <div className="mb-4">
             <div className="flex justify-between items-center mb-1.5">
               <span className="text-xs   text-muted-foreground">
-                Step {stepIndex} of 7 — {STEP_LABELS[step]}
+                {tr(`Step ${stepIndex} of 7`, `الخطوة ${stepIndex} من 7`)} — {t(STEP_LABELS[step])}
               </span>
               <span className="text-xs   text-[#008755]">
-                {Math.round(progress)}% complete
+                {tr(`${Math.round(progress)}% complete`, `${Math.round(progress)}% مكتمل`)}
               </span>
             </div>
             <Progress value={progress} indicatorColor="#008755" className="h-1.5" />
@@ -672,7 +735,10 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
         <div className="flex-1 overflow-y-auto px-6 py-3 space-y-3 min-h-0">
           {step === 'start' && (
             <AiBubble
-              text={`Hello ${user.name.split(' ')[0]}! I'm here to help you shape your idea. Describe it in your own words — no need to be perfect.`}
+              text={tr(
+                `Hello ${user.name.split(' ')[0]}! I'm here to help you shape your idea. Describe it in your own words — no need to be perfect.`,
+                `مرحبًا ${(user.nameAr ?? user.name).split(' ')[0]}! أنا هنا لمساعدتك في صياغة فكرتك. صفها بكلماتك الخاصة — لا داعي لأن تكون مثالية.`,
+              )}
             />
           )}
           {messages.map((msg, i) =>
@@ -689,7 +755,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
             <Textarea
               value={currentInput}
               onChange={e => setCurrentInput(e.target.value)}
-              placeholder={step === 'start' ? 'Describe your idea in your own words...' : 'Type your answer here...'}
+              placeholder={step === 'start' ? tr('Describe your idea in your own words...', 'صف فكرتك بكلماتك الخاصة...') : tr('Type your answer here...', 'اكتب إجابتك هنا...')}
               className="min-h-[90px]"
               onKeyDown={e => {
                 if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
@@ -703,15 +769,15 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 {EXAMPLE_CHIPS.map(chip => (
                   <button
                     key={chip}
-                    onClick={() => setCurrentInput(chip)}
+                    onClick={() => setCurrentInput(t(chip))}
                     className={cn(
-                      'text-xs rounded-full px-3 py-1.5 border text-left transition-colors',
-                      currentInput === chip
+                      'text-xs rounded-full px-3 py-1.5 border text-start transition-colors',
+                      currentInput === t(chip)
                         ? 'border-[#008755] bg-[#008755]/5 text-[#008755]'
                         : 'border-border bg-white text-muted-foreground hover:border-[#008755] hover:text-[#008755]',
                     )}
                   >
-                    {chip}
+                    {t(chip)}
                   </button>
                 ))}
               </div>
@@ -722,7 +788,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 disabled={!currentInput.trim()}
                 className="bg-[#008755] hover:bg-[#005844] text-white gap-1.5"
               >
-                {step === 'expertise' ? 'Review Idea →' : 'Continue →'}
+                {step === 'expertise' ? tr('Review Idea →', 'مراجعة الفكرة ←') : tr('Continue →', 'متابعة ←')}
               </Button>
             </div>
           </div>
@@ -741,7 +807,7 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
                 { label: 'Area of Expertise', value: answers.expertise },
               ].map(({ label, value }) => (
                 <div key={label} className="px-4 py-3">
-                  <p className="text-[11px]   text-muted-foreground mb-0.5">{label}</p>
+                  <p className="text-[11px]   text-muted-foreground mb-0.5">{t(label)}</p>
                   <p className="text-sm text-foreground leading-relaxed">{value || '—'}</p>
                 </div>
               ))}
@@ -749,24 +815,24 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <p className="text-xs   text-muted-foreground mb-1.5">Department</p>
+                <p className="text-xs   text-muted-foreground mb-1.5">{tr('Department', 'الإدارة')}</p>
                 <Select value={department} onValueChange={setDepartment}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                    {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{t(d)}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <p className="text-xs   text-muted-foreground mb-1.5">Category</p>
+                <p className="text-xs   text-muted-foreground mb-1.5">{tr('Category', 'الفئة')}</p>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className="h-9 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                    {CATEGORIES.map(c => <SelectItem key={c} value={c}>{t(c)}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
@@ -774,10 +840,10 @@ export function SubmitIdeaPage({ user, role: _role, onNavigate }: PageProps) {
 
             <div className="flex justify-between items-center pt-1">
               <Button variant="outline" size="sm" onClick={() => setStep('expertise')}>
-                <ArrowLeft className="h-3.5 w-3.5" /> Back
+                <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" /> {tr('Back', 'رجوع')}
               </Button>
               <Button onClick={handleSubmit} className="bg-[#008755] hover:bg-[#005844] text-white gap-1.5">
-                Submit Idea <ChevronRight className="h-4 w-4" />
+                {tr('Submit Idea', 'تقديم الفكرة')} <ChevronRight className="h-4 w-4 rtl:rotate-180" />
               </Button>
             </div>
           </div>

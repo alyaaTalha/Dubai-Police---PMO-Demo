@@ -12,6 +12,7 @@ import { Input } from '../../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select';
 import { Progress } from '../../ui/progress';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -120,6 +121,106 @@ const DEPARTMENTS = [
 
 const QUARTERS = ['Q3 2025', 'Q4 2025', 'Q1 2026', 'Q2 2026'];
 
+// ── Arabic lookup for mock data (keyed by English value) ──────────────────────
+const AR: Record<string, string> = {
+  // clusters
+  'Smart Operations Cluster': 'مجموعة العمليات الذكية',
+  'Customer Experience Cluster': 'مجموعة تجربة المتعاملين',
+  'Digital Evidence Cluster': 'مجموعة الأدلة الرقمية',
+  'HR Innovation Cluster': 'مجموعة ابتكار الموارد البشرية',
+  'Process Automation Cluster': 'مجموعة أتمتة العمليات',
+  // cluster ideas
+  'AI Patrol Scheduling': 'جدولة الدوريات بالذكاء الاصطناعي',
+  'Predictive Fleet Maintenance': 'الصيانة التنبؤية للأسطول',
+  'Smart Shift Planner': 'مخطط المناوبات الذكي',
+  'Drone Emergency Kit': 'حقيبة الطوارئ بالطائرات المسيّرة',
+  'Smart Queue Management': 'الإدارة الذكية للطوابير',
+  'Real-Time Wait Times': 'أوقات الانتظار الفورية',
+  'Community Feedback Loop': 'حلقة ملاحظات المجتمع',
+  'Paperless Evidence Management': 'إدارة الأدلة دون ورق',
+  'Smart Evidence Tagging': 'الوسم الذكي للأدلة',
+  'Blockchain Evidence Chain': 'سلسلة الأدلة بتقنية البلوك تشين',
+  'Digital Training Badges': 'شارات التدريب الرقمية',
+  'AR Training Simulations': 'محاكاة التدريب بالواقع المعزز',
+  'Mobile Learning Platform': 'منصة التعلم عبر الجوال',
+  'E-Grievance Tracker': 'متتبع التظلمات الإلكتروني',
+  'Mobile Field Reports': 'التقارير الميدانية عبر الجوال',
+  // departments
+  'Operations': 'العمليات',
+  'Community Affairs': 'شؤون المجتمع',
+  'Legal Affairs': 'الشؤون القانونية',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  'Digital Transformation': 'التحول الرقمي',
+  'Finance': 'المالية',
+  'IT Services': 'خدمات تقنية المعلومات',
+  // notes
+  'These four ideas share a core AI-dispatch theme and have complementary implementation paths.': 'تشترك هذه الأفكار الأربع في محور أساسي هو التوجيه بالذكاء الاصطناعي، ولها مسارات تنفيذ متكاملة.',
+  'All three target front-desk service bottlenecks with proven technology.': 'تستهدف الأفكار الثلاث معالجة اختناقات خدمات الاستقبال باستخدام تقنيات مثبتة.',
+  'Strong strategic alignment but technology readiness needs assessment.': 'توافق استراتيجي قوي، إلا أن الجاهزية التقنية تحتاج إلى تقييم.',
+  'Coordinator recommends phased implementation — badges first.': 'يوصي المنسق بالتنفيذ على مراحل — بدءًا بالشارات.',
+  'Clear operational wins, low effort, high strategic fit.': 'مكاسب تشغيلية واضحة، بجهد منخفض وتوافق استراتيجي عالٍ.',
+  // approved ideas
+  'Smart Queue Management at Service Centers': 'الإدارة الذكية للطوابير في مراكز الخدمة',
+  'Digital Training Badge System': 'نظام شارات التدريب الرقمية',
+  'Smart Evidence Tagging System': 'نظام الوسم الذكي للأدلة',
+  'Community Feedback Loop Automation': 'أتمتة حلقة ملاحظات المجتمع',
+  'Mobile Field Report Digitization': 'رقمنة التقارير الميدانية عبر الجوال',
+  'Real-Time Wait Times Display': 'عرض أوقات الانتظار الفورية',
+  'AI-Assisted Vehicle Inspection Reports': 'تقارير فحص المركبات بمساعدة الذكاء الاصطناعي',
+  'E-Grievance Resolution Tracker': 'متتبع معالجة التظلمات الإلكتروني',
+  // people
+  'Fatima Al Mansoori': 'فاطمة المنصوري',
+  'Saeed Al Ketbi': 'سعيد الكتبي',
+  'Mariam Al Suwaidi': 'مريم السويدي',
+  'Hessa Al Blooshi': 'حصة البلوشي',
+  'Omar Al Zaabi': 'عمر الزعابي',
+  // impact areas
+  'Customer Experience': 'تجربة المتعاملين',
+  'Productivity': 'الإنتاجية',
+  'Operational Efficiency': 'الكفاءة التشغيلية',
+  'Safety & Security': 'السلامة والأمن',
+  // fit / priority
+  'High': 'عالية',
+  'Medium': 'متوسطة',
+  'Low': 'منخفضة',
+  // AI notes
+  'Aligns with 3 strategic pillars. Quick win.': 'يتوافق مع 3 ركائز استراتيجية. مكسب سريع.',
+  'High ROI potential. Low implementation risk.': 'عائد استثمار مرتفع محتمل. مخاطر تنفيذ منخفضة.',
+  'Reduces case processing time by est. 30%.': 'يقلل وقت معالجة القضايا بنسبة تقديرية تبلغ 30%.',
+  'Direct link to customer satisfaction KPI.': 'ارتباط مباشر بمؤشر أداء رضا المتعاملين.',
+  'Eliminates 2.5 hrs of manual data entry daily.': 'يلغي 2.5 ساعة من إدخال البيانات اليدوي يوميًا.',
+  'Already piloted in 2 service centers.': 'تمت تجربته فعليًا في مركزي خدمة.',
+  'Moderate complexity. Needs IT integration plan.': 'تعقيد متوسط. يحتاج إلى خطة تكامل تقني.',
+  'Addresses compliance requirement. Low risk.': 'يلبي متطلبات الامتثال. مخاطر منخفضة.',
+  // dates
+  'Jun 15, 2025': '15 يونيو 2025',
+  'Jun 12, 2025': '12 يونيو 2025',
+  'Jun 10, 2025': '10 يونيو 2025',
+  'Jun 8, 2025': '8 يونيو 2025',
+  'Jun 5, 2025': '5 يونيو 2025',
+  'May 28, 2025': '28 مايو 2025',
+  'May 25, 2025': '25 مايو 2025',
+  'May 20, 2025': '20 مايو 2025',
+  'Jun 20, 2025': '20 يونيو 2025',
+  'May 30, 2025': '30 مايو 2025',
+  // types / statuses
+  'Project': 'مشروع',
+  'Initiative': 'مبادرة',
+  'In Planning': 'قيد التخطيط',
+  'Active': 'نشط',
+  // quarters
+  'Q3 2025': 'الربع الثالث 2025',
+  'Q4 2025': 'الربع الرابع 2025',
+  'Q1 2026': 'الربع الأول 2026',
+  'Q2 2026': 'الربع الثاني 2026',
+};
+
+/** Translate a mock-data value using the local AR lookup. */
+function useT() {
+  const { tr } = useLanguage();
+  return { tr, t: (s: string) => tr(s, AR[s]) };
+}
+
 // ── Helper components ──────────────────────────────────────────────────────────
 function InitialsAvatar({ initials, color = '#008755' }: { initials: string; color?: string }) {
   return (
@@ -133,6 +234,7 @@ function InitialsAvatar({ initials, color = '#008755' }: { initials: string; col
 }
 
 function FitBadge({ fit }: { fit: string }) {
+  const { tr, t } = useT();
   const colors: Record<string, string> = {
     High: 'bg-green-100 text-green-800 border-green-200',
     Medium: 'bg-amber-100 text-amber-800 border-amber-200',
@@ -140,7 +242,7 @@ function FitBadge({ fit }: { fit: string }) {
   };
   return (
     <span className={cn('text-xs font-medium px-2 py-0.5 rounded border', colors[fit] ?? 'bg-gray-100 text-gray-700 border-gray-200')}>
-      {fit} Fit
+      {tr(`${fit} Fit`, `توافق ${t(fit)}`)}
     </span>
   );
 }
@@ -158,6 +260,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<string[]>([]);
   const [assignedDept, setAssignedDept] = useState('');
+  const { tr, t } = useT();
 
   const handleAccept = () => {
     setStatus('validated');
@@ -176,10 +279,13 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
       impactArea: 'Operational Excellence',
     };
     onConvertToProject?.(project);
-    toast.success('Opportunity validated & added to PMO', {
-      description: `"${opp.cluster}" is now visible in Portfolio → Projects.`,
+    toast.success(tr('Opportunity validated & added to PMO', 'تم اعتماد الفرصة وإضافتها إلى مكتب إدارة المشاريع'), {
+      description: tr(
+        `"${opp.cluster}" is now visible in Portfolio → Projects.`,
+        `"${t(opp.cluster)}" ظاهرة الآن في المحفظة ← المشاريع.`,
+      ),
       duration: 8000,
-      action: { label: 'View in Portfolio', onClick: () => onNavigateToPortfolio?.() },
+      action: { label: tr('View in Portfolio', 'عرض في المحفظة'), onClick: () => onNavigateToPortfolio?.() },
     });
   };
 
@@ -210,29 +316,29 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
     <Card className={cn('rounded-xl bg-white shadow-sm transition-all duration-200', borderColor)}>
       {/* Header — always visible */}
       <button
-        className="w-full text-left px-5 py-4 flex items-center gap-4"
+        className="w-full text-start px-5 py-4 flex items-center gap-4"
         onClick={() => setExpanded(e => !e)}
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <span className="font-semibold text-gray-900 text-sm  ">
-              {opp.cluster}
+              {t(opp.cluster)}
             </span>
             {status === 'validated' && (
-              <Badge className="bg-green-100 text-green-800 border-green-200 text-xs">Validated</Badge>
+              <Badge className="bg-green-100 text-green-800 border-green-200 text-xs">{tr('Validated', 'معتمدة')}</Badge>
             )}
             {status === 'rejected' && (
-              <Badge className="bg-red-100 text-red-700 border-red-200 text-xs">Rejected</Badge>
+              <Badge className="bg-red-100 text-red-700 border-red-200 text-xs">{tr('Rejected', 'مرفوضة')}</Badge>
             )}
             {status === 'pending' && (
-              <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">Ready for Validation</Badge>
+              <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">{tr('Ready for Validation', 'جاهزة للاعتماد')}</Badge>
             )}
           </div>
           <div className="flex items-center gap-4 flex-wrap text-xs text-gray-500">
-            <span className="flex items-center gap-1"><Users className="w-3 h-3" />{opp.ideas.length} ideas</span>
-            <span>{opp.dept}</span>
+            <span className="flex items-center gap-1"><Users className="w-3 h-3" />{opp.ideas.length} {tr('ideas', 'أفكار')}</span>
+            <span>{t(opp.dept)}</span>
             <div className="flex items-center gap-2">
-              <span>Readiness</span>
+              <span>{tr('Readiness', 'الجاهزية')}</span>
               <div className="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden">
                 <div
                   className="h-full rounded-full"
@@ -253,12 +359,12 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
         <div className="px-5 pb-5 space-y-4 border-t border-gray-100">
           {/* Ideas list */}
           <div className="pt-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Related Ideas</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{tr('Related Ideas', 'الأفكار ذات الصلة')}</p>
             <div className="space-y-2">
               {opp.ideas.map((idea, i) => (
                 <div key={idea} className="flex items-center gap-2">
                   <InitialsAvatar initials={opp.ideaSubmitters[i] ?? 'XX'} />
-                  <span className="text-sm text-gray-800">{idea}</span>
+                  <span className="text-sm text-gray-800">{t(idea)}</span>
                 </div>
               ))}
             </div>
@@ -266,12 +372,12 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
 
           {/* Readiness breakdown */}
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Readiness Breakdown</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{tr('Readiness Breakdown', 'تفاصيل الجاهزية')}</p>
             <div className="space-y-2">
               {[
-                { label: 'Strategic Fit', value: 92 },
-                { label: 'Implementation Feasibility', value: 84 },
-                { label: 'Resource Availability', value: 76 },
+                { label: tr('Strategic Fit', 'التوافق الاستراتيجي'), value: 92 },
+                { label: tr('Implementation Feasibility', 'جدوى التنفيذ'), value: 84 },
+                { label: tr('Resource Availability', 'توفر الموارد'), value: 76 },
               ].map(({ label, value }) => (
                 <div key={label} className="flex items-center gap-3">
                   <span className="text-xs text-gray-600 w-44 flex-shrink-0">{label}</span>
@@ -281,22 +387,22 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
                       style={{ width: `${value}%` }}
                     />
                   </div>
-                  <span className="text-xs font-medium text-gray-700 w-8 text-right">{value}%</span>
+                  <span className="text-xs font-medium text-gray-700 w-8 text-end">{value}%</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Coordinator note */}
-          <blockquote className="border-l-4 border-[#26D07C] pl-3 py-1 bg-green-50 rounded-r-lg">
-            <p className="text-xs text-gray-700 italic">"{opp.note}"</p>
-            <p className="text-xs text-gray-400 mt-1">— Coordinator Note</p>
+          <blockquote className="border-s-4 border-[#26D07C] ps-3 py-1 bg-green-50 rounded-e-lg">
+            <p className="text-xs text-gray-700 italic">"{t(opp.note)}"</p>
+            <p className="text-xs text-gray-400 mt-1">— {tr('Coordinator Note', 'ملاحظة المنسق')}</p>
           </blockquote>
 
           {/* Comments */}
           <div>
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
-              <MessageSquare className="w-3 h-3" /> Comments
+              <MessageSquare className="w-3 h-3" /> {tr('Comments', 'التعليقات')}
             </p>
             {comments.length > 0 && (
               <div className="space-y-1 mb-2">
@@ -311,7 +417,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
               <textarea
                 className="flex-1 text-xs border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-1 focus:ring-[#008755]"
                 rows={2}
-                placeholder="Add a comment..."
+                placeholder={tr('Add a comment...', 'أضف تعليقًا...')}
                 value={comment}
                 onChange={e => setComment(e.target.value)}
               />
@@ -321,7 +427,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
                 className="self-end text-xs"
                 onClick={handleAddComment}
               >
-                Add
+                {tr('Add', 'إضافة')}
               </Button>
             </div>
           </div>
@@ -329,11 +435,11 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
           {/* Reject reason inline */}
           {rejecting && (
             <div className="rounded-lg border border-red-200 bg-red-50 p-3 space-y-2">
-              <p className="text-xs font-semibold text-red-700">Rejection Reason (required)</p>
+              <p className="text-xs font-semibold text-red-700">{tr('Rejection Reason (required)', 'سبب الرفض (مطلوب)')}</p>
               <textarea
                 className="w-full text-xs border border-red-200 rounded px-3 py-2 resize-none focus:outline-none focus:ring-1 focus:ring-red-400"
                 rows={2}
-                placeholder="Explain why this opportunity is being rejected..."
+                placeholder={tr('Explain why this opportunity is being rejected...', 'وضّح سبب رفض هذه الفرصة...')}
                 value={rejectReason}
                 onChange={e => setRejectReason(e.target.value)}
               />
@@ -344,7 +450,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
                   onClick={handleConfirmReject}
                   disabled={!rejectReason.trim()}
                 >
-                  Confirm Rejection
+                  {tr('Confirm Rejection', 'تأكيد الرفض')}
                 </Button>
                 <Button
                   size="sm"
@@ -352,7 +458,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
                   className="text-xs"
                   onClick={() => { setRejecting(false); setRejectReason(''); }}
                 >
-                  Cancel
+                  {tr('Cancel', 'إلغاء')}
                 </Button>
               </div>
             </div>
@@ -367,7 +473,7 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
                 onClick={handleAccept}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                Accept Opportunity
+                {tr('Accept Opportunity', 'قبول الفرصة')}
               </Button>
               <Button
                 size="sm"
@@ -376,18 +482,18 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
                 onClick={handleRejectClick}
               >
                 <XCircle className="w-3.5 h-3.5" />
-                Reject
+                {tr('Reject', 'رفض')}
               </Button>
               <Button size="sm" variant="ghost" className="text-gray-500 text-xs">
-                Remove from Pipeline
+                {tr('Remove from Pipeline', 'إزالة من مسار الابتكار')}
               </Button>
               <Select value={assignedDept} onValueChange={setAssignedDept}>
                 <SelectTrigger className="h-8 text-xs w-44">
-                  <SelectValue placeholder="Assign Department" />
+                  <SelectValue placeholder={tr('Assign Department', 'إسناد إلى إدارة')} />
                 </SelectTrigger>
                 <SelectContent>
                   {DEPARTMENTS.map(d => (
-                    <SelectItem key={d} value={d} className="text-xs">{d}</SelectItem>
+                    <SelectItem key={d} value={d} className="text-xs">{t(d)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -397,14 +503,14 @@ function OpportunityCard({ opp, onConvertToProject, onNavigateToPortfolio }: {
           {status === 'validated' && (
             <div className="flex items-center gap-2 text-green-700 text-sm font-medium">
               <CheckCircle2 className="w-4 h-4" />
-              Opportunity accepted and validated
+              {tr('Opportunity accepted and validated', 'تم قبول الفرصة واعتمادها')}
             </div>
           )}
 
           {status === 'rejected' && (
             <div className="flex items-center gap-2 text-red-600 text-sm font-medium">
               <XCircle className="w-4 h-4" />
-              Opportunity rejected
+              {tr('Opportunity rejected', 'تم رفض الفرصة')}
             </div>
           )}
         </div>
@@ -426,6 +532,8 @@ interface ConvertFormState {
 function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: { idea: typeof APPROVED_IDEAS[number]; onConvertToProject?: (p: IdeaOriginProject) => void; onNavigateToPortfolio?: () => void }) {
   const [converting, setConverting] = useState<ConvertType | null>(null);
   const [converted, setConverted] = useState<ConvertType | null>(null);
+  const { tr, t } = useT();
+  const typeLabel = (k: ConvertType) => (k === 'project' ? tr('Project', 'مشروع') : tr('Initiative', 'مبادرة'));
   const [form, setForm] = useState<ConvertFormState>({
     projectName: idea.title,
     ownerDept: idea.dept,
@@ -443,10 +551,13 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
       const type = converting === 'project' ? 'Project' : 'Initiative';
       setConverted(converting);
       setConverting(null);
-      toast.success(`Idea converted to ${type}`, {
-        description: `"${form.projectName}" has been added to the PMO Portfolio.`,
+      toast.success(tr(`Idea converted to ${type}`, `تم تحويل الفكرة إلى ${typeLabel(converting)}`), {
+        description: tr(
+          `"${form.projectName}" has been added to the PMO Portfolio.`,
+          `تمت إضافة "${t(form.projectName)}" إلى محفظة مكتب إدارة المشاريع.`,
+        ),
         duration: 8000,
-        action: { label: 'View in Portfolio', onClick: () => onNavigateToPortfolio?.() },
+        action: { label: tr('View in Portfolio', 'عرض في المحفظة'), onClick: () => onNavigateToPortfolio?.() },
       });
       onConvertToProject?.({
         id: `idea-${idea.id}-${Date.now()}`,
@@ -492,9 +603,9 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
             </div>
             <div>
               <p className="text-sm font-semibold text-[#008755]  ">
-                Converted to {converted === 'project' ? 'Project' : 'Initiative'}
+                {tr('Converted to', 'تم التحويل إلى')} {typeLabel(converted)}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">{idea.title}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{t(idea.title)}</p>
             </div>
           </div>
         ) : (
@@ -504,23 +615,23 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
               {/* Left: idea info */}
               <div className="flex-1 min-w-0 space-y-2">
                 <h3 className="text-sm font-semibold text-gray-900 leading-snug  ">
-                  {idea.title}
+                  {t(idea.title)}
                 </h3>
                 <div className="text-xs text-gray-500 space-y-0.5">
-                  <p>{idea.submitter} · {idea.dept}</p>
-                  <p>Approved {idea.approved}</p>
+                  <p>{t(idea.submitter)} · {t(idea.dept)}</p>
+                  <p>{tr('Approved', 'تاريخ الاعتماد')} {t(idea.approved)}</p>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   <span className={cn('text-xs font-medium px-2 py-0.5 rounded-full', fitColor)}>
-                    {idea.fit} Fit
+                    {tr(`${idea.fit} Fit`, `توافق ${t(idea.fit)}`)}
                   </span>
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                    {idea.impact}
+                    {t(idea.impact)}
                   </span>
                 </div>
                 <div className="flex items-start gap-1.5 bg-green-50 rounded-lg px-2.5 py-1.5">
                   <Sparkles className="w-3 h-3 text-[#008755] flex-shrink-0 mt-0.5" />
-                  <p className="text-xs text-green-800">{idea.aiNote}</p>
+                  <p className="text-xs text-green-800">{t(idea.aiNote)}</p>
                 </div>
               </div>
 
@@ -532,7 +643,7 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
                   onClick={() => handleConvertClick('project')}
                 >
                   <FolderKanban className="w-3.5 h-3.5" />
-                  Convert to Project
+                  {tr('Convert to Project', 'تحويل إلى مشروع')}
                 </Button>
                 <Button
                   size="sm"
@@ -541,7 +652,7 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
                   onClick={() => handleConvertClick('initiative')}
                 >
                   <GitBranch className="w-3.5 h-3.5" />
-                  Convert to Initiative
+                  {tr('Convert to Initiative', 'تحويل إلى مبادرة')}
                 </Button>
               </div>
             </div>
@@ -550,11 +661,11 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
             {converting && (
               <div className="rounded-xl border border-[#008755]/30 bg-green-50/60 p-4 space-y-3 mt-1">
                 <p className="text-xs font-semibold text-[#005844] uppercase tracking-wide">
-                  Convert to {converting === 'project' ? 'Project' : 'Initiative'}
+                  {tr('Convert to', 'تحويل إلى')} {typeLabel(converting)}
                 </p>
                 <div className="grid grid-cols-1 gap-2">
                   <div>
-                    <label className="text-xs text-gray-600 mb-1 block">Project Name</label>
+                    <label className="text-xs text-gray-600 mb-1 block">{tr('Project Name', 'اسم المشروع')}</label>
                     <Input
                       className="h-8 text-xs"
                       value={form.projectName}
@@ -563,40 +674,40 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <label className="text-xs text-gray-600 mb-1 block">Owner Department</label>
+                      <label className="text-xs text-gray-600 mb-1 block">{tr('Owner Department', 'الإدارة المالكة')}</label>
                       <Select value={form.ownerDept} onValueChange={v => setForm(f => ({ ...f, ownerDept: v }))}>
                         <SelectTrigger className="h-8 text-xs">
-                          <SelectValue placeholder="Department" />
+                          <SelectValue placeholder={tr('Department', 'الإدارة')} />
                         </SelectTrigger>
                         <SelectContent>
                           {DEPARTMENTS.map(d => (
-                            <SelectItem key={d} value={d} className="text-xs">{d}</SelectItem>
+                            <SelectItem key={d} value={d} className="text-xs">{t(d)}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-600 mb-1 block">Priority</label>
+                      <label className="text-xs text-gray-600 mb-1 block">{tr('Priority', 'الأولوية')}</label>
                       <Select value={form.priority} onValueChange={v => setForm(f => ({ ...f, priority: v }))}>
                         <SelectTrigger className="h-8 text-xs">
-                          <SelectValue placeholder="Priority" />
+                          <SelectValue placeholder={tr('Priority', 'الأولوية')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="High" className="text-xs">High</SelectItem>
-                          <SelectItem value="Medium" className="text-xs">Medium</SelectItem>
-                          <SelectItem value="Low" className="text-xs">Low</SelectItem>
+                          <SelectItem value="High" className="text-xs">{tr('High', 'عالية')}</SelectItem>
+                          <SelectItem value="Medium" className="text-xs">{tr('Medium', 'متوسطة')}</SelectItem>
+                          <SelectItem value="Low" className="text-xs">{tr('Low', 'منخفضة')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-600 mb-1 block">Target Quarter</label>
+                      <label className="text-xs text-gray-600 mb-1 block">{tr('Target Quarter', 'الربع المستهدف')}</label>
                       <Select value={form.targetQuarter} onValueChange={v => setForm(f => ({ ...f, targetQuarter: v }))}>
                         <SelectTrigger className="h-8 text-xs">
-                          <SelectValue placeholder="Quarter" />
+                          <SelectValue placeholder={tr('Quarter', 'الربع')} />
                         </SelectTrigger>
                         <SelectContent>
                           {QUARTERS.map(q => (
-                            <SelectItem key={q} value={q} className="text-xs">{q}</SelectItem>
+                            <SelectItem key={q} value={q} className="text-xs">{t(q)}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -610,13 +721,13 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
                     onClick={handleConfirm}
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    Confirm Conversion
+                    {tr('Confirm Conversion', 'تأكيد التحويل')}
                   </Button>
                   <button
                     className="text-xs text-gray-500 hover:text-gray-700 underline"
                     onClick={handleCancel}
                   >
-                    Cancel
+                    {tr('Cancel', 'إلغاء')}
                   </button>
                 </div>
               </div>
@@ -630,15 +741,16 @@ function ApprovedIdeaCard({ idea, onConvertToProject, onNavigateToPortfolio }: {
 
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNavigateToPortfolio }: PageProps) {
+  const { tr, t } = useT();
   return (
     <div className="p-4 space-y-6">
       {/* ── Header ── */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900  ">
-          Innovation Pipeline
+          {tr('Innovation Pipeline', 'مسار الابتكار')}
         </h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Validate opportunities and convert approved ideas into projects.
+          {tr('Validate opportunities and convert approved ideas into projects.', 'اعتمد الفرص وحوّل الأفكار المعتمدة إلى مشاريع.')}
         </p>
       </div>
 
@@ -649,9 +761,9 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 mb-1">Awaiting Validation</p>
+                <p className="text-xs text-gray-500 mb-1">{tr('Awaiting Validation', 'بانتظار الاعتماد')}</p>
                 <p className="text-3xl font-bold text-gray-900">5</p>
-                <p className="text-xs text-gray-400 mt-1">opportunities</p>
+                <p className="text-xs text-gray-400 mt-1">{tr('opportunities', 'فرص')}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
                 <AlertCircle className="w-5 h-5 text-blue-600" />
@@ -665,9 +777,9 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-amber-700 mb-1 font-medium">Ready to Convert</p>
+                <p className="text-xs text-amber-700 mb-1 font-medium">{tr('Ready to Convert', 'جاهزة للتحويل')}</p>
                 <p className="text-3xl font-bold text-amber-900">8</p>
-                <p className="text-xs text-amber-600 mt-1">approved ideas</p>
+                <p className="text-xs text-amber-600 mt-1">{tr('approved ideas', 'أفكار معتمدة')}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-amber-200 flex items-center justify-center flex-shrink-0">
                 <Zap className="w-5 h-5 text-amber-700" />
@@ -681,14 +793,14 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 mb-1">Converted This Quarter</p>
+                <p className="text-xs text-gray-500 mb-1">{tr('Converted This Quarter', 'المحوّلة هذا الربع')}</p>
                 <p className="text-3xl font-bold text-[#008755]">3</p>
                 <div className="flex gap-2 mt-1">
                   <span className="text-xs text-gray-400 flex items-center gap-0.5">
-                    <FolderKanban className="w-3 h-3" /> 2 Projects
+                    <FolderKanban className="w-3 h-3" /> {tr('2 Projects', 'مشروعان')}
                   </span>
                   <span className="text-xs text-gray-400 flex items-center gap-0.5">
-                    <GitBranch className="w-3 h-3" /> 1 Initiative
+                    <GitBranch className="w-3 h-3" /> {tr('1 Initiative', 'مبادرة واحدة')}
                   </span>
                 </div>
               </div>
@@ -704,9 +816,9 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500 mb-1">Avg Time to Convert</p>
+                <p className="text-xs text-gray-500 mb-1">{tr('Avg Time to Convert', 'متوسط وقت التحويل')}</p>
                 <p className="text-3xl font-bold text-gray-900">6.2</p>
-                <p className="text-xs text-gray-400 mt-1">days</p>
+                <p className="text-xs text-gray-400 mt-1">{tr('days', 'أيام')}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
                 <Clock className="w-5 h-5 text-purple-600" />
@@ -720,7 +832,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
       <section className="space-y-3">
         <div className="flex items-center gap-2">
           <h2 className="text-base font-semibold text-gray-900  ">
-            Coordinator-Flagged Opportunities
+            {tr('Coordinator-Flagged Opportunities', 'الفرص المرشحة من المنسق')}
           </h2>
           <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">5</Badge>
         </div>
@@ -735,10 +847,10 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
       <section className="space-y-3">
         <div className="flex items-center gap-2 flex-wrap">
           <h2 className="text-base font-semibold text-gray-900  ">
-            Approved Ideas — Ready to Convert to PMO
+            {tr('Approved Ideas — Ready to Convert to PMO', 'الأفكار المعتمدة — جاهزة للتحويل إلى مكتب إدارة المشاريع')}
           </h2>
           <Badge className="bg-amber-100 text-amber-800 border-amber-300 text-xs font-semibold">
-            8 awaiting conversion
+            {tr('8 awaiting conversion', '8 بانتظار التحويل')}
           </Badge>
         </div>
 
@@ -746,9 +858,13 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
           <CardContent className="p-4 space-y-4">
             {/* Helper banner */}
             <div className="flex items-center gap-2 bg-white rounded-lg border border-amber-200 px-3 py-2.5">
-              <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0" />
+              <ArrowRight className="w-4 h-4 text-amber-600 flex-shrink-0 rtl:rotate-180" />
               <p className="text-xs text-amber-800">
-                <span className="font-semibold">Action required:</span> Click "Convert to Project" or "Convert to Initiative" on any card below to bridge it into the PMO system.
+                <span className="font-semibold">{tr('Action required:', 'إجراء مطلوب:')}</span>{' '}
+                {tr(
+                  'Click "Convert to Project" or "Convert to Initiative" on any card below to bridge it into the PMO system.',
+                  'انقر على "تحويل إلى مشروع" أو "تحويل إلى مبادرة" في أي بطاقة أدناه لنقلها إلى نظام مكتب إدارة المشاريع.',
+                )}
               </p>
             </div>
 
@@ -765,18 +881,18 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
       {/* ── Section 4: Recently Converted (audit trail) ── */}
       <section className="space-y-3">
         <h2 className="text-base font-semibold text-gray-900  ">
-          Recently Converted
+          {tr('Recently Converted', 'المحوّلة مؤخرًا')}
         </h2>
         <Card className="rounded-xl border border-border bg-white shadow-sm">
           <CardContent className="p-0">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50 rounded-t-xl">
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">Idea Title</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">Converted To</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden sm:table-cell">Department</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden md:table-cell">Date</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">Status</th>
+                  <th className="text-start text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">{tr('Idea Title', 'عنوان الفكرة')}</th>
+                  <th className="text-start text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">{tr('Converted To', 'حُوّلت إلى')}</th>
+                  <th className="text-start text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden sm:table-cell">{tr('Department', 'الإدارة')}</th>
+                  <th className="text-start text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3 hidden md:table-cell">{tr('Date', 'التاريخ')}</th>
+                  <th className="text-start text-xs font-semibold text-gray-500 uppercase tracking-wide px-4 py-3">{tr('Status', 'الحالة')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -786,7 +902,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
                     className={cn('border-b border-gray-50 hover:bg-gray-50/50 transition-colors', i === RECENTLY_CONVERTED.length - 1 && 'border-0')}
                   >
                     <td className="px-4 py-3">
-                      <span className="text-sm font-medium text-gray-900">{row.title}</span>
+                      <span className="text-sm font-medium text-gray-900">{t(row.title)}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5">
@@ -795,12 +911,12 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
                           : <GitBranch className="w-3.5 h-3.5 text-blue-500" />
                         }
                         <span className={cn('text-xs font-medium', row.type === 'Project' ? 'text-[#008755]' : 'text-blue-600')}>
-                          {row.type}
+                          {t(row.type)}
                         </span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-xs text-gray-600 hidden sm:table-cell">{row.dept}</td>
-                    <td className="px-4 py-3 text-xs text-gray-500 hidden md:table-cell">{row.date}</td>
+                    <td className="px-4 py-3 text-xs text-gray-600 hidden sm:table-cell">{t(row.dept)}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500 hidden md:table-cell">{t(row.date)}</td>
                     <td className="px-4 py-3">
                       <Badge
                         className={cn(
@@ -810,7 +926,7 @@ export function PipelinePage({ user, role, onNavigate, onConvertToProject, onNav
                             : 'bg-gray-100 text-gray-600 border-gray-200',
                         )}
                       >
-                        {row.status}
+                        {t(row.status)}
                       </Badge>
                     </td>
                   </tr>

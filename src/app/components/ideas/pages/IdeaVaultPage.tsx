@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '../../ui/select';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -187,6 +188,82 @@ const VAULT_IDEAS: VaultIdea[] = [
   },
 ];
 
+// ── Arabic lookup (keyed by English display value) ─────────────────────────────
+const AR: Record<string, string> = {
+  // Reasons
+  Duplicate: 'مكررة',
+  Cost: 'التكلفة',
+  'No Need': 'لا حاجة',
+  Technology: 'التقنية',
+  'Out of Scope': 'خارج النطاق',
+  // Departments
+  Operations: 'العمليات',
+  'Legal Affairs': 'الشؤون القانونية',
+  'Community Affairs': 'شؤون المجتمع',
+  'Digital Transformation': 'التحول الرقمي',
+  'HR & Training': 'الموارد البشرية والتدريب',
+  // People
+  'Omar Al Zaabi': 'عمر الزعابي',
+  'Saeed Al Ketbi': 'سعيد الكتبي',
+  'Mariam Al Suwaidi': 'مريم السويدي',
+  'Hessa Al Blooshi': 'حصة البلوشي',
+  'Fatima Al Mansoori': 'فاطمة المنصوري',
+  // Dates
+  'Mar 2024': 'مارس 2024',
+  'Feb 2024': 'فبراير 2024',
+  'Jan 2024': 'يناير 2024',
+  'Dec 2023': 'ديسمبر 2023',
+  'Nov 2023': 'نوفمبر 2023',
+  'Oct 2023': 'أكتوبر 2023',
+  'Sep 2023': 'سبتمبر 2023',
+  'Aug 2023': 'أغسطس 2023',
+  'Jul 2023': 'يوليو 2023',
+  'Jun 2023': 'يونيو 2023',
+  'May 2023': 'مايو 2023',
+  'Apr 2023': 'أبريل 2023',
+  // Titles
+  'Drone Delivery for Emergency Medical Kits': 'توصيل حقائب الإسعاف الطارئة بالطائرات المسيّرة',
+  'AI-Powered Body Camera Analysis': 'تحليل تسجيلات كاميرات الجسم بالذكاء الاصطناعي',
+  'Blockchain Evidence Chain of Custody': 'سلسلة حيازة الأدلة بتقنية البلوك تشين',
+  'Community Volunteer Patrol Network': 'شبكة دوريات المتطوعين المجتمعية',
+  'Automated License Plate Fine System': 'نظام المخالفات الآلي عبر لوحات المركبات',
+  'AR Training Simulations for Officers': 'محاكاة تدريبية بالواقع المعزز للضباط',
+  'Social Media Sentiment Monitoring Dashboard': 'لوحة رصد توجهات الرأي على وسائل التواصل الاجتماعي',
+  'Smart Parking Enforcement Robots': 'روبوتات ذكية لضبط مخالفات المواقف',
+  'Centralized Lost Property Digital Platform': 'منصة رقمية موحدة للمفقودات',
+  'AI-Assisted Shift Scheduling': 'جدولة المناوبات بمساعدة الذكاء الاصطناعي',
+  'Mobile Station Rapid Deployment Units': 'وحدات المراكز المتنقلة للانتشار السريع',
+  'QR-Based Public Tip Submission System': 'نظام تقديم البلاغات العامة عبر رمز QR',
+  // Notes
+  'Regulatory airspace approval not yet available from the GCAA at the time of submission.':
+    'لم تكن موافقة الهيئة العامة للطيران المدني على استخدام المجال الجوي متاحة وقت التقديم.',
+  'Infrastructure cost exceeded available budget by 4x; vendor quotes were not within procurement thresholds.':
+    'تجاوزت تكلفة البنية التحتية الميزانية المتاحة بأربعة أضعاف، ولم تكن عروض الموردين ضمن حدود المشتريات.',
+  'Integration with legacy CCTV systems and case management software was not feasible at the time of review.':
+    'لم يكن التكامل مع أنظمة المراقبة القديمة وبرمجيات إدارة القضايا ممكناً وقت المراجعة.',
+  'Existing neighbourhood watch programs already cover this scope across all targeted districts.':
+    'تغطي برامج مراقبة الأحياء الحالية هذا النطاق بالفعل في جميع المناطق المستهدفة.',
+  'Duplicates the existing Saher system already deployed city-wide and managed by the Roads Authority.':
+    'تكرر نظام "ساهر" القائم المطبّق على مستوى المدينة والذي تديره هيئة الطرق.',
+  'Hardware procurement and annual licensing cost was 3.2M AED — above the departmental ceiling for that cycle.':
+    'بلغت تكلفة شراء الأجهزة والتراخيص السنوية 3.2 مليون درهم — متجاوزةً السقف المعتمد للإدارة في تلك الدورة.',
+  'Falls under the Communications & Media department jurisdiction and was redirected accordingly.':
+    'تقع ضمن اختصاص إدارة الاتصال والإعلام، وتمت إحالتها إليها وفقاً لذلك.',
+  'Hardware reliability in extreme summer heat conditions was not proven by any manufacturer at review time.':
+    'لم تُثبت أي جهة مصنّعة موثوقية الأجهزة في ظروف الحرارة الشديدة صيفاً وقت المراجعة.',
+  'A similar platform was already under active development by the IT department and scheduled for Q1 release.':
+    'كانت منصة مماثلة قيد التطوير لدى إدارة تقنية المعلومات ومن المقرر إطلاقها في الربع الأول.',
+  'Vendor pricing was out of budget at the time; newer open-source alternatives with comparable features now exist.':
+    'كانت أسعار المورد خارج الميزانية حينها؛ وتتوفر الآن بدائل مفتوحة المصدر أحدث بمزايا مماثلة.',
+  'Field assessment and incident density analysis showed insufficient demand in the originally targeted areas.':
+    'أظهر التقييم الميداني وتحليل كثافة البلاغات عدم كفاية الطلب في المناطق المستهدفة أصلاً.',
+  'Fully covered by the existing Aman app public tip feature, which already supports QR-triggered submissions.':
+    'مغطاة بالكامل بخاصية البلاغات العامة في تطبيق "أمان" الحالي، والتي تدعم التقديم عبر رمز QR.',
+};
+
+const DEFAULT_NOTE_EN = 'Worth revisiting — conditions have changed.';
+const DEFAULT_NOTE_AR = 'تستحق إعادة النظر — فقد تغيّرت الظروف.';
+
 const ALL_DEPTS = Array.from(new Set(VAULT_IDEAS.map((i) => i.dept))).sort();
 const ALL_REASONS: RejectionReason[] = ['Duplicate', 'Cost', 'No Need', 'Technology', 'Out of Scope'];
 
@@ -231,6 +308,8 @@ function VaultIdeaCard({
   onRecommend: (id: number) => void;
   isRecommended: boolean;
 }) {
+  const { tr } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
   return (
     <Card
       className={cn(
@@ -250,42 +329,42 @@ function VaultIdeaCard({
             )}
           >
             {REASON_ICONS[idea.reason]}
-            {idea.reason}
+            {t(idea.reason)}
           </span>
           {idea.feasible && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700  ">
               <CheckCircle2 className="h-3 w-3" />
-              Now Feasible
+              {tr('Now Feasible', 'أصبحت ممكنة الآن')}
             </span>
           )}
           {isRecommended && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#008755]/10 text-[#008755]  ">
               <CheckCircle2 className="h-3 w-3" />
-              Recommended
+              {tr('Recommended', 'موصى بها')}
             </span>
           )}
         </div>
 
         {/* Title */}
         <h3 className="text-sm font-semibold text-gray-900   leading-snug">
-          {idea.title}
+          {t(idea.title)}
         </h3>
 
         {/* Meta */}
         <div className="flex flex-wrap gap-x-2 gap-y-0.5 text-xs text-gray-500">
-          <span className="font-medium text-gray-700">{idea.submitter}</span>
+          <span className="font-medium text-gray-700">{t(idea.submitter)}</span>
           <span>·</span>
-          <span>{idea.dept}</span>
+          <span>{t(idea.dept)}</span>
           <span>·</span>
           <span className="inline-flex items-center gap-0.5">
             <Clock className="h-3 w-3" />
-            Archived {idea.date}
+            {tr('Archived', 'أُرشفت')} {t(idea.date)}
           </span>
         </div>
 
         {/* Archive note */}
-        <p className="text-xs text-gray-500 leading-relaxed border-l-2 border-gray-200 pl-2 italic">
-          {idea.note}
+        <p className="text-xs text-gray-500 leading-relaxed border-s-2 border-gray-200 ps-2 italic">
+          {t(idea.note)}
         </p>
 
         {/* Action row */}
@@ -293,7 +372,7 @@ function VaultIdeaCard({
           {isRecommended ? (
             <span className="text-xs text-[#008755] font-medium   inline-flex items-center gap-1">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              Added to queue
+              {tr('Added to queue', 'أُضيفت إلى القائمة')}
             </span>
           ) : (
             <Button
@@ -302,7 +381,7 @@ function VaultIdeaCard({
               className="h-7 px-3 text-xs border-[#008755] text-[#008755] hover:bg-[#008755]/10  "
               onClick={() => onRecommend(idea.id)}
             >
-              Recommend Reconsideration
+              {tr('Recommend Reconsideration', 'التوصية بإعادة النظر')}
             </Button>
           )}
           <Button
@@ -310,7 +389,7 @@ function VaultIdeaCard({
             variant="ghost"
             className="h-7 px-2 text-xs text-gray-500 hover:text-[#008755] hover:bg-[#008755]/10 gap-1"
           >
-            View Details
+            {tr('View Details', 'عرض التفاصيل')}
             <ExternalLink className="h-3 w-3" />
           </Button>
         </div>
@@ -333,6 +412,8 @@ function QueueEntry({
   submitted: boolean;
   onSubmit: () => void;
 }) {
+  const { tr } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
   return (
     <div
       className={cn(
@@ -345,10 +426,10 @@ function QueueEntry({
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-semibold text-gray-900  ">
-            {idea.title}
+            {t(idea.title)}
           </p>
           <p className="text-xs text-gray-500 mt-0.5">
-            {idea.submitter} · {idea.dept} · Archived {idea.date}
+            {t(idea.submitter)} · {t(idea.dept)} · {tr('Archived', 'أُرشفت')} {t(idea.date)}
           </p>
         </div>
         <span
@@ -357,23 +438,26 @@ function QueueEntry({
             REASON_STYLES[idea.reason],
           )}
         >
-          {idea.reason}
+          {t(idea.reason)}
         </span>
       </div>
 
       {submitted ? (
         <div className="flex items-center gap-2 text-sm text-[#008755]  ">
           <CheckCircle2 className="h-4 w-4" />
-          Submitted to Director for review
+          {tr('Submitted to Director for review', 'أُرسلت إلى المدير للمراجعة')}
         </div>
       ) : (
         <>
           <textarea
             className="w-full rounded-lg border border-border bg-gray-50 px-3 py-2 text-xs text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-[#008755]/30  "
             rows={2}
-            value={note}
+            value={note === DEFAULT_NOTE_EN ? tr(DEFAULT_NOTE_EN, DEFAULT_NOTE_AR) : note}
             onChange={(e) => onNoteChange(e.target.value)}
-            placeholder="Add a note explaining why this idea should be reconsidered…"
+            placeholder={tr(
+              'Add a note explaining why this idea should be reconsidered…',
+              'أضف ملاحظة توضح سبب ضرورة إعادة النظر في هذه الفكرة…',
+            )}
           />
           <div className="flex justify-end">
             <Button
@@ -382,7 +466,7 @@ function QueueEntry({
               onClick={onSubmit}
             >
               <Send className="h-3.5 w-3.5" />
-              Submit to Director
+              {tr('Submit to Director', 'إرسال إلى المدير')}
             </Button>
           </div>
         </>
@@ -393,6 +477,9 @@ function QueueEntry({
 
 // ── Main Page ──────────────────────────────────────────────────────────────────
 export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
+  const { tr } = useLanguage();
+  const t = (s: string) => tr(s, AR[s]);
+
   // Filter state
   const [search, setSearch] = useState('');
   const [deptFilter, setDeptFilter] = useState('all');
@@ -404,7 +491,7 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
 
   // Per-card reconsideration notes
   const [queueNotes, setQueueNotes] = useState<Record<number, string>>(() =>
-    Object.fromEntries(VAULT_IDEAS.map((i) => [i.id, 'Worth revisiting — conditions have changed.'])),
+    Object.fromEntries(VAULT_IDEAS.map((i) => [i.id, DEFAULT_NOTE_EN])),
   );
 
   // Submitted to director
@@ -440,14 +527,17 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
   };
 
   // Filtered ideas
+  const q = search.trim().toLowerCase();
   const filtered = VAULT_IDEAS.filter((idea) => {
     if (feasibleOnly && !idea.feasible) return false;
     if (deptFilter !== 'all' && idea.dept !== deptFilter) return false;
     if (reasonFilter !== 'all' && idea.reason !== reasonFilter) return false;
     if (
-      search.trim() &&
-      !idea.title.toLowerCase().includes(search.toLowerCase()) &&
-      !idea.submitter.toLowerCase().includes(search.toLowerCase())
+      q &&
+      !idea.title.toLowerCase().includes(q) &&
+      !idea.submitter.toLowerCase().includes(q) &&
+      !(AR[idea.title] ?? '').includes(search.trim()) &&
+      !(AR[idea.submitter] ?? '').includes(search.trim())
     )
       return false;
     return true;
@@ -464,10 +554,13 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900   leading-tight">
-              Idea Vault
+              {tr('Idea Vault', 'خزينة الأفكار')}
             </h1>
             <p className="text-xs text-gray-500  ">
-              Previously rejected or archived ideas — revisit when the time is right.
+              {tr(
+                'Previously rejected or archived ideas — revisit when the time is right.',
+                'أفكار سبق رفضها أو أرشفتها — أعد النظر فيها عندما يحين الوقت المناسب.',
+              )}
             </p>
           </div>
         </div>
@@ -484,32 +577,32 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
           onClick={() => setFeasibleOnly((v) => !v)}
         >
           <CheckCircle2 className="h-3.5 w-3.5" />
-          Now Feasible Only
+          {tr('Now Feasible Only', 'الممكنة الآن فقط')}
         </Button>
       </div>
 
       {/* ── Stats row ───────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCard
-          label="Total Archived"
+          label={tr('Total Archived', 'إجمالي الأفكار المؤرشفة')}
           value={47}
           icon={<Archive className="h-5 w-5 text-gray-600" />}
           accent="bg-gray-100"
         />
         <StatCard
-          label="Duplicate Removed"
+          label={tr('Duplicate Removed', 'أفكار مكررة مستبعدة')}
           value={12}
           icon={<Repeat2 className="h-5 w-5 text-purple-600" />}
           accent="bg-purple-100"
         />
         <StatCard
-          label="Cost / Resource Issues"
+          label={tr('Cost / Resource Issues', 'مشكلات التكلفة / الموارد')}
           value={18}
           icon={<DollarSign className="h-5 w-5 text-red-600" />}
           accent="bg-red-100"
         />
         <StatCard
-          label="Recommended for Reconsideration"
+          label={tr('Recommended for Reconsideration', 'موصى بإعادة النظر فيها')}
           value={6}
           icon={<CheckCircle2 className="h-5 w-5 text-[#008755]" />}
           accent="bg-[#008755]/10"
@@ -519,10 +612,10 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
       {/* ── Filter bar ──────────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <Input
-            className="pl-9 h-9 text-sm rounded-lg border-border focus-visible:ring-[#008755]"
-            placeholder="Search ideas or submitters…"
+            className="ps-9 h-9 text-sm rounded-lg border-border focus-visible:ring-[#008755]"
+            placeholder={tr('Search ideas or submitters…', 'ابحث في الأفكار أو مقدّميها…')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -530,24 +623,24 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
 
         <Select value={deptFilter} onValueChange={setDeptFilter}>
           <SelectTrigger className="h-9 w-[170px] text-xs rounded-lg border-border focus:ring-[#008755]">
-            <SelectValue placeholder="Department" />
+            <SelectValue placeholder={tr('Department', 'الإدارة')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Departments</SelectItem>
+            <SelectItem value="all">{tr('All Departments', 'جميع الإدارات')}</SelectItem>
             {ALL_DEPTS.map((d) => (
-              <SelectItem key={d} value={d}>{d}</SelectItem>
+              <SelectItem key={d} value={d}>{t(d)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         <Select value={reasonFilter} onValueChange={setReasonFilter}>
           <SelectTrigger className="h-9 w-[170px] text-xs rounded-lg border-border focus:ring-[#008755]">
-            <SelectValue placeholder="Rejection Reason" />
+            <SelectValue placeholder={tr('Rejection Reason', 'سبب الرفض')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Reasons</SelectItem>
+            <SelectItem value="all">{tr('All Reasons', 'جميع الأسباب')}</SelectItem>
             {ALL_REASONS.map((r) => (
-              <SelectItem key={r} value={r}>{r}</SelectItem>
+              <SelectItem key={r} value={r}>{t(r)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -562,12 +655,15 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
           )}
         >
           <CheckCircle2 className="h-3.5 w-3.5" />
-          Now Feasible
+          {tr('Now Feasible', 'أصبحت ممكنة الآن')}
         </button>
 
         {(search || deptFilter !== 'all' || reasonFilter !== 'all' || feasibleOnly) && (
           <span className="text-xs text-gray-400">
-            {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+            {tr(
+              `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`,
+              `${filtered.length} نتيجة`,
+            )}
           </span>
         )}
       </div>
@@ -576,7 +672,9 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-gray-400 gap-2">
           <Archive className="h-10 w-10 opacity-30" />
-          <p className="text-sm  ">No archived ideas match your filters.</p>
+          <p className="text-sm  ">
+            {tr('No archived ideas match your filters.', 'لا توجد أفكار مؤرشفة تطابق عوامل التصفية.')}
+          </p>
           <Button
             variant="ghost"
             size="sm"
@@ -588,7 +686,7 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
               setFeasibleOnly(false);
             }}
           >
-            Clear filters
+            {tr('Clear filters', 'مسح عوامل التصفية')}
           </Button>
         </div>
       ) : (
@@ -614,14 +712,20 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
             <div className="h-8 w-8 rounded-lg bg-[#008755]/10 flex items-center justify-center">
               <Send className="h-4 w-4 text-[#008755]" />
             </div>
-            <div className="text-left">
+            <div className="text-start">
               <p className="text-sm font-semibold text-gray-900  ">
-                Reconsideration Queue
+                {tr('Reconsideration Queue', 'قائمة إعادة النظر')}
               </p>
               <p className="text-xs text-gray-500  ">
                 {recommendedList.length === 0
-                  ? 'No ideas recommended yet — use the cards above to add.'
-                  : `${recommendedList.length} idea${recommendedList.length !== 1 ? 's' : ''} pending review`}
+                  ? tr(
+                      'No ideas recommended yet — use the cards above to add.',
+                      'لا توجد أفكار موصى بها بعد — استخدم البطاقات أعلاه للإضافة.',
+                    )
+                  : tr(
+                      `${recommendedList.length} idea${recommendedList.length !== 1 ? 's' : ''} pending review`,
+                      `${recommendedList.length} ${recommendedList.length === 1 ? 'فكرة' : 'أفكار'} بانتظار المراجعة`,
+                    )}
               </p>
             </div>
           </div>
@@ -645,7 +749,10 @@ export function IdeaVaultPage({ user, role, onNavigate }: PageProps) {
               <div className="flex flex-col items-center py-8 text-gray-400 gap-2">
                 <CheckCircle2 className="h-8 w-8 opacity-30" />
                 <p className="text-sm  ">
-                  The queue is empty. Click "Recommend Reconsideration" on any archived idea above.
+                  {tr(
+                    'The queue is empty. Click "Recommend Reconsideration" on any archived idea above.',
+                    'القائمة فارغة. انقر على "التوصية بإعادة النظر" في أي فكرة مؤرشفة أعلاه.',
+                  )}
                 </p>
               </div>
             ) : (

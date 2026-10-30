@@ -11,6 +11,7 @@ import { Badge } from '../../ui/badge';
 import { Progress } from '../../ui/progress';
 import { Avatar, AvatarFallback } from '../../ui/avatar';
 import { cn } from '../../ui/utils';
+import { useLanguage } from '../../../i18n/LanguageContext';
 import heroDecoration from '../../../../assets/sandbox-hero-decoration.png';
 
 type IdeasRole = 'innovator' | 'coordinator' | 'director' | 'admin';
@@ -22,6 +23,10 @@ interface User {
   xp: number;
   initials: string;
   chip: string;
+  nameAr?: string;
+  roleAr?: string;
+  subtitleAr?: string;
+  chipAr?: string;
 }
 
 interface PageProps {
@@ -130,8 +135,62 @@ const ACHIEVEMENT_BADGES: AchievementBadge[] = [
   { id: 'ip-pioneer',   label: 'IP Pioneer',        icon: FileCheck,    desc: 'Awarded an intellectual property right', unlockedFor: ['admin'] },
 ];
 
+// ── Arabic display text (keyed by the English value) ─────────────────────────
+const AR: Record<string, string> = {
+  // Levels & tiers
+  'Explorer': 'مستكشف',
+  'Strategist': 'استراتيجي',
+  'Innovation Architect': 'مهندس ابتكار',
+  'Visionary': 'صاحب رؤية',
+  'Max Level': 'المستوى الأعلى',
+  'Silver': 'فضي',
+  'Gold': 'ذهبي',
+  'Platinum': 'بلاتيني',
+  'Diamond': 'ماسي',
+  // Months
+  'Jan': 'يناير', 'Feb': 'فبراير', 'Mar': 'مارس', 'Apr': 'أبريل', 'May': 'مايو', 'Jun': 'يونيو',
+  // Initiatives
+  'AI-Powered Document Scanning Tool': 'أداة مسح المستندات بالذكاء الاصطناعي',
+  'Body-Camera Footage Classifier': 'مصنّف لقطات الكاميرات الجسدية',
+  'Digital Lost-Property Portal': 'البوابة الرقمية للمفقودات',
+  'Predictive Patrol Scheduling': 'الجدولة التنبؤية للدوريات',
+  'Real-Time Crime Mapping Dashboard': 'لوحة رسم خرائط الجريمة في الوقت الفعلي',
+  'Smart Evidence Tagging System': 'نظام الوسم الذكي للأدلة',
+  'Unified Complaint Management App': 'التطبيق الموحد لإدارة الشكاوى',
+  'Citywide CCTV Analytics Platform': 'منصة تحليلات كاميرات المراقبة على مستوى المدينة',
+  'Community Policing Mobile App': 'تطبيق الشرطة المجتمعية للهواتف الذكية',
+  'Officer Wellness Programme': 'برنامج رفاهية الضباط',
+  'Digital Court Liaison System': 'نظام الارتباط الرقمي مع المحاكم',
+  'Ideas Platform v2 Launch': 'إطلاق الإصدار الثاني من منصة الأفكار',
+  'AI Governance Framework': 'إطار حوكمة الذكاء الاصطناعي',
+  'Innovation KPI Reporting Automation': 'أتمتة تقارير مؤشرات أداء الابتكار',
+  'Cross-Dept Collaboration Hub': 'مركز التعاون بين الإدارات',
+  // My roles
+  'Idea Owner': 'صاحب الفكرة',
+  'Contributor': 'مساهم',
+  'Reviewer': 'مراجع',
+  'Coordinator': 'منسق',
+  'Sponsor': 'راعٍ',
+  // Statuses
+  'In Progress': 'قيد التنفيذ',
+  'Completed': 'مكتمل',
+  'On Hold': 'معلّق',
+  // Badges
+  'First Idea': 'الفكرة الأولى',
+  '10-Point Club': 'نادي النقاط العشر',
+  'Challenge Winner': 'الفائز بالتحدي',
+  'Mentor': 'مرشد',
+  'IP Pioneer': 'رائد الملكية الفكرية',
+  'Submitted your first idea': 'قدّمت فكرتك الأولى',
+  'Earned 10 innovation points': 'حصلت على 10 نقاط ابتكار',
+  'Won an innovation challenge': 'فزت بتحدٍّ ابتكاري',
+  'Mentored 3+ colleagues': 'أرشدت 3 زملاء أو أكثر',
+  'Awarded an intellectual property right': 'حصلت على حق ملكية فكرية',
+};
+
 // ── Status badge helper ───────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: InitiativeStatus }) {
+  const { tr } = useLanguage();
   const cfg = {
     'In Progress': 'bg-[#008755]/10 text-[#008755]',
     'Completed':   'bg-blue-50 text-blue-700',
@@ -139,12 +198,14 @@ function StatusBadge({ status }: { status: InitiativeStatus }) {
   }[status];
   return (
     <Badge className={cn('border-0 text-[10px] px-1.5 py-0', cfg)}>
-      {status}
+      {tr(status, AR[status])}
     </Badge>
   );
 }
 
 export function Innovation360Page({ user, role, onNavigate }: PageProps) {
+  const { tr, isRTL } = useLanguage();
+  const t = (en: string) => tr(en, AR[en]);
   const lv = LEVEL_CONFIG[role];
   const ls = LIFETIME_STATS[role];
   const chartData = CHART_DATA[role];
@@ -161,7 +222,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
         <img
           src={heroDecoration}
           alt=""
-          className="absolute -top-16 -right-16 h-140 w-140 rounded-full object-cover opacity-50 pointer-events-none select-none"
+          className="absolute -top-16 -end-16 h-140 w-140 rounded-full object-cover opacity-50 pointer-events-none select-none"
         />
 
         <div className="relative z-10 flex flex-col md:flex-row gap-5 md:items-center">
@@ -177,15 +238,15 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <span className={cn('text-[11px] font-["Dubai:Medium",_sans-serif] px-2 py-0.5 rounded-full', lv.tierBg)}>
-                {lv.tier}
+                {t(lv.tier)}
               </span>
               <Badge className="bg-white/20 text-white border-0 text-[11px] px-2 py-0">
-                <Shield className="h-3 w-3 mr-1" />
-                {lv.label}
+                <Shield className="h-3 w-3 me-1" />
+                {t(lv.label)}
               </Badge>
             </div>
-            <h2 className="text-xl   leading-tight">{user.name}</h2>
-            <p className="text-white/70 text-sm">{user.subtitle}</p>
+            <h2 className="text-xl   leading-tight">{tr(user.name, user.nameAr)}</h2>
+            <p className="text-white/70 text-sm">{tr(user.subtitle, user.subtitleAr)}</p>
           </div>
 
           {/* XP progress */}
@@ -194,16 +255,16 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
               <div className="flex items-center gap-1">
                 <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
                 <span className="text-sm  ">
-                  {user.xp.toLocaleString()} XP
+                  {user.xp.toLocaleString()} {tr('XP', 'نقطة خبرة')}
                 </span>
               </div>
               {role !== 'admin' && (
                 <span className="text-[11px] text-white/60">
-                  {xpForNext.toLocaleString()} to {lv.nextLabel}
+                  {tr(`${xpForNext.toLocaleString()} to ${lv.nextLabel}`, `${xpForNext.toLocaleString()} للوصول إلى ${t(lv.nextLabel)}`)}
                 </span>
               )}
               {role === 'admin' && (
-                <span className="text-[11px] text-white/60">Max Level</span>
+                <span className="text-[11px] text-white/60">{t('Max Level')}</span>
               )}
             </div>
             <div className="h-2 bg-white/20 rounded-full overflow-hidden">
@@ -212,7 +273,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                 style={{ width: `${xpProgress}%` }}
               />
             </div>
-            <p className="text-[11px] text-white/50 mt-1 text-right">{xpProgress}% to next tier</p>
+            <p className="text-[11px] text-white/50 mt-1 text-end">{tr(`${xpProgress}% to next tier`, `${xpProgress}% نحو الفئة التالية`)}</p>
           </div>
         </div>
       </div>
@@ -220,11 +281,11 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
       {/* ── 2. Lifetime Stats ───────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {[
-          { label: 'Ideas Submitted',       value: ls.submitted,    icon: Lightbulb   },
-          { label: 'Ideas Applied',         value: ls.applied,      icon: CheckCircle2 },
-          { label: 'Projects Implemented',  value: ls.implemented,  icon: GitPullRequest },
-          { label: 'Awards Won',            value: ls.awards,       icon: Award       },
-          { label: 'IPs Awarded',           value: ls.ips,          icon: FileCheck   },
+          { label: tr('Ideas Submitted', 'الأفكار المقدّمة'),         value: ls.submitted,    icon: Lightbulb   },
+          { label: tr('Ideas Applied', 'الأفكار المطبّقة'),          value: ls.applied,      icon: CheckCircle2 },
+          { label: tr('Projects Implemented', 'المشاريع المنفّذة'),  value: ls.implemented,  icon: GitPullRequest },
+          { label: tr('Awards Won', 'الجوائز المحققة'),             value: ls.awards,       icon: Award       },
+          { label: tr('IPs Awarded', 'حقوق الملكية الفكرية الممنوحة'), value: ls.ips,       icon: FileCheck   },
         ].map(({ label, value, icon: Icon }) => (
           <Card key={label} className="rounded-xl">
             <CardContent className="pt-4 pb-4 px-4">
@@ -250,13 +311,13 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
           <CardHeader className="px-4 pt-4 pb-0 gap-0">
             <CardTitle className="text-sm   text-foreground flex items-center gap-1.5">
               <TrendingUp className="h-4 w-4 text-[#008755]" />
-              6-Month Contribution
+              {tr('6-Month Contribution', 'المساهمة خلال 6 أشهر')}
             </CardTitle>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Ideas submitted per month</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">{tr('Ideas submitted per month', 'الأفكار المقدّمة شهرياً')}</p>
           </CardHeader>
           <CardContent className="pt-3 pb-4 px-2">
             <ResponsiveContainer width="100%" height={160}>
-              <AreaChart data={chartData} margin={{ top: 4, right: 12, left: -20, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 4, right: isRTL ? -20 : 12, left: isRTL ? 12 : -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="ideasGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%"  stopColor="#008755" stopOpacity={0.2} />
@@ -264,9 +325,10 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} reversed={isRTL} tickFormatter={(m: string) => t(m)} />
+                <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} allowDecimals={false} orientation={isRTL ? 'right' : 'left'} />
                 <Tooltip
+                  labelFormatter={(m) => t(String(m))}
                   contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e7eb' }}
                   labelStyle={{ fontWeight: 600 }}
                 />
@@ -278,7 +340,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                   fill="url(#ideasGradient)"
                   dot={{ r: 3, fill: '#008755', strokeWidth: 0 }}
                   activeDot={{ r: 5, fill: '#008755' }}
-                  name="Ideas"
+                  name={tr('Ideas', 'الأفكار')}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -290,7 +352,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
           <CardHeader className="px-4 pt-4 pb-0 gap-0">
             <CardTitle className="text-sm   text-foreground flex items-center gap-1.5">
               <Zap className="h-4 w-4 text-[#008755]" />
-              Active Innovation Initiatives
+              {tr('Active Innovation Initiatives', 'مبادرات الابتكار النشطة')}
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-3 pb-4 px-4">
@@ -299,13 +361,13 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                 <div key={init.name} className="border border-border rounded-lg p-3">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <p className="text-xs   text-foreground leading-snug flex-1 min-w-0">
-                      {init.name}
+                      {t(init.name)}
                     </p>
                     <StatusBadge status={init.status} />
                   </div>
                   <div className="flex items-center gap-3">
                     <Badge className="bg-[#008755]/10 text-[#008755] border-0 text-[10px] px-1.5 py-0 flex-shrink-0">
-                      {init.myRole}
+                      {t(init.myRole)}
                     </Badge>
                     <div className="flex-1 flex items-center gap-2">
                       <Progress
@@ -313,7 +375,7 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                         className="h-1.5 flex-1 bg-[#008755]/10"
                         indicatorColor={init.status === 'Completed' ? '#26D07C' : init.status === 'On Hold' ? '#f59e0b' : '#008755'}
                       />
-                      <span className="text-[11px] text-muted-foreground flex-shrink-0 w-8 text-right">
+                      <span className="text-[11px] text-muted-foreground flex-shrink-0 w-8 text-end">
                         {init.progress}%
                       </span>
                     </div>
@@ -330,10 +392,13 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
         <CardHeader className="px-4 pt-4 pb-0 gap-0">
           <CardTitle className="text-sm   text-foreground flex items-center gap-1.5">
             <Award className="h-4 w-4 text-[#008755]" />
-            Achievement Badges
+            {tr('Achievement Badges', 'شارات الإنجاز')}
           </CardTitle>
           <p className="text-[11px] text-muted-foreground mt-0.5">
-            {ACHIEVEMENT_BADGES.filter(b => b.unlockedFor.includes(role)).length} of {ACHIEVEMENT_BADGES.length} earned
+            {tr(
+              `${ACHIEVEMENT_BADGES.filter(b => b.unlockedFor.includes(role)).length} of ${ACHIEVEMENT_BADGES.length} earned`,
+              `تم الحصول على ${ACHIEVEMENT_BADGES.filter(b => b.unlockedFor.includes(role)).length} من ${ACHIEVEMENT_BADGES.length}`,
+            )}
           </p>
         </CardHeader>
         <CardContent className="pt-4 pb-4 px-4">
@@ -365,9 +430,9 @@ export function Innovation360Page({ user, role, onNavigate }: PageProps) {
                       'text-[11px] font-["Dubai:Medium",_sans-serif] leading-tight',
                       unlocked ? 'text-[#008755]' : 'text-muted-foreground'
                     )}>
-                      {badge.label}
+                      {t(badge.label)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{badge.desc}</p>
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{t(badge.desc)}</p>
                   </div>
                   {unlocked && (
                     <CheckCircle2 className="h-3.5 w-3.5 text-[#26D07C]" />

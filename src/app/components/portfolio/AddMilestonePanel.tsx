@@ -2,6 +2,18 @@ import { useState } from "react";
 import { X, ChevronDown, ChevronRight, CheckCircle2, Clock, AlertCircle, Upload } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
+import { useLanguage } from "../../i18n/LanguageContext";
+
+// Arabic display values for section titles and statuses (keys stay English for logic).
+const AR: Record<string, string> = {
+  "Discovery": "الاستكشاف",
+  "Root Cause Analysis & Impact Quantification": "تحليل الأسباب الجذرية وقياس الأثر",
+  "Solution Identification": "تحديد الحلول",
+  "Solution Implementation Roadmap": "خارطة طريق تنفيذ الحل",
+  "Not Started": "لم يبدأ",
+  "In Progress": "قيد التنفيذ",
+  "Completed": "مكتمل",
+};
 
 interface AddMilestonePanelProps {
   isOpen: boolean;
@@ -19,6 +31,8 @@ interface AccordionSection {
 }
 
 export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestonePanelProps) {
+  const { tr } = useLanguage();
+  const ta = (value: string) => tr(value, AR[value]);
   const [sections, setSections] = useState<AccordionSection[]>([
     { id: "discovery", title: "Discovery", status: "Not Started", isExpanded: false },
     { id: "rootCause", title: "Root Cause Analysis & Impact Quantification", status: "Not Started", isExpanded: false },
@@ -77,50 +91,50 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
       {/* Group 1: Project Info */}
       <div className="space-y-4">
         <h4 className="text-xs font-['Dubai:Medium',_'Dubai'] text-black uppercase tracking-wide flex items-center gap-2">
-          Project Info
+          {tr("Project Info", "معلومات المشروع")}
         </h4>
         
         <div className="grid grid-cols-1 gap-4">
           <div>
             <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-              Project <span className="text-[#D83731]">*</span>
+              {tr("Project", "المشروع")} <span className="text-[#D83731]">*</span>
             </label>
             <select
               value={formData.project}
               onChange={(e) => setFormData({ ...formData, project: e.target.value })}
               className="w-full px-3 py-2 text-sm border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
             >
-              <option value="">Select project</option>
-              <option value="blockchain">Blockchain Integration Project</option>
-              <option value="ai-analytics">AI Analytics Platform</option>
-              <option value="mobile-app">Mobile Application Development</option>
-              <option value="data-migration">Data Migration Initiative</option>
+              <option value="">{tr("Select project", "اختر المشروع")}</option>
+              <option value="blockchain">{tr("Blockchain Integration Project", "مشروع تكامل البلوك تشين")}</option>
+              <option value="ai-analytics">{tr("AI Analytics Platform", "منصة تحليلات الذكاء الاصطناعي")}</option>
+              <option value="mobile-app">{tr("Mobile Application Development", "تطوير تطبيق الهاتف المتحرك")}</option>
+              <option value="data-migration">{tr("Data Migration Initiative", "مبادرة ترحيل البيانات")}</option>
             </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                Title (English) <span className="text-[#D83731]">*</span>
+                {tr("Title (English)", "العنوان (بالإنجليزية)")} <span className="text-[#D83731]">*</span>
               </label>
               <input
                 type="text"
                 value={formData.titleEnglish}
                 onChange={(e) => setFormData({ ...formData, titleEnglish: e.target.value })}
-                placeholder="Enter milestone title in English"
+                placeholder={tr("Enter milestone title in English", "أدخل عنوان المرحلة الرئيسية بالإنجليزية")}
                 className="w-full px-3 py-2 text-sm border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
               />
             </div>
 
             <div>
               <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-                Title (Arabic) <span className="text-[#D83731]">*</span>
+                {tr("Title (Arabic)", "العنوان (بالعربية)")} <span className="text-[#D83731]">*</span>
               </label>
               <input
                 type="text"
                 value={formData.titleArabic}
                 onChange={(e) => setFormData({ ...formData, titleArabic: e.target.value })}
-                placeholder="أدخل عنوان المعلم بالعربية"
+                placeholder="أدخل عنوان المرحلة الرئيسية بالعربية"
                 dir="rtl"
                 className="w-full px-3 py-2 text-sm border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
               />
@@ -135,13 +149,13 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
       {/* Group 2: Cost & Budgeting */}
       <div className="space-y-4">
         <h4 className="text-xs font-['Dubai:Medium',_'Dubai'] text-black uppercase tracking-wide flex items-center gap-2">
-          Cost & Budgeting
+          {tr("Cost & Budgeting", "التكلفة والميزانية")}
         </h4>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-              Planned Budget (AED) <span className="text-[#D83731]">*</span>
+              {tr("Planned Budget (AED)", "الميزانية المخططة (درهم)")} <span className="text-[#D83731]">*</span>
             </label>
             <input
               type="number"
@@ -154,7 +168,7 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
 
           <div>
             <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-              Actual Budget (AED) <span className="text-[#D83731]">*</span>
+              {tr("Actual Budget (AED)", "الميزانية الفعلية (درهم)")} <span className="text-[#D83731]">*</span>
             </label>
             <input
               type="number"
@@ -175,14 +189,14 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
       {/* Group 3: Evidence */}
       <div className="space-y-4">
         <h4 className="text-xs font-['Dubai:Medium',_'Dubai'] text-black uppercase tracking-wide flex items-center gap-2">
-          Evidence
+          {tr("Evidence", "الأدلة")}
         </h4>
         
         <div>
           <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-            File Upload <span className="text-[#D83731]">*</span>
+            {tr("File Upload", "رفع ملف")} <span className="text-[#D83731]">*</span>
           </label>
-            <input type="file" className="w-full border border-gray-100 rounded-md focus-visible:border-gray-300 focus-visible:ring-gray-300 outline-none bg-gray-100 text-gray-700 focus:border-gray-300 file:cursor-pointer file:border-0 file:me-2 file:py-[5px] file:px-[10px] file:rounded-l-md file:text-sm file:bg-gray-200 file:hover:bg-gray-300 file:text-gray-800"/>
+            <input type="file" className="w-full border border-gray-100 rounded-md focus-visible:border-gray-300 focus-visible:ring-gray-300 outline-none bg-gray-100 text-gray-700 focus:border-gray-300 file:cursor-pointer file:border-0 file:me-2 file:py-[5px] file:px-[10px] file:rounded-s-md file:text-sm file:bg-gray-200 file:hover:bg-gray-300 file:text-gray-800"/>
           
           {/* <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center hover:border-[#008755] transition-colors cursor-pointer">
             <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
@@ -203,12 +217,12 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
 
         <div>
           <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-            Comments
+            {tr("Comments", "الملاحظات")}
           </label>
           <textarea
             value={formData.comments}
             onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
-            placeholder="Add any additional comments or notes..."
+            placeholder={tr("Add any additional comments or notes...", "أضف أي ملاحظات أو تعليقات إضافية...")}
             rows={4}
             className="w-full px-3 py-2 text-sm border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755] resize-none"
           />
@@ -221,43 +235,43 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
       {/* Group 4: Organization Unit */}
       <div className="space-y-4">
         <h4 className="text-xs font-['Dubai:Medium',_'Dubai'] text-black uppercase tracking-wide flex items-center gap-2">
-          Organization Unit
+          {tr("Organization Unit", "الوحدة التنظيمية")}
         </h4>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-              Department <span className="text-[#D83731]">*</span>
+              {tr("Department", "الإدارة")} <span className="text-[#D83731]">*</span>
             </label>
             <select
               value={formData.department}
               onChange={(e) => setFormData({ ...formData, department: e.target.value })}
               className="w-full px-3 py-2 text-sm border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
             >
-              <option value="">Select department</option>
-              <option value="it">Information Technology</option>
-              <option value="operations">Operations</option>
-              <option value="policy">Policy and Legislation</option>
-              <option value="strategy">Strategy and Planning</option>
-              <option value="finance">Finance</option>
+              <option value="">{tr("Select department", "اختر الإدارة")}</option>
+              <option value="it">{tr("Information Technology", "تقنية المعلومات")}</option>
+              <option value="operations">{tr("Operations", "العمليات")}</option>
+              <option value="policy">{tr("Policy and Legislation", "السياسات والتشريعات")}</option>
+              <option value="strategy">{tr("Strategy and Planning", "الاستراتيجية والتخطيط")}</option>
+              <option value="finance">{tr("Finance", "المالية")}</option>
             </select>
           </div>
 
           <div>
             <label className="text-xs font-['Dubai:Medium',_'Dubai'] text-muted-foreground mb-1 block">
-              Section <span className="text-[#D83731]">*</span>
+              {tr("Section", "القسم")} <span className="text-[#D83731]">*</span>
             </label>
             <select
               value={formData.section}
               onChange={(e) => setFormData({ ...formData, section: e.target.value })}
               className="w-full px-3 py-2 text-sm border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-[#008755]/20 focus:border-[#008755]"
             >
-              <option value="">Select section</option>
-              <option value="development">Development</option>
-              <option value="infrastructure">Infrastructure</option>
-              <option value="security">Security & Compliance</option>
-              <option value="data">Data Management</option>
-              <option value="support">Support Services</option>
+              <option value="">{tr("Select section", "اختر القسم")}</option>
+              <option value="development">{tr("Development", "التطوير")}</option>
+              <option value="infrastructure">{tr("Infrastructure", "البنية التحتية")}</option>
+              <option value="security">{tr("Security & Compliance", "الأمن والامتثال")}</option>
+              <option value="data">{tr("Data Management", "إدارة البيانات")}</option>
+              <option value="support">{tr("Support Services", "خدمات الدعم")}</option>
             </select>
           </div>
         </div>
@@ -274,16 +288,16 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
       />
 
       {/* Sliding Panel */}
-      <div className="fixed right-0 top-0 h-full w-[50%] bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+      <div className="fixed end-0 top-0 h-full w-[50%] bg-white shadow-2xl z-50 flex flex-col animate-in slide-in-from-right rtl:slide-in-from-left duration-300">
         {/* Sticky Header */}
         <div className="sticky top-0 z-10  px-6 py-5 pb-0 shadow">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-xl font-['Dubai:Medium',_'Dubai'] text-black mb-1">
-                Add Milestone
+                {tr("Add Milestone", "إضافة مرحلة رئيسية")}
               </h2>
               <p className="text-sm text-black">
-                Linked to Project: <span className="font-['Dubai:Medium',_'Dubai']">{projectName}</span>
+                {tr("Linked to Project:", "مرتبطة بالمشروع:")} <span className="font-['Dubai:Medium',_'Dubai']">{projectName}</span>
               </p>
             </div>
             <Button
@@ -324,24 +338,24 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
                   onClick={() => toggleSection(section.id)}
                   className={`flex items-center justify-between p-4 cursor-pointer transition-all ${
                     section.isExpanded 
-                      ? "bg-gradient-to-r from-[#008755]/10 to-white" 
+                      ? "bg-gradient-to-r rtl:bg-gradient-to-l from-[#008755]/10 to-white" 
                       : "bg-white hover:bg-muted/30"
                   }`}
                 >
                   <div className="flex items-center gap-3 flex-1">
-                    <div className={`transition-transform duration-300 ${section.isExpanded ? "rotate-90" : ""}`}>
-                      <ChevronRight className="h-5 w-5 text-[#008755]" />
+                    <div className={`transition-transform duration-300 ${section.isExpanded ? "rotate-90 rtl:-rotate-90" : ""}`}>
+                      <ChevronRight className="h-5 w-5 text-[#008755] rtl:rotate-180" />
                     </div>
                     <div className="flex-1">
                       <h3 className="text-sm font-['Dubai:Medium',_'Dubai'] text-[#1f2937]">
-                        {section.title}
+                        {ta(section.title)}
                       </h3>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {getStatusIcon(section.status)}
                     <Badge className={`${getStatusColor(section.status)} text-xs`}>
-                      {section.status}
+                      {ta(section.status)}
                     </Badge>
                   </div>
                 </div>
@@ -367,19 +381,19 @@ export function AddMilestonePanel({ isOpen, onClose, projectName }: AddMilestone
               onClick={onClose}
               className="border-muted text-muted-foreground hover:bg-muted"
             >
-              Cancel
+              {tr("Cancel", "إلغاء")}
             </Button>
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 className="text-[#008755] hover:bg-[#008755]/10"
               >
-                Save Draft
+                {tr("Save Draft", "حفظ كمسودة")}
               </Button>
               <Button
                 className="bg-[#008755] hover:bg-[#006644] text-white"
               >
-                Create Milestone
+                {tr("Create Milestone", "إنشاء المرحلة الرئيسية")}
               </Button>
             </div>
           </div>

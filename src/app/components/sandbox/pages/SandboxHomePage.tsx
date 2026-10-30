@@ -313,7 +313,9 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
             { label: tr('Departments Engaged', 'الإدارات المشاركة'), value: depts.size, icon: Building2, delta: '+1' },
           ].map(({ label, value, icon: Icon, delta }) => (
             <div key={label} className="bg-card border border-border rounded-xl p-4 relative overflow-hidden">
-              <span dir="ltr" className="absolute top-3.5 end-3.5text-sm font-bold px-1.5 py-0.5 rounded-full bg-[#008755]/10 text-[#008755]">{delta}</span>
+              <span className="absolute top-3.5 end-3.5 text-xs font-bold px-1.5 py-0.5 rounded-full bg-[#008755]/10 text-[#008755]">
+                <span dir="ltr">{delta}</span>
+              </span>
               <div className="h-9 w-9 rounded-lg bg-[#008755]/10 flex items-center justify-center mb-3">
                 <Icon className="h-4 w-4 text-[#008755]" />
               </div>

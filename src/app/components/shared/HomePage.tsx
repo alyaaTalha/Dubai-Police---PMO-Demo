@@ -1,784 +1,794 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Award,
-  ArrowRight,
-  BarChart3,
-  Target,
-  Users,
   TrendingUp,
-  FileText,
-  Activity,
-  Bell,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  Calendar,
   Lightbulb,
   ChevronRight,
-  ArrowUpDown,
-  Briefcase
+  FlaskConical,
+  ShieldCheck,
+  ClipboardCheck,
+  Handshake,
+  FolderKanban,
+  Wallet,
+  Plus,
+  Sparkles,
+  CalendarDays,
+  Clock,
+  Check,
+  ArrowRight,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Checkbox } from "../ui/checkbox";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LabelList,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+} from "recharts";
+import {
+  INITIAL_PROJECTS, IP_REGISTER, PARTNERS, STAGES, TYPES, money,
+  type ProjectType,
+} from "../sandbox/sandboxData";
+import { useSandboxTr } from "../sandbox/sandboxI18n";
+import spotlightImage from "../../../assets/img1.jpeg";
 import heroDecoration from "../../../assets/sandbox-hero-decoration.png";
 import { useLanguage } from "../../i18n/LanguageContext";
 
 
-interface HomePageProps {
+export interface HomePageProps {
   onNavigate: (view: 'strategy' | 'performance' | 'scorecards' | 'home' | 'partnership' | 'voc' | 'portfolio' | 'ideas-platform' | 'sandbox-platform') => void;
 }
 
-// Mock tasks data
-const tasks = [
-  { id: 1, title: 'Review Q4 Performance Reports', titleAr: 'مراجعة تقارير أداء الربع الرابع', status: 'in-progress', priority: 'high', dueDate: '2025-10-28' },
-  { id: 2, title: 'Update Strategic Objectives for 2026', titleAr: 'تحديث الأهداف الاستراتيجية لعام 2026', status: 'open', priority: 'medium', dueDate: '2025-10-30' },
-  { id: 3, title: 'Approve Department KPIs', titleAr: 'اعتماد مؤشرات الأداء الرئيسية للإدارات', status: 'completed', priority: 'high', dueDate: '2025-10-25' },
-  { id: 4, title: 'Conduct Mid-Year Review Meeting', titleAr: 'عقد اجتماع مراجعة منتصف العام', status: 'open', priority: 'low', dueDate: '2025-11-05' },
-];
-
 // Mock announcements data
-const announcements = [
+export const announcements = [
   {
     id: 1,
-    title: 'Q4 Performance Evaluation Cycle Now Open',
-    titleAr: 'دورة تقييم أداء الربع الرابع مفتوحة الآن',
-    description: 'The deadline for Excellence in Public Service nominations has been extended to March 15th.',
-    descriptionAr: 'تم تمديد الموعد النهائي لترشيحات التميز في الخدمة العامة حتى 15 مارس.',
-    timestamp: '2 days ago',
-    timestampAr: 'منذ يومين',
-    badges: []
+    title: 'Q1 2027 Sandbox Intake Is Now Open',
+    titleAr: 'باب التقديم للبيئة التجريبية للربع الأول 2027 مفتوح الآن',
+    description: 'Departments can submit new R&D, innovation and knowledge projects for sandbox piloting until 30 November.',
+    descriptionAr: 'يمكن للإدارات تقديم مشاريع البحث والتطوير والابتكار والمعرفة الجديدة للتجريب في البيئة التجريبية حتى 30 نوفمبر.',
+    timestamp: '1 day ago',
+    timestampAr: 'منذ يوم',
+    badges: [
+      { label: 'Intake', labelAr: 'التقديم', className: 'bg-[#008755] text-white hover:bg-[#008755]' },
+    ]
   },
   {
     id: 2,
-    title: 'New Strategic Initiative Added: "Smart Trade 2030"',
-    titleAr: 'إضافة مبادرة استراتيجية جديدة: «التجارة الذكية 2030»',
-    description: 'A new corporate initiative has been added under the STG Dashboard for Dubai Customs innovation roadmap.',
-    descriptionAr: 'تمت إضافة مبادرة مؤسسية جديدة ضمن لوحة STG لخارطة طريق الابتكار في جمارك دبي.',
-    timestamp: '1 week ago',
-    timestampAr: 'منذ أسبوع',
-    badges: []
-  },
-  {
-    id: 3,
-    title: 'Policy Update — KPI Review Process',
-    titleAr: 'تحديث السياسات — آلية مراجعة مؤشرات الأداء الرئيسية',
-    description: 'The process for KPI approval and quarterly reviews has been updated to enhance governance.',
-    descriptionAr: 'تم تحديث آلية اعتماد مؤشرات الأداء الرئيسية والمراجعات الربعية لتعزيز الحوكمة.',
+    title: 'Updated Evaluation Criteria for Innovation Projects',
+    titleAr: 'تحديث معايير تقييم مشاريع الابتكار',
+    description: 'Strategic Alignment and Expected Impact now carry 25% weight each in the innovation scoring model.',
+    descriptionAr: 'أصبح لكل من المواءمة الاستراتيجية والأثر المتوقع وزن 25% في نموذج تقييم مشاريع الابتكار.',
     timestamp: '3 days ago',
     timestampAr: 'منذ 3 أيام',
     badges: [
-      { label: 'Policy', labelAr: 'سياسة', variant: 'default' as const },
-      { label: 'Guidelines', labelAr: 'إرشادات', variant: 'secondary' as const }
+      { label: 'Policy', labelAr: 'سياسة', className: 'bg-[#16a8b8] text-white hover:bg-[#16a8b8]' },
+      { label: 'Evaluation', labelAr: 'التقييم', className: 'bg-[#ffb088] text-white hover:bg-[#ffb088]' },
+    ]
+  },
+  {
+    id: 3,
+    title: 'New Partner Joins the Sandbox: Europol Tech Exchange',
+    titleAr: 'شريك جديد ينضم إلى البيئة التجريبية: Europol Tech Exchange',
+    description: 'International collaboration opportunities are now available for R&D projects at TRL 4 and above.',
+    descriptionAr: 'تتوفر الآن فرص تعاون دولية لمشاريع البحث والتطوير بمستوى جاهزية تقنية 4 فأعلى.',
+    timestamp: '1 week ago',
+    timestampAr: 'منذ أسبوع',
+    badges: [
+      { label: 'Partnership', labelAr: 'شراكة', className: 'bg-[#8b6fd4] text-white hover:bg-[#8b6fd4]' },
     ]
   }
 ];
 
-// Mock recent activity data
-const recentActivity = [
+// Mock recent activity data (Sandbox Platform)
+export const recentActivity = [
   {
     id: 1,
-    text: 'Target completion adjusted from Q2 2026 → Q1 2026, reflecting improved project progress',
-    textAr: 'تم تعديل موعد الإنجاز المستهدف من الربع الثاني 2026 إلى الربع الأول 2026، بما يعكس تحسّن تقدم المشروع',
-    timestamp: '5 hours ago',
-    timestampAr: 'منذ 5 ساعات',
-    type: 'update'
+    title: 'Patent granted',
+    titleAr: 'منح براءة اختراع',
+    text: 'Smart Evidence Chain-of-Custody Protocol approved by the IP office',
+    textAr: 'اعتماد بروتوكول سلسلة حيازة الأدلة الذكي من مكتب الملكية الفكرية',
+    timestamp: '2 hours ago',
+    timestampAr: 'منذ ساعتين',
+    type: 'success'
   },
   {
     id: 2,
-    text: 'The Performance Management System now displays live progress indicators for departmental KPIs',
-    textAr: 'يعرض نظام إدارة الأداء الآن مؤشرات تقدم مباشرة لمؤشرات الأداء الرئيسية للإدارات',
-    timestamp: '1 day ago',
-    timestampAr: 'منذ يوم',
+    title: 'Evaluation submitted',
+    titleAr: 'تقديم تقييم',
+    text: 'Smart Evidence Room (RFID) scored 94/100 by the innovation panel',
+    textAr: 'حصل مشروع غرفة الأدلة الذكية (RFID) على 94/100 من لجنة الابتكار',
+    timestamp: 'Yesterday',
+    timestampAr: 'أمس',
     type: 'info'
   },
   {
     id: 3,
-    text: 'Latest performance results show exceptional alignment with strategic goals, marking a +7% improvement',
-    textAr: 'تُظهر أحدث نتائج الأداء مواءمة استثنائية مع الأهداف الاستراتيجية، محققةً تحسناً بنسبة +7%',
+    title: 'Stage advanced',
+    titleAr: 'الانتقال إلى مرحلة جديدة',
+    text: 'Quantum-Resistant Encryption Pilot moved from Development to Sandbox',
+    textAr: 'انتقل مشروع تجربة التشفير المقاوم للحوسبة الكمية من التطوير إلى البيئة التجريبية',
     timestamp: '2 days ago',
     timestampAr: 'منذ يومين',
-    type: 'success'
+    type: 'stage'
+  },
+  {
+    id: 4,
+    title: 'Partner agreement signed',
+    titleAr: 'توقيع اتفاقية شراكة',
+    text: 'Khalifa University added to 2 additional R&D projects',
+    textAr: 'إضافة جامعة خليفة إلى مشروعين إضافيين للبحث والتطوير',
+    timestamp: '3 days ago',
+    timestampAr: 'منذ 3 أيام',
+    type: 'partner'
   }
 ];
 
-// Arabic labels for chart series (division names are used as data keys, so translate only at render time)
-const DIVISION_AR: Record<string, string> = {
-  'Customs Development': 'تطوير الجمارك',
-  'Customs Inspection': 'التفتيش الجمركي',
-  'Finance and Administrative affairs': 'الشؤون المالية والإدارية',
-  'Human Resources': 'الموارد البشرية',
-  'Director General': 'المدير العام',
-  'Policy and Legislation': 'السياسات والتشريعات',
+export const ACTIVITY_STYLE: Record<string, { icon: typeof Award; color: string }> = {
+  success: { icon: ShieldCheck, color: '#008755' },
+  info: { icon: ClipboardCheck, color: '#1d5fa8' },
+  stage: { icon: TrendingUp, color: '#a8710d' },
+  partner: { icon: Handshake, color: '#8b6fd4' },
 };
 
-const MONTH_AR: Record<string, string> = {
+// ── Sandbox Platform statistics (derived from the platform's own project data) ──
+export const TYPE_KEYS: ProjectType[] = ['rd', 'innov', 'know'];
+// Home-page colours for the three project types, from the Dubai Police brand guideline:
+// Pan 2188C navy, Pan 7725C green (primary) and Pan 3265C aqua. `label` is the in-bar text colour.
+export const TYPE_COLOR: Record<ProjectType, { color: string; chip: string; label: string }> = {
+  rd:    { color: '#00426A', chip: 'bg-[#00426A]/10 text-[#00426A]', label: '#ffffff' },
+  innov: { color: '#008755', chip: 'bg-[#008755]/10 text-[#008755]', label: '#ffffff' },
+  know:  { color: '#00C7B1', chip: 'bg-[#00C7B1]/15 text-[#05868E]', label: '#00426A' },
+};
+export const TOTAL_PROJECTS = INITIAL_PROJECTS.length;
+export const TOTAL_BUDGET = INITIAL_PROJECTS.reduce((s, p) => s + p.budget, 0);
+export const IN_SANDBOX = INITIAL_PROJECTS.filter(p => p.stage === 'Sandbox').length;
+export const IP_GRANTED = IP_REGISTER.filter(i => i.status === 'Granted').length;
+
+const STAGE_DATA = STAGES.map(stage => {
+  const row: Record<string, string | number> = { stage };
+  TYPE_KEYS.forEach(t => { row[t] = INITIAL_PROJECTS.filter(p => p.stage === stage && p.type === t).length; });
+  return row;
+});
+
+const TYPE_MIX = TYPE_KEYS.map(t => {
+  const list = INITIAL_PROJECTS.filter(p => p.type === t);
+  return { key: t, name: TYPES[t].label, value: list.length, budget: list.reduce((s, p) => s + p.budget, 0), fill: TYPE_COLOR[t].color };
+});
+
+
+export const TOP_PROJECTS = INITIAL_PROJECTS
+  .filter(p => p.score != null)
+  .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+  .slice(0, 4);
+
+// Quick actions shown under the banner (all open the Sandbox Platform)
+const QUICK_ACTIONS = [
+  { key: 'new', icon: Plus, color: '#008755', title: 'Submit New Project', titleAr: 'تقديم مشروع جديد', desc: 'Start a sandbox intake request', descAr: 'بدء طلب تقديم للبيئة التجريبية' },
+  { key: 'eval', icon: ClipboardCheck, color: '#1d5fa8', title: 'Evaluate Projects', titleAr: 'تقييم المشاريع', desc: '3 evaluations awaiting you', descAr: '3 تقييمات بانتظارك' },
+  { key: 'ip', icon: ShieldCheck, color: '#a8710d', title: 'Register IP', titleAr: 'تسجيل ملكية فكرية', desc: 'Patents, trademarks & works', descAr: 'براءات وعلامات ومصنفات' },
+  { key: 'ai', icon: Sparkles, color: '#8b6fd4', title: 'Ask the Assistant', titleAr: 'اسأل المساعد', desc: 'AI answers on the portfolio', descAr: 'إجابات ذكية حول المحفظة' },
+];
+
+// Mock upcoming sandbox events
+export const UPCOMING_EVENTS = [
+  { id: 1, day: '05', time: '10:00', title: 'Innovation Evaluation Committee', titleAr: 'لجنة تقييم الابتكار', place: 'HQ · Meeting Room 3', placeAr: 'القيادة العامة · قاعة الاجتماعات 3', kind: 'meeting' },
+  { id: 2, day: '12', time: '09:30', title: 'Sandbox Demo Day: Digital Twin — Traffic Network', titleAr: 'يوم العرض التجريبي: التوأم الرقمي لشبكة المرور', place: 'Innovation Lab', placeAr: 'مختبر الابتكار', kind: 'demo' },
+  { id: 3, day: '19', time: '13:00', title: 'Khalifa University R&D Partnership Workshop', titleAr: 'ورشة شراكة البحث والتطوير مع جامعة خليفة', place: 'Online', placeAr: 'عن بُعد', kind: 'workshop' },
+  { id: 4, day: '30', time: '23:59', title: 'Q1 2027 Sandbox Intake Closes', titleAr: 'إغلاق باب التقديم للربع الأول 2027', place: 'Sandbox Platform', placeAr: 'منصة البيئة التجريبية', kind: 'deadline' },
+];
+
+export const EVENT_KIND: Record<string, { label: string; labelAr: string; className: string }> = {
+  meeting: { label: 'Committee', labelAr: 'لجنة', className: 'bg-blue-50 text-blue-700' },
+  demo: { label: 'Demo', labelAr: 'عرض', className: 'bg-[#008755]/10 text-[#008755]' },
+  workshop: { label: 'Workshop', labelAr: 'ورشة', className: 'bg-violet-50 text-violet-700' },
+  deadline: { label: 'Deadline', labelAr: 'موعد نهائي', className: 'bg-red-50 text-red-700' },
+};
+
+// Mock sandbox tasks assigned to the current user
+export const SANDBOX_TASKS = [
+  { id: 1, title: 'Score evaluation', titleAr: 'إدخال درجات التقييم', project: 'Digital Twin — Traffic Network', due: 'Nov 3', dueAr: '3 نوفمبر', priority: 'high' },
+  { id: 2, title: 'Approve budget request', titleAr: 'اعتماد طلب الميزانية', project: 'Autonomous Patrol Drone Study', due: 'Nov 5', dueAr: '5 نوفمبر', priority: 'high' },
+  { id: 3, title: 'Review IP filing', titleAr: 'مراجعة طلب الملكية الفكرية', project: 'Forensic DNA Rapid-Analysis Method', due: 'Nov 10', dueAr: '10 نوفمبر', priority: 'medium' },
+  { id: 4, title: 'Update feasibility report', titleAr: 'تحديث تقرير الجدوى', project: 'Drone-Assisted Crowd Analytics', due: 'Nov 14', dueAr: '14 نوفمبر', priority: 'low' },
+];
+
+export const PRIORITY_META: Record<string, { label: string; labelAr: string; className: string }> = {
+  high: { label: 'High', labelAr: 'عالية', className: 'bg-red-50 text-red-700' },
+  medium: { label: 'Medium', labelAr: 'متوسطة', className: 'bg-amber-50 text-amber-700' },
+  low: { label: 'Low', labelAr: 'منخفضة', className: 'bg-slate-100 text-slate-600' },
+};
+
+// Mock 8-quarter history for the KPI tile sparklines (each ends at the live value)
+const SPARKS = {
+  projects: [8, 10, 11, 12, 14, 15, 17, TOTAL_PROJECTS],
+  budget: [22, 27, 31, 35, 39, 43, 47, TOTAL_BUDGET],
+  sandbox: [0, 1, 1, 2, 2, 3, 3, IN_SANDBOX],
+  ip: [2, 3, 4, 5, 5, 6, 7, IP_GRANTED],
+};
+
+// Mock Ideas Platform snapshot
+export const IDEAS_MONTHLY = [
+  { m: 'May', v: 18 }, { m: 'Jun', v: 24 }, { m: 'Jul', v: 21 },
+  { m: 'Aug', v: 29 }, { m: 'Sep', v: 33 }, { m: 'Oct', v: 27 },
+];
+
+export const MONTH_AR: Record<string, string> = {
   Jan: 'يناير', Feb: 'فبراير', Mar: 'مارس', Apr: 'أبريل', May: 'مايو', Jun: 'يونيو',
   Jul: 'يوليو', Aug: 'أغسطس', Sep: 'سبتمبر', Oct: 'أكتوبر', Nov: 'نوفمبر', Dec: 'ديسمبر',
 };
 
-/** Translate a chart period label ("Q1 2025", "Jan 2025", "2025") to Arabic. */
-function periodAr(period: string): string {
-  const [first, year] = period.split(' ');
-  if (!year) return period;
-  if (/^Q\d$/.test(first)) return `الربع ${first.slice(1)} ${year}`;
-  return `${MONTH_AR[first] ?? first} ${year}`;
+const AXIS_TICK = { fontSize: 12, fill: '#8a8f98', fontFamily: 'Dubai, sans-serif' };
+
+/** Shared hover tooltip for every chart on the page. */
+export function ChartTooltip({ active, payload, label, labelFormatter }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg text-xs font-[Dubai] min-w-[140px]">
+      {label != null && label !== '' && (
+        <p className="mb-1 font-semibold text-[#1a1a1a]">{labelFormatter ? labelFormatter(label) : label}</p>
+      )}
+      {payload.map((p: any) => (
+        <div key={p.dataKey ?? p.name} className="flex items-center gap-2 text-[#555555]">
+          <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: p.payload?.fill ?? p.color }} />
+          <span>{p.name}</span>
+          <span className="ms-auto ps-3 font-semibold text-[#1a1a1a] tabular-nums">{p.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** White rounded panel with a title row, used by every dashboard block. */
+function Panel({ title, subtitle, action, className = '', children }: {
+  title: string; subtitle?: string; action?: ReactNode; className?: string; children: ReactNode;
+}) {
+  return (
+    <div className={`rounded-xl border border-gray-200 bg-white p-4 ${className}`}>
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div>
+          <h3 className="text-sm font-semibold text-[#1a1a1a] font-[Dubai]">{title}</h3>
+          {subtitle && <p className="text-xs text-[#8a8f98] mt-0.5">{subtitle}</p>}
+        </div>
+        {action}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** KPI tile: headline number, trend pill and an 8-quarter sparkline. */
+function StatTile({ id, icon: Icon, label, value, sub, delta, color, spark, isRTL }: {
+  id: string; icon: typeof Award; label: string; value: string; sub: string; delta: string;
+  color: string; spark: number[]; isRTL: boolean;
+}) {
+  const data = spark.map((v, i) => ({ i, v }));
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-md">
+      <div className="p-4 pb-4">
+        <div className="flex items-start justify-between">
+          <div className="h-9 w-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${color}1a`, color }}>
+            <Icon className="h-[18px] w-[18px]" />
+          </div>
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#008755]/10 text-[#008755] px-2 py-0.5 text-xs font-medium">
+            <TrendingUp className="h-3 w-3 rtl:-scale-x-100" />
+            {delta}
+          </span>
+        </div>
+        <p className="mt-3 text-xs text-[#666666] font-[Dubai]">{label}</p>
+        <p className="text-2xl font-semibold text-[#1a1a1a] tabular-nums leading-tight">{value}</p>
+        {/* <p className="text-xs text-[#999999]">{sub}</p> */}
+      </div>
+      {/* <div className="h-12 mt-1">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={isRTL ? [...data].reverse() : data} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id={`spark-${id}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.28} />
+                <stop offset="100%" stopColor={color} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <Area type="monotone" dataKey="v" stroke={color} strokeWidth={2} fill={`url(#spark-${id})`} dot={false} isAnimationActive={false} />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div> */}
+    </div>
+  );
+}
+
+/** Green welcome banner with Sandbox / Ideas buttons — shared by both home page designs. */
+export function HomeBanner({ onNavigate }: HomePageProps) {
+  const { tr } = useLanguage();
+  return (
+    <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
+      <img
+        src={heroDecoration}
+        alt=""
+        className="absolute -top-16 -end-16 rtl:-scale-x-100 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
+      />
+      {/* <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" /> */}
+      <CardContent className="pt-3 !pb-3 relative z-10">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1.5">
+              <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <Award className="h-5 w-5" />
+              </div>
+              <div>
+                <h1 className="text-xl   mb-0.5">
+                  {tr('Good Morning, User', 'صباح الخير، المستخدم')}
+                </h1>
+                <p className="text-white/90 text-sm">
+                  {tr('Innovation Sandbox Platform — R&D, Innovation & Knowledge', 'منصة البيئة التجريبية للابتكار — البحث والتطوير والابتكار والمعرفة')}
+                </p>
+              </div>
+            </div>
+           
+          </div>
+         <div className="flex items-center gap-2">
+  {[
+    {
+page: 'sandbox-platform' as const,
+icon: FlaskConical,
+label: tr('Sandbox Platform', 'منصة البيئة التجريبية'),
+primary: true,
+    },
+    {
+page: 'ideas-platform' as const,
+icon: Lightbulb,
+label: tr('Ideas Platform', 'منصة الأفكار'),
+primary: false,
+    },
+  ].map(({ page, icon: Icon, label, primary }) => (
+    <button
+key={page}
+type="button"
+onClick={() => onNavigate(page)}
+className={`inline-flex items-center gap-2 h-10 rounded-full px-4 text-sm font-[Dubai] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 ${
+  primary
+    ? 'bg-white text-[#005844] shadow-sm hover:bg-white/90'
+    : 'border border-white/40 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20'
+}`}
+    >
+<Icon className="h-4 w-4" />
+{label}
+    </button>
+  ))}
+</div>
+
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 export function HomePage({ onNavigate }: HomePageProps) {
   const { tr, isRTL } = useLanguage();
-  const fmtPeriod = (value: any) => (isRTL ? periodAr(String(value)) : String(value));
-  const frequencyLabel = (f: string) =>
-    f === 'annual' ? tr('Annual', 'سنوي') : f === 'quarterly' ? tr('Quarterly', 'ربع سنوي') : f === 'monthly' ? tr('Monthly', 'شهري') : f;
-  const statusLabel = (st: string) =>
-    st === 'in-progress' ? tr('In Progress', 'قيد التنفيذ') : st === 'open' ? tr('Open', 'مفتوحة') : st === 'completed' ? tr('Completed', 'مكتملة') : st;
-  const priorityLabel = (pr: string) =>
-    pr === 'high' ? tr('High', 'عالية') : pr === 'medium' ? tr('Medium', 'متوسطة') : pr === 'low' ? tr('Low', 'منخفضة') : pr;
-  const [selectedYear, setSelectedYear] = useState(2025);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [prioritySort, setPrioritySort] = useState<'asc' | 'desc' | null>(null);
-  const [dateSort, setDateSort] = useState<'asc' | 'desc' | null>(null);
-  const [frequency, setFrequency] = useState<string>('quarterly');
-  const [yearFrom, setYearFrom] = useState<number>(2025);
-  const [yearTo, setYearTo] = useState<number>(2025);
-
-  // Filter and sort tasks
-  const getFilteredAndSortedTasks = () => {
-    let filteredTasks = [...tasks];
-
-    // Apply status filter
-    if (statusFilter !== 'all') {
-      filteredTasks = filteredTasks.filter(task => task.status === statusFilter);
-    }
-
-    // Apply priority sort
-    if (prioritySort) {
-      const priorityOrder = { high: 3, medium: 2, low: 1 };
-      filteredTasks.sort((a, b) => {
-        const aVal = priorityOrder[a.priority];
-        const bVal = priorityOrder[b.priority];
-        return prioritySort === 'asc' ? aVal - bVal : bVal - aVal;
-      });
-    }
-
-    // Apply date sort
-    if (dateSort) {
-      filteredTasks.sort((a, b) => {
-        const aDate = new Date(a.dueDate).getTime();
-        const bDate = new Date(b.dueDate).getTime();
-        return dateSort === 'asc' ? aDate - bDate : bDate - aDate;
-      });
-    }
-
-    return filteredTasks;
-  };
-
-  const filteredTasks = getFilteredAndSortedTasks();
-
-  // Generate performance data based on frequency and year range
-  const getPerformanceData = () => {
-    const divisions = ["Customs Development", "Customs Inspection", "Finance and Administrative affairs", "Human Resources", "Director General", "Policy and Legislation"];
-
-    if (frequency === 'annual') {
-      // Generate annual data
-      const data = [];
-      for (let year = yearFrom; year <= yearTo; year++) {
-        const yearData: any = { period: year.toString() };
-        divisions.forEach(division => {
-          yearData[division] = Math.floor(Math.random() * 20) + 75; // Random value between 75-95
-        });
-        data.push(yearData);
-      }
-      return data;
-    } else if (frequency === 'quarterly') {
-      // Generate quarterly data for the range
-      const data = [];
-      for (let year = yearFrom; year <= yearTo; year++) {
-        for (let q = 1; q <= 4; q++) {
-          const quarterData: any = { period: `Q${q} ${year}` };
-          divisions.forEach(division => {
-            quarterData[division] = Math.floor(Math.random() * 20) + 75;
-          });
-          data.push(quarterData);
-        }
-      }
-      return data;
-    } else if (frequency === 'monthly') {
-      // Generate monthly data for the range (last 6 months to keep chart readable)
-      const data = [];
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      for (let year = yearFrom; year <= yearTo; year++) {
-        months.forEach((month, idx) => {
-          const monthData: any = { period: `${month} ${year}` };
-          divisions.forEach(division => {
-            monthData[division] = Math.floor(Math.random() * 20) + 75;
-          });
-          data.push(monthData);
-        });
-      }
-      // Return only last 12 months for readability
-      return data.slice(-12);
-    }
-    return [];
-  };
-
-  const performanceData = getPerformanceData();
+  const ts = useSandboxTr();
+  const [doneTasks, setDoneTasks] = useState<Set<number>>(new Set());
+  const toggleTask = (id: number) =>
+    setDoneTasks(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
 
   return (
     <div className="h-full overflow-hidden flex">
       {/* Main Content Area - Scrollable */}
       <div className="flex-1 overflow-auto">
         <div className="space-y-3 p-3 pe-0">
-          {/* Hero Banner with CTA */}
-          <Card className="relative text-white border-none shadow-lg overflow-hidden bg-gradient-to-br from-[#005844] via-[#008755] to-[#00a869]">
-            <img
-              src={heroDecoration}
-              alt=""
-              className="absolute -top-16 -end-16 rtl:-scale-x-100 h-160 w-160 rounded-full object-cover opacity-50 pointer-events-none select-none"
-            />
-            {/* <div className="absolute inset-0 bg-gradient-to-r from-[#005844]/80 to-[#008755]/80" /> */}
-            <CardContent className="pt-3 pb-3 relative z-10">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <div className="h-10 w-10 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <Award className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h1 className="text-xl   mb-0.5">
-                        {tr('Good Morning, User', 'صباح الخير، المستخدم')}
-                      </h1>
-                      <p className="text-white/90 text-sm">
-                        {tr('Strategy and Performance Management System', 'نظام إدارة الاستراتيجية والأداء')}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex flex-col items-center gap-1.5  group"
-                      // onClick={() => onNavigate('performance')}
-                    >
-                      <div className="relative size-[40px]">
-                        <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
-                          <BarChart3 className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-white font-[Dubai]">{tr('Performance', 'الأداء')}</p>
-                    </div>
-
-                    <div
-                      className="flex flex-col items-center gap-1.5  group"
-                      // onClick={() => onNavigate('strategy')}
-                    >
-                      <div className="relative size-[40px]">
-                        <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
-                          <Target className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-white font-[Dubai]">{tr('Strategy', 'الاستراتيجية')}</p>
-                    </div>
-
-                    <div
-                      className="flex flex-col items-center gap-1.5  group"
-                      // onClick={() => onNavigate('partnership')}
-                    >
-                      <div className="relative size-[40px]">
-                        <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
-                          <Users className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-white font-[Dubai]">{tr('Partnership', 'الشراكات')}</p>
-                    </div>
-
-                    <div
-                      className="flex flex-col items-center gap-1.5  group"
-                      // onClick={() => onNavigate('voc')}
-                    >
-                      <div className="relative size-[40px]">
-                        <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center  transition-colors">
-                          <FileText className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-white font-[Dubai]">{tr('VOC', 'صوت المتعامل')}</p>
-                    </div>
-
-                    <div
-                      className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                      onClick={() => onNavigate('sandbox-platform')}
-                    >
-                      <div className="relative size-[40px]">
-                        <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#005844] flex items-center justify-center group-hover:bg-[#008755] transition-colors">
-                          <Briefcase className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-white font-[Dubai]">{tr('Sandbox', 'البيئة التجريبية')}</p>
-                    </div>
-
-                    <div
-                      className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                      onClick={() => onNavigate('ideas-platform')}
-                    >
-                      <div className="relative size-[40px]">
-                        <div className="absolute inset-0 rounded-full bg-white" />
-                        <div className="absolute inset-[1px] rounded-full bg-[#26D07C] flex items-center justify-center group-hover:bg-[#008755] transition-colors">
-                          <Lightbulb className="h-4 w-4 text-white" />
-                        </div>
-                      </div>
-                      <p className="text-xs text-white font-[Dubai]">{tr('Ideas', 'الأفكار')}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="hidden xl:block">
-                  <div className="relative h-32 w-32">
-                    <div className="absolute inset-0 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-3xl   mb-0.5">2025</div>
-                        <div className="text-xs text-white/80">{tr('Active Year', 'السنة الحالية')}</div>
-                        <div className="text-[10px] text-white/60">{tr('Q1 - Q4', 'الربع 1 - الربع 4')}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Access Cards */}
-          <div>
-            <h2 className="text-lg   text-[#1f2937] mb-1.5 font-[Dubai] font-normal">
-              {tr('Quick Access', 'الوصول السريع')}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-              <Card
-                className="cursor-pointer transition-all hover:shadow-md hover:border-[#008755]/50"
-                onClick={() => onNavigate('performance')}
-              >
-                <CardContent className="pt-3 pb-3">
-                  <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[#008755] to-[#008755]/80 flex items-center justify-center text-white mb-2">
-                    <BarChart3 className="h-5 w-5" />
-                  </div>
-                  <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    {tr('Performance Dashboard', 'لوحة الأداء')}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {tr('Monitor KPIs and track organizational performance', 'رصد مؤشرات الأداء الرئيسية ومتابعة الأداء المؤسسي')}
-                  </p>
-                  <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>{tr('Open Dashboard', 'فتح اللوحة')}</span>
-                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card
-                className="cursor-pointer transition-all hover:shadow-md hover:border-[#008755]/50"
-                onClick={() => onNavigate('scorecards')}
-              >
-                <CardContent className="pt-3 pb-3">
-                  <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[#008755] to-[#008755]/80 flex items-center justify-center text-white mb-2">
-                    <Target className="h-5 w-5" />
-                  </div>
-                  <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    {tr('Scorecards', 'بطاقات الأداء')}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {tr('View all organizational scorecards and metrics', 'عرض جميع بطاقات الأداء والمقاييس المؤسسية')}
-                  </p>
-                  <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>{tr('View Scorecards', 'عرض بطاقات الأداء')}</span>
-                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card
-                className="cursor-pointer transition-all hover:shadow-md hover:border-[#008755]/50"
-                onClick={() => onNavigate('strategy')}
-              >
-                <CardContent className="pt-3 pb-3">
-                  <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[#008755] to-[#008755]/80 flex items-center justify-center text-white mb-2">
-                    <Activity className="h-5 w-5" />
-                  </div>
-                  <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    {tr('Strategy', 'الاستراتيجية')}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {tr('Strategic planning and alignment tools', 'أدوات التخطيط والمواءمة الاستراتيجية')}
-                  </p>
-                  <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>{tr('View Strategy', 'عرض الاستراتيجية')}</span>
-                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="cursor-pointer transition-all hover:shadow-md hover:border-[#008755]/50">
-                <CardContent className="pt-3 pb-3">
-                  <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[#008755] to-[#008755]/80 flex items-center justify-center text-white mb-2">
-                    <FileText className="h-5 w-5" />
-                  </div>
-                  <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    {tr('Reports', 'التقارير')}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {tr('Generate and export performance reports', 'إنشاء تقارير الأداء وتصديرها')}
-                  </p>
-                  <div className="flex items-center text-[#008755] text-xs  ">
-                    <span>{tr('View Reports', 'عرض التقارير')}</span>
-                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card
-                className="cursor-pointer transition-all hover:shadow-md hover:border-[#26D07C]/50"
-                onClick={() => onNavigate('ideas-platform')}
-              >
-                <CardContent className="pt-3 pb-3">
-                  <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-[#26D07C] to-[#008755] flex items-center justify-center text-white mb-2">
-                    <Lightbulb className="h-5 w-5" />
-                  </div>
-                  <h3 className="  text-[#1f2937] mb-1 text-sm font-[Dubai]">
-                    {tr('Ideas Platform', 'منصة الأفكار')}
-                  </h3>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    {tr('Submit, review and track innovation ideas', 'تقديم أفكار الابتكار ومراجعتها ومتابعتها')}
-                  </p>
-                  <div className="flex items-center text-[#26D07C] text-xs  ">
-                    <span>{tr('Open Platform', 'فتح المنصة')}</span>
-                    <ArrowRight className="h-3 w-3 ms-1 rtl:rotate-180" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          {/* Performance Trend */}
-          <div className="pe-6">
-            <h2 className="text-lg   text-[#1f2937] mb-1.5 font-[Dubai]">
-              {tr('Performance Trend', 'اتجاه الأداء')}
-            </h2>
-            <Card>
-              <CardHeader>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="  font-[Dubai]">
-                        {tr('Division Performance Trends', 'اتجاهات أداء القطاعات')}
-                      </CardTitle>
-                      <CardDescription>
-                        {isRTL
-                          ? `اتجاهات درجات الأداء حسب القطاع - عرض ${frequencyLabel(frequency)} من ${yearFrom} إلى ${yearTo}`
-                          : `Performance score trends by division - ${frequency.charAt(0).toUpperCase() + frequency.slice(1)} view from ${yearFrom} to ${yearTo}`}
-                      </CardDescription>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Frequency:', 'التكرار:')}</span>
-                      <Select value={frequency} onValueChange={setFrequency}>
-                        <SelectTrigger className="w-[120px] h-8">
-                          <SelectValue placeholder={tr('Frequency', 'التكرار')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="annual">{tr('Annual', 'سنوي')}</SelectItem>
-                          <SelectItem value="quarterly">{tr('Quarterly', 'ربع سنوي')}</SelectItem>
-                          <SelectItem value="monthly">{tr('Monthly', 'شهري')}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Year From:', 'من سنة:')}</span>
-                      <Select value={yearFrom.toString()} onValueChange={(value) => {
-                        const newFrom = Number(value);
-                        setYearFrom(newFrom);
-                        if (newFrom > yearTo) setYearTo(newFrom);
-                      }}>
-                        <SelectTrigger className="w-[100px] h-8">
-                          <SelectValue placeholder={tr('From', 'من')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="2020">2020</SelectItem>
-                          <SelectItem value="2021">2021</SelectItem>
-                          <SelectItem value="2022">2022</SelectItem>
-                          <SelectItem value="2023">2023</SelectItem>
-                          <SelectItem value="2024">2024</SelectItem>
-                          <SelectItem value="2025">2025</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Year To:', 'إلى سنة:')}</span>
-                      <Select value={yearTo.toString()} onValueChange={(value) => {
-                        const newTo = Number(value);
-                        setYearTo(newTo);
-                        if (newTo < yearFrom) setYearFrom(newTo);
-                      }}>
-                        <SelectTrigger className="w-[100px] h-8">
-                          <SelectValue placeholder={tr('To', 'إلى')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="2020">2020</SelectItem>
-                          <SelectItem value="2021">2021</SelectItem>
-                          <SelectItem value="2022">2022</SelectItem>
-                          <SelectItem value="2023">2023</SelectItem>
-                          <SelectItem value="2024">2024</SelectItem>
-                          <SelectItem value="2025">2025</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart
-                    data={performanceData}
-                    margin={isRTL ? { top: 5, right: 0, left: 30, bottom: 5 } : { top: 5, right: 30, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      dataKey="period"
-                      stroke="#6b7280"
-                      reversed={isRTL}
-                      tickFormatter={fmtPeriod}
-                      style={{ fontSize: '12px', fontFamily: 'Dubai, sans-serif' }}
-                    />
-                    <YAxis
-                      stroke="#6b7280"
-                      domain={[60, 100]}
-                      orientation={isRTL ? 'right' : 'left'}
-                      style={{ fontSize: '12px', fontFamily: 'Dubai, sans-serif' }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '6px',
-                        fontFamily: 'Dubai, sans-serif'
-                      }}
-                      labelFormatter={fmtPeriod}
-                    />
-                    <Legend
-                      wrapperStyle={{
-                        fontSize: '12px',
-                        fontFamily: 'Dubai, sans-serif'
-                      }}
-                    />
-                    <Line key="customs-dev" type="monotone" dataKey="Customs Development" name={tr('Customs Development', DIVISION_AR['Customs Development'])} stroke="#00B0AA" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="customs-inspect" type="monotone" dataKey="Customs Inspection" name={tr('Customs Inspection', DIVISION_AR['Customs Inspection'])} stroke="#BB9956" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="finance-admin" type="monotone" dataKey="Finance and Administrative affairs" name={tr('Finance and Administrative affairs', DIVISION_AR['Finance and Administrative affairs'])} stroke="#008755" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="hr" type="monotone" dataKey="Human Resources" name={tr('Human Resources', DIVISION_AR['Human Resources'])} stroke="#005844" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="director-gen" type="monotone" dataKey="Director General" name={tr('Director General', DIVISION_AR['Director General'])} stroke="#115E67" strokeWidth={2} dot={{ r: 4 }} />
-                    <Line key="policy-leg" type="monotone" dataKey="Policy and Legislation" name={tr('Policy and Legislation', DIVISION_AR['Policy and Legislation'])} stroke="#FFBE9F" strokeWidth={2} dot={{ r: 4 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Task List */}
-          <div className="pe-6">
-            <div className="flex items-center justify-between mb-1.5">
-              <h2 className="text-lg font-['Dubai:Medium'] text-[#1f2937] font-[Dubai]">
-                {tr('Task List', 'قائمة المهام')}
+          <HomeBanner onNavigate={onNavigate} />
+ <h2 className="text-lg text-[#1f2937] font-[Dubai] font-normal">
+                {tr('Quick Actions', 'إجراءات سريعة')}
               </h2>
-              <Button variant="ghost" size="sm" className="text-[#008755]">
-                {tr('View All', 'عرض الكل')}
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+            {QUICK_ACTIONS.map(({ key, icon: Icon, color, title, titleAr, desc, descAr }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => onNavigate('sandbox-platform')}
+                className="group flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 text-start transition-all hover:border-[#008755]/40 hover:shadow-md"
+              >
+                <div className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105" style={{ backgroundColor: `${color}1a`, color }}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[#1a1a1a] font-[Dubai] truncate">{tr(title, titleAr)}</p>
+                  <p className="text-xs text-[#8a8f98] truncate">{tr(desc, descAr)}</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-gray-300 transition-all group-hover:text-[#008755] rtl:rotate-180" />
+              </button>
+            ))}
+          </div>
+
+          {/* Sandbox Overview — KPI tiles */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <h2 className="text-lg text-[#1f2937] font-[Dubai] font-normal">
+                {tr('Sandbox Overview', 'نظرة عامة على البيئة التجريبية')}
+              </h2>
+              <Button variant="ghost" size="sm" className="text-[#008755]" onClick={() => onNavigate('sandbox-platform')}>
+                {tr('Open Sandbox', 'فتح البيئة التجريبية')}
                 <ChevronRight className="h-4 w-4 ms-1 rtl:rotate-180" />
               </Button>
             </div>
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Filter:', 'تصفية:')}</span>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
-                      <SelectTrigger className="w-[130px] h-8">
-                        <SelectValue placeholder={tr('Status', 'الحالة')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">{tr('All Status', 'جميع الحالات')}</SelectItem>
-                        <SelectItem value="open">{tr('Open', 'مفتوحة')}</SelectItem>
-                        <SelectItem value="in-progress">{tr('In Progress', 'قيد التنفيذ')}</SelectItem>
-                        <SelectItem value="completed">{tr('Completed', 'مكتملة')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+              <StatTile
+                id="projects" icon={FolderKanban} color="#008755" isRTL={isRTL} spark={SPARKS.projects}
+                label={tr('Total Projects', 'إجمالي المشاريع')}
+                value={String(TOTAL_PROJECTS)}
+                sub={tr('Across R&D, Innovation & Knowledge', 'في البحث والتطوير والابتكار والمعرفة')}
+                delta="+12%"
+              />
+              <StatTile
+                id="budget" icon={Wallet} color="#1d5fa8" isRTL={isRTL} spark={SPARKS.budget}
+                label={tr('Portfolio Budget', 'ميزانية المحفظة')}
+                value={isRTL ? `${TOTAL_BUDGET.toFixed(1)} مليون درهم` : money(TOTAL_BUDGET)}
+                sub={tr('Approved funding to date', 'التمويل المعتمد حتى الآن')}
+                delta="+8%"
+              />
+              <StatTile
+                id="sandbox" icon={FlaskConical} color="#005844" isRTL={isRTL} spark={SPARKS.sandbox}
+                label={tr('Reached Sandbox', 'وصلت إلى البيئة التجريبية')}
+                value={String(IN_SANDBOX)}
+                sub={isRTL
+                  ? `${Math.round((IN_SANDBOX / TOTAL_PROJECTS) * 100)}% من المحفظة قيد التجريب`
+                  : `${Math.round((IN_SANDBOX / TOTAL_PROJECTS) * 100)}% of portfolio piloting`}
+                delta="+33%"
+              />
+              <StatTile
+                id="ip" icon={ShieldCheck} color="#a8710d" isRTL={isRTL} spark={SPARKS.ip}
+                label={tr('IP Assets Granted', 'أصول الملكية الفكرية الممنوحة')}
+                value={`${IP_GRANTED}/${IP_REGISTER.length}`}
+                sub={tr('Patents, trademarks & works', 'براءات وعلامات ومصنفات')}
+                delta="+2"
+              />
+            </div>
+          </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground font-[Dubai]">{tr('Sort:', 'ترتيب:')}</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8"
-                      onClick={() => {
-                        if (prioritySort === null) {
-                          setPrioritySort('desc');
-                          setDateSort(null);
-                        } else if (prioritySort === 'desc') {
-                          setPrioritySort('asc');
-                        } else {
-                          setPrioritySort(null);
-                        }
-                      }}
-                    >
-                      {tr('Priority', 'الأولوية')}
-                      <ArrowUpDown className="h-3 w-3 ms-1" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8"
-                      onClick={() => {
-                        if (dateSort === null) {
-                          setDateSort('asc');
-                          setPrioritySort(null);
-                        } else if (dateSort === 'asc') {
-                          setDateSort('desc');
-                        } else {
-                          setDateSort(null);
-                        }
-                      }}
-                    >
-                      {tr('Date', 'التاريخ')}
-                      <ArrowUpDown className="h-3 w-3 ms-1" />
-                    </Button>
-                  </div>
+          {/* Pipeline by stage + Portfolio mix */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+            <Panel
+              className="xl:col-span-2"
+              title={tr('Project Pipeline', 'مسار المشاريع')}
+              subtitle={tr('Projects at each stage, by type', 'المشاريع في كل مرحلة حسب النوع')}
+              action={
+                <div className="flex items-center gap-3 text-xs text-[#555555]">
+                  {TYPE_KEYS.map(t => (
+                    <span key={t} className="inline-flex items-center gap-1.5">
+                      <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: TYPE_COLOR[t].color }} />
+                      {ts(TYPES[t].label)}
+                    </span>
+                  ))}
                 </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <div className="space-y-3">
-                  {filteredTasks.map((task) => (
-                    <div
-                      key={task.id}
-                      className={`flex items-start pb-3 border-b last:border-b-0 last:pb-0 ${task.status === 'completed' ? 'opacity-60' : ''
-                        }`}
+              }
+            >
+              <ResponsiveContainer width="100%" height={230}>
+                <BarChart data={STAGE_DATA} layout="vertical" barCategoryGap={10} margin={{ top: 0, right: 8, left: 8, bottom: 0 }}>
+                  <CartesianGrid horizontal={false} stroke="#eef0f2" />
+                  <XAxis type="number" domain={[0, "dataMax"]} reversed={isRTL} allowDecimals={false} axisLine={false} tickLine={false} tick={AXIS_TICK} />
+                  <YAxis
+                    type="category" dataKey="stage" width={110} orientation={isRTL ? 'right' : 'left'}
+                    axisLine={false} tickLine={false}
+                    tick={({ x, y, payload }: any) => (
+                      // Explicit anchor + LTR direction so labels sit beside the bars in both layouts
+                      <text
+                        x={x} y={y} dy={4} textAnchor={isRTL ? 'start' : 'end'}
+                        style={{ direction: 'ltr', fontSize: 12, fill: '#555555', fontFamily: 'Dubai, sans-serif' }}
+                      >
+                        {ts(String(payload.value))}
+                      </text>
+                    )}
+                  />
+                  <Tooltip cursor={{ fill: '#f5f8fa' }} content={<ChartTooltip labelFormatter={(s: string) => ts(s)} />} />
+                  {TYPE_KEYS.map((t, idx) => (
+                    <Bar
+                      key={t} dataKey={t} stackId="stage" name={ts(TYPES[t].label)} fill={TYPE_COLOR[t].color}
+                      stroke="#ffffff" strokeWidth={2}
+                      radius={idx === TYPE_KEYS.length - 1 ? (isRTL ? [4, 0, 0, 4] : [0, 4, 4, 0]) : 0}
                     >
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className={`font-['Dubai:Medium',_'Dubai'] ${task.status === 'completed' ? 'text-muted-foreground' : 'text-[#1f2937]'
-                            }`}>
-                            {tr(task.title, task.titleAr)}
-                          </p>
-                          <div className="flex gap-2">
-                            <Badge
-                              style={{
-                                backgroundColor:
-                                  task.status === 'completed' ? '#35774320' :
-                                    task.status === 'in-progress' ? '#00875520' : '#F2A20020',
-                                color:
-                                  task.status === 'completed' ? '#357743' :
-                                    task.status === 'in-progress' ? '#008755' : '#F2A200'
-                              }}
-                              className="min-w-[90px] justify-center"
-                            >
-                              {isRTL ? statusLabel(task.status) : (task.status === 'in-progress' ? 'In Progress' : task.status.charAt(0).toUpperCase() + task.status.slice(1))}
-                            </Badge>
-                            <Badge
-                              style={{
-                                backgroundColor: task.priority === 'high' ? '#D8373120' :
-                                  task.priority === 'medium' ? '#F2A20020' : '#35774320',
-                                color: task.priority === 'high' ? '#D83731' :
-                                  task.priority === 'medium' ? '#F2A200' : '#357743'
-                              }}
-                              className="min-w-[80px] justify-center"
-                            >
-                              {isRTL ? priorityLabel(task.priority) : task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
-                          <Calendar className="h-3 w-3" />
-                          <span>{tr('Due:', 'تاريخ الاستحقاق:')} {task.dueDate}</span>
-                        </div>
+                      <LabelList dataKey={t} position="center" fill={TYPE_COLOR[t].label} fontSize={12} formatter={(v: number) => (v > 0 ? v : '')} />
+                    </Bar>
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </Panel>
+
+            <Panel title={tr('Portfolio Mix', 'توزيع المحفظة')} subtitle={tr('Share of projects by type', 'نسبة المشاريع حسب النوع')}>
+              <div className="relative h-[150px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={TYPE_MIX} dataKey="value" nameKey="name" innerRadius={50} outerRadius={70}
+                      paddingAngle={3} cornerRadius={4} stroke="#ffffff" strokeWidth={2} startAngle={90} endAngle={-270}
+                    >
+                      {TYPE_MIX.map(d => <Cell key={d.key} fill={d.fill} name={ts(d.name)} />)}
+                    </Pie>
+                    <Tooltip content={<ChartTooltip />} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-2xl font-semibold text-[#1a1a1a] tabular-nums leading-none">{TOTAL_PROJECTS}</span>
+                  <span className="text-xs text-[#8a8f98] mt-1">{tr('Projects', 'مشروع')}</span>
+                </div>
+              </div>
+              <div className="mt-3 space-y-2">
+                {TYPE_MIX.map(d => (
+                  <div key={d.key} className="flex items-center gap-2 text-xs">
+                    <span className="h-2.5 w-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: d.fill }} />
+                    <span className="text-[#555555] font-[Dubai]">{ts(d.name)}</span>
+                    <span className="ms-auto text-[#8a8f98] tabular-nums">
+                      {isRTL ? `${d.budget.toFixed(1)} مليون درهم` : money(d.budget)}
+                    </span>
+                    <span className="w-10 text-end font-semibold text-[#1a1a1a] tabular-nums">
+                      {Math.round((d.value / TOTAL_PROJECTS) * 100)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          </div>
+
+          {/* Success story spotlight + Upcoming events */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+            <div className="xl:col-span-2 relative overflow-hidden rounded-xl border border-gray-200 bg-white flex flex-col md:flex-row">
+              <div className="relative md:w-2/5 h-48 md:h-auto flex-shrink-0">
+                <img src={spotlightImage} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:bg-gradient-to-r rtl:md:bg-gradient-to-l md:from-transparent md:to-black/10" />
+                <span className="absolute top-3 start-3 inline-flex items-center gap-1 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-xs font-medium text-[#005844]">
+                  <Award className="h-3.5 w-3.5" />
+                  {tr('Success Story', 'قصة نجاح')}
+                </span>
+              </div>
+              <div className="flex-1 p-5 flex flex-col">
+                <div className="flex items-center gap-2 text-xs text-[#8a8f98] mb-1">
+                  <span className={`rounded px-1.5 py-px ${TYPE_COLOR.innov.chip}`}>{ts('Innovation')}</span>
+                  <span>{ts('Customer Happiness')}</span>
+                </div>
+                <h3 className="text-lg text-[#1a1a1a] font-[Dubai] leading-snug">{ts('Smart Queue Management')}</h3>
+                <p className="text-xs text-[#666666] leading-relaxed mt-1.5">
+                  {tr(
+                    'After a six-month sandbox pilot across three service centres, dynamic queue allocation is now live — and patented.',
+                    'بعد تجربة استمرت ستة أشهر في ثلاثة مراكز خدمة، أصبح نظام التوزيع الديناميكي للطوابير مطبقاً الآن وحاصلاً على براءة اختراع.'
+                  )}
+                </p>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="rounded-lg bg-[#f5f8fa] px-3 py-2">
+                    <p className="text-xs text-[#8a8f98]">{tr('Avg. wait before', 'متوسط الانتظار قبل')}</p>
+                    <p className="text-base font-semibold text-[#8a8f98] line-through tabular-nums">{tr('25 min', '25 دقيقة')}</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-[#008755] rtl:rotate-180 flex-shrink-0" />
+                  <div className="rounded-lg bg-[#008755]/10 px-3 py-2">
+                    <p className="text-xs text-[#008755]">{tr('Avg. wait after', 'متوسط الانتظار بعد')}</p>
+                    <p className="text-base font-semibold text-[#005844] tabular-nums">{tr('9 min', '9 دقائق')}</p>
+                  </div>
+                  <span dir="ltr" className="hidden sm:inline-flex rounded-full bg-[#008755] text-white px-2.5 py-1 text-xs font-semibold tabular-nums">−64%</span>
+                </div>
+                <div className="mt-auto pt-4">
+                  <Button size="sm" className="bg-[#008755] hover:bg-[#005844] text-white" onClick={() => onNavigate('sandbox-platform')}>
+                    {tr('View Project', 'عرض المشروع')}
+                    <ArrowRight className="h-3.5 w-3.5 ms-1 rtl:rotate-180" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Panel
+              title={tr('Upcoming Events', 'الفعاليات القادمة')}
+              subtitle={tr('November 2026', 'نوفمبر 2026')}
+              action={
+                <div className="h-8 w-8 rounded-lg bg-[#008755]/10 text-[#008755] flex items-center justify-center">
+                  <CalendarDays className="h-4 w-4" />
+                </div>
+              }
+            >
+              <div className="space-y-2.5">
+                {UPCOMING_EVENTS.map(ev => (
+                  <div key={ev.id} className="flex items-start gap-3">
+                    <div className="w-11 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 text-center">
+                      <div className="bg-[#008755] text-white text-xs uppercase tracking-wide py-0.5">{tr('Nov', 'نوف')}</div>
+                      <div className="text-base font-semibold text-[#1a1a1a] tabular-nums py-0.5">{ev.day}</div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-[#1a1a1a] font-[Dubai] leading-snug line-clamp-2">{tr(ev.title, ev.titleAr)}</p>
+                      <div className="flex items-center gap-1.5 mt-1 text-xs text-[#8a8f98]">
+                        <span className={`rounded px-1.5 py-px ${EVENT_KIND[ev.kind].className}`}>
+                          {tr(EVENT_KIND[ev.kind].label, EVENT_KIND[ev.kind].labelAr)}
+                        </span>
+                        <span className="tabular-nums">{ev.time}</span>
+                        <span className="truncate">· {tr(ev.place, ev.placeAr)}</span>
                       </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          </div>
+
+          {/* My sandbox tasks + Partners */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+            <Panel
+              className="xl:col-span-2"
+              title={tr('My Sandbox Tasks', 'مهامي في البيئة التجريبية')}
+              subtitle={isRTL
+                ? `${SANDBOX_TASKS.length - doneTasks.size} مهام متبقية`
+                : `${SANDBOX_TASKS.length - doneTasks.size} of ${SANDBOX_TASKS.length} remaining`}
+              action={
+                <Button variant="ghost" size="sm" className="h-7 text-xs text-[#008755]" onClick={() => onNavigate('sandbox-platform')}>
+                  {tr('View All', 'عرض الكل')}
+                  <ChevronRight className="h-3.5 w-3.5 ms-1 rtl:rotate-180" />
+                </Button>
+              }
+            >
+              <div className="divide-y divide-gray-100">
+                {SANDBOX_TASKS.map(task => {
+                  const done = doneTasks.has(task.id);
+                  const pr = PRIORITY_META[task.priority];
+                  return (
+                    <div key={task.id} className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+                      <button
+                        type="button"
+                        aria-pressed={done}
+                        aria-label={tr('Mark as done', 'وضع علامة كمكتملة')}
+                        onClick={() => toggleTask(task.id)}
+                        className={`h-5 w-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${done ? 'bg-[#008755] border-[#008755] text-white' : 'border-gray-300 hover:border-[#008755]'}`}
+                      >
+                        {done && <Check className="h-3 w-3" strokeWidth={3} />}
+                      </button>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-[Dubai] truncate ${done ? 'text-[#8a8f98] line-through' : 'text-[#1a1a1a]'}`}>
+                          {tr(task.title, task.titleAr)}
+                        </p>
+                        <p className="text-xs text-[#8a8f98] truncate">{ts(task.project)}</p>
+                      </div>
+                      <span className={`hidden sm:inline rounded px-1.5 py-px text-xs ${pr.className}`}>{tr(pr.label, pr.labelAr)}</span>
+                      <span className="inline-flex items-center gap-1 text-xs text-[#8a8f98] w-20 justify-end flex-shrink-0">
+                        <Clock className="h-3 w-3" />
+                        {tr(task.due, task.dueAr)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </Panel>
+
+            <Panel
+              title={tr('Partner Network', 'شبكة الشركاء')}
+              subtitle={isRTL ? `${PARTNERS.length} شركاء نشطين` : `${PARTNERS.length} active partners`}
+              action={
+                <div className="h-8 w-8 rounded-lg bg-[#8b6fd4]/10 text-[#8b6fd4] flex items-center justify-center">
+                  <Handshake className="h-4 w-4" />
+                </div>
+              }
+            >
+              <div className="space-y-2.5">
+                {PARTNERS.slice(0, 4).map(pt => (
+                  <div key={pt.name} className="flex items-center gap-2.5">
+                    <div
+                      className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold text-white flex-shrink-0"
+                      style={{ background: `linear-gradient(135deg, ${pt.gradientFrom}, ${pt.gradientTo})` }}
+                    >
+                      {pt.initials}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-[#1a1a1a] font-[Dubai] truncate">{ts(pt.name)}</p>
+                      <p className="text-xs text-[#8a8f98]">{ts(pt.type)}</p>
+                    </div>
+                    <span className="text-xs text-[#555555] tabular-nums flex-shrink-0">
+                      {isRTL ? `${pt.activeProjects} مشاريع` : `${pt.activeProjects} projects`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+                <div className="flex gap-1">
+                  {PARTNERS.slice(4).map(pt => (
+                    <div
+                      key={pt.name}
+                      title={ts(pt.name)}
+                      className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-semibold text-white"
+                      style={{ background: `linear-gradient(135deg, ${pt.gradientFrom}, ${pt.gradientTo})` }}
+                    >
+                      {pt.initials}
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+                <button type="button" onClick={() => onNavigate('sandbox-platform')} className="text-xs text-[#008755] hover:underline">
+                  {isRTL ? `+${PARTNERS.length - 4} آخرين` : `+${PARTNERS.length - 4} more`}
+                </button>
+              </div>
+            </Panel>
           </div>
 
-          {/* Insights Section */}
-          <div className="pe-6">
-            <h2 className="text-lg   text-[#1f2937] mb-1.5 font-[Dubai]">
-              {tr('Insights', 'رؤى')}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Performance Insights */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-[#008755]/10 flex items-center justify-center">
-                      <Lightbulb className="h-4 w-4 text-[#008755]" />
+          {/* Top evaluated projects + Ideas snapshot */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+            <Panel
+              className="xl:col-span-2"
+              title={tr('Top Evaluated Projects', 'المشاريع الأعلى تقييماً')}
+              subtitle={tr('Highest evaluation panel scores', 'أعلى درجات لجنة التقييم')}
+              action={
+                <Button variant="ghost" size="sm" className="h-7 text-xs text-[#008755]" onClick={() => onNavigate('sandbox-platform')}>
+                  {tr('View All', 'عرض الكل')}
+                  <ChevronRight className="h-3.5 w-3.5 ms-1 rtl:rotate-180" />
+                </Button>
+              }
+            >
+              <div className="divide-y divide-gray-100">
+                {TOP_PROJECTS.map((p, i) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => onNavigate('sandbox-platform')}
+                    className="w-full flex items-center gap-3 py-2.5 first:pt-0 last:pb-0 text-start group"
+                  >
+                    <span className="h-7 w-7 rounded-lg bg-[#f5f8fa] text-xs font-semibold text-[#555555] flex items-center justify-center flex-shrink-0 tabular-nums">
+                      {i + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-[#1a1a1a] truncate font-[Dubai] group-hover:text-[#008755] transition-colors">{ts(p.name)}</p>
+                      <div className="flex items-center gap-2 mt-0.5 text-xs text-[#8a8f98]">
+                        <span className={`rounded px-1.5 py-px ${TYPE_COLOR[p.type].chip}`}>{ts(TYPES[p.type].label)}</span>
+                        <span>{ts(p.stage)}</span>
+                        <span className="hidden sm:inline">· {ts(p.dept)}</span>
+                      </div>
                     </div>
-                    <CardTitle className="text-base">{tr('Performance Insights', 'رؤى الأداء')}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
-                      <span>{tr('Overall performance has improved by 12% compared to last quarter', 'تحسّن الأداء العام بنسبة 12% مقارنة بالربع السابق')}</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
-                      <span>{tr('Customer satisfaction metrics exceeded targets by 7%', 'تجاوزت مؤشرات رضا المتعاملين المستهدفات بنسبة 7%')}</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
-                      <span>{tr('3 departments require attention for below-target KPIs', '3 إدارات تتطلب المتابعة بسبب مؤشرات أداء دون المستهدف')}</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
+                    <div className="w-32 flex items-center gap-2 flex-shrink-0">
+                      <div className="flex-1 h-1.5 rounded-full bg-[#f0f2f4] overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${p.score}%`, backgroundColor: TYPE_COLOR[p.type].color }} />
+                      </div>
+                      <span className="text-sm font-semibold text-[#1a1a1a] tabular-nums w-7 text-end">{p.score}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </Panel>
 
-              {/* Strategy Insights */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-[#008755]/10 flex items-center justify-center">
-                      <Lightbulb className="h-4 w-4 text-[#008755]" />
-                    </div>
-                    <CardTitle className="text-base">{tr('Strategy Insights', 'رؤى الاستراتيجية')}</CardTitle>
+            <Panel
+              title={tr('Ideas Platform', 'منصة الأفكار')}
+              subtitle={tr('Monthly idea submissions', 'الأفكار المقدمة شهرياً')}
+              action={
+                <div className="h-8 w-8 rounded-lg bg-[#26D07C]/15 text-[#008755] flex items-center justify-center">
+                  <Lightbulb className="h-4 w-4" />
+                </div>
+              }
+            >
+              <div className="grid grid-cols-3 gap-2 mb-2">
+                {[
+                  [tr('Submitted', 'المقدمة'), '248'],
+                  [tr('In Review', 'قيد المراجعة'), '37'],
+                  [tr('To Sandbox', 'إلى البيئة التجريبية'), '12'],
+                ].map(([l, v]) => (
+                  <div key={l} className="rounded-lg bg-[#f5f8fa] px-2 py-1.5">
+                    <p className="text-base font-semibold text-[#1a1a1a] tabular-nums leading-tight">{v}</p>
+                    <p className="text-xs text-[#8a8f98] truncate">{l}</p>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
-                      <span>{tr('Strategic alignment improved across all divisions', 'تحسّنت المواءمة الاستراتيجية في جميع القطاعات')}</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
-                      <span>{tr('Innovation initiatives show 85% completion rate', 'تُظهر مبادرات الابتكار نسبة إنجاز 85%')}</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-sm">
-                      <ChevronRight className="h-4 w-4 text-[#008755] mt-0.5 flex-shrink-0 rtl:rotate-180" />
-                      <span>{tr('2 new strategic objectives added for Q1 2026', 'إضافة هدفين استراتيجيين جديدين للربع الأول 2026')}</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
+                ))}
+              </div>
+              <ResponsiveContainer width="100%" height={92}>
+                <BarChart data={IDEAS_MONTHLY} margin={{ top: 14, right: 0, left: 0, bottom: 0 }}>
+                  <XAxis
+                    dataKey="m" reversed={isRTL} axisLine={false} tickLine={false} tick={AXIS_TICK}
+                    tickFormatter={(m) => (isRTL ? MONTH_AR[m] ?? m : m)}
+                  />
+                  <Tooltip
+                    cursor={{ fill: '#f5f8fa' }}
+                    content={<ChartTooltip labelFormatter={(m: string) => (isRTL ? MONTH_AR[m] ?? m : m)} />}
+                  />
+                  <Bar dataKey="v" name={tr('Ideas', 'الأفكار')} fill="#26D07C" radius={[4, 4, 0, 0]} maxBarSize={22}>
+                    <LabelList dataKey="v" position="top" fill="#555555" fontSize={12} />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <button
+                type="button"
+                onClick={() => onNavigate('ideas-platform')}
+                className="mt-2 w-full inline-flex items-center justify-center gap-1 rounded-lg border border-gray-200 py-1.5 text-xs text-[#008755] hover:bg-[#f5f8fa] transition-colors font-[Dubai]"
+              >
+                {tr('Open Ideas Platform', 'فتح منصة الأفكار')}
+                <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
+              </button>
+            </Panel>
           </div>
         </div>
       </div>
@@ -814,17 +824,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                         {announcement.badges.map((badge, idx) => (
                           <Badge
                             key={idx}
-                            className={`text-[10px] px-2 py-0.5 rounded ${badge.label === 'Policy'
-                                ? 'bg-[#16a8b8] text-white hover:bg-[#16a8b8]'
-                                : 'bg-[#ffb088] text-white hover:bg-[#ffb088]'
-                              }`}
+                            className={`text-xs px-2 py-0.5 rounded ${badge.className}`}
                           >
                             {tr(badge.label, badge.labelAr)}
                           </Badge>
                         ))}
                       </div>
                     )}
-                    <div className="flex items-center gap-1.5 text-[11px] text-[#999999]">
+                    <div className="flex items-center gap-1.5 text-xs text-[#999999]">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
                         <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
                         <line x1="16" x2="16" y1="2" y2="6" />
@@ -852,31 +859,37 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 {tr('Recent Activity', 'النشاط الأخير')}
               </h3>
             </div>
-            <div className="bg-[#f5f8fa] rounded-xl p-4">
-              <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3">
-                    <div className="mt-1 flex-shrink-0">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-[#008755]">
-                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-                        <polyline points="14 2 14 8 20 8" />
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs text-[#1a1a1a] mb-1.5 leading-relaxed">
+            <div className="space-y-2">
+              {recentActivity.map((activity) => {
+                const { icon: ActivityIcon, color } = ACTIVITY_STYLE[activity.type] ?? ACTIVITY_STYLE.info;
+                return (
+                  <Card key={activity.id} className="border border-gray-200 bg-white rounded-xl">
+                    <CardContent className="p-3">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div
+                          className="h-6 w-6 rounded-md flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: `${color}1a`, color }}
+                        >
+                          <ActivityIcon className="h-3.5 w-3.5" />
+                        </div>
+                        <h4 className="  text-sm text-[#1a1a1a] leading-snug font-[Dubai]">
+                          {tr(activity.title, activity.titleAr)}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-[#666666] mb-2 leading-relaxed">
                         {tr(activity.text, activity.textAr)}
                       </p>
-                      <div className="flex items-center gap-1.5 text-[11px] text-[#999999]">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                      <div className="flex items-center gap-1.5 text-xs text-[#999999]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
                           <circle cx="12" cy="12" r="10" />
                           <polyline points="12 6 12 12 16 14" />
                         </svg>
                         <span>{tr(activity.timestamp, activity.timestampAr)}</span>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </div>

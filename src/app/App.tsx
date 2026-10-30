@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Header } from './components/shared/Header';
 import { Footer } from './components/shared/Footer';
-import { HomePage } from './components/shared/HomePage';
+import { HomeView } from './components/shared/HomeView';
 import { StrategyDashboard } from './components/strategy/StrategyDashboard';
 import { PerformanceDashboard } from './components/performance/PerformanceDashboard';
 import { ScorecardsPage } from './components/performance/ScorecardsPage';
@@ -106,7 +106,7 @@ export default function App() {
 
         <main className="flex-1 overflow-hidden">
           {currentView === 'home' ? (
-            <HomePage onNavigate={(view) => {
+            <HomeView onNavigate={(view) => {
               setCurrentView(view as typeof currentView);
               updateBreadcrumbsForView(view as typeof currentView);
             }} />

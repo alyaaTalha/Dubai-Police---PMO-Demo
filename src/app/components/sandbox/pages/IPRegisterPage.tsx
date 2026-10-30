@@ -102,12 +102,12 @@ export function IPRegisterPage({ store }: PageProps) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-start text-sm uppercase tracking-wide text-muted-foreground bg-muted/30">
-              <th className="px-4 py-2.5 font-semibold">{tr('Title', 'العنوان')}</th>
-              <th className="px-4 py-2.5 font-semibold">{tr('Type', 'النوع')}</th>
-              <th className="px-4 py-2.5 font-semibold">{tr('Status', 'الحالة')}</th>
-              <th className="px-4 py-2.5 font-semibold">{tr('Filed', 'تاريخ الإيداع')}</th>
-              <th className="px-4 py-2.5 font-semibold">{tr('Department', 'الإدارة')}</th>
-              <th className="px-4 py-2.5 font-semibold">{tr('Linked Project', 'المشروع المرتبط')}</th>
+              <th className="px-4 py-2.5 font-semibold text-start">{tr('Title', 'العنوان')}</th>
+              <th className="px-4 py-2.5 font-semibold text-start">{tr('Type', 'النوع')}</th>
+              <th className="px-4 py-2.5 font-semibold text-start">{tr('Status', 'الحالة')}</th>
+              <th className="px-4 py-2.5 font-semibold text-start">{tr('Filed', 'تاريخ الإيداع')}</th>
+              <th className="px-4 py-2.5 font-semibold text-start">{tr('Department', 'الإدارة')}</th>
+              <th className="px-4 py-2.5 font-semibold text-start">{tr('Linked Project', 'المشروع المرتبط')}</th>
             </tr>
           </thead>
           <tbody>

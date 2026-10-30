@@ -24,6 +24,8 @@ import { useSandboxTr } from './sandboxI18n';
 interface SandboxPlatformShellProps {
   onBack?: () => void;
   setBreadcrumbs?: (crumbs: Array<{ label: string; onClick?: () => void }>) => void;
+  /** Page to open on first render (defaults to the platform home). */
+  initialPage?: SandboxPage;
 }
 
 interface NavLeaf { id: SandboxPage; label: string; icon: React.ElementType; count?: (projects: Project[]) => number | undefined; }
@@ -35,8 +37,8 @@ type CrumbSpec =
   | { kind: 'page'; page: SandboxPage }
   | { kind: 'project'; backTo: SandboxPage; projectId: string };
 
-export function SandboxPlatformShell({ onBack, setBreadcrumbs }: SandboxPlatformShellProps) {
-  const [activePage, setActivePage] = useState<SandboxPage>('home');
+export function SandboxPlatformShell({ onBack, setBreadcrumbs, initialPage = 'home' }: SandboxPlatformShellProps) {
+  const [activePage, setActivePage] = useState<SandboxPage>(initialPage);
   const [typesOpen, setTypesOpen] = useState(true);
   const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS);
   const [reports, setReports] = useState(REPORTS);
@@ -45,7 +47,9 @@ export function SandboxPlatformShell({ onBack, setBreadcrumbs }: SandboxPlatform
   const [search, setSearch] = useState('');
   const [viewingProjectId, setViewingProjectId] = useState<string | null>(null);
   const [returnPage, setReturnPage] = useState<SandboxPage>('home');
-  const [crumbSpec, setCrumbSpec] = useState<CrumbSpec | null>(null);
+  const [crumbSpec, setCrumbSpec] = useState<CrumbSpec | null>(
+    initialPage === 'home' ? null : { kind: 'page', page: initialPage },
+  );
   const { tr, lang } = useLanguage();
   const ts = useSandboxTr();
 

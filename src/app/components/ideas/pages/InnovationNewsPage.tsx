@@ -192,7 +192,7 @@ function CategoryChip({ category }: { category: NewsCategory }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center text-[10px] font-medium rounded-full px-2 py-0.5',
+        'inline-flex items-center text-[10px] font-medium rounded-full px-2 py-0.5 w-fit',
         style.chip
       )}
     >

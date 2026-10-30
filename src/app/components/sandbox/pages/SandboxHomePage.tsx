@@ -774,12 +774,12 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-start text-sm uppercase tracking-wide text-muted-foreground bg-muted/30">
-                <th className="px-4 py-2.5 font-semibold">{tr('Project', 'المشروع')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Type', 'النوع')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Status', 'الحالة')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Stage', 'المرحلة')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Budget', 'الميزانية')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Department', 'الإدارة')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Project', 'المشروع')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Type', 'النوع')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Status', 'الحالة')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Stage', 'المرحلة')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Budget', 'الميزانية')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Department', 'الإدارة')}</th>
               </tr>
             </thead>
             <tbody>

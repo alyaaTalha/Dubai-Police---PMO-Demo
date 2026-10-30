@@ -11,6 +11,7 @@ import { PortfolioDashboard } from './components/portfolio/PortfolioDashboard';
 import { SystemAdministrationPage } from './components/admin/SystemAdministrationPage';
 import { IdeasPlatformShell, type IdeaOriginProject } from './components/ideas/IdeasPlatformShell';
 import { SandboxPlatformShell } from './components/sandbox/SandboxPlatformShell';
+import type { SandboxPage } from './components/sandbox/SandboxStore';
 import Sidebar from './imports/Sidebar';
 import { Toaster } from './components/ui/sonner';
 
@@ -23,6 +24,7 @@ export default function App() {
   const [breadcrumbs, setBreadcrumbs] = useState<Array<{ label: string; onClick?: () => void }>>([{ label: 'Home' }]);
   const [convertedProjects, setConvertedProjects] = useState<IdeaOriginProject[]>([]);
   const [initialIdeasPage, setInitialIdeasPage] = useState<string>('home');
+  const [initialSandboxPage, setInitialSandboxPage] = useState<SandboxPage>('home');
 
   const handleConvertToProject = useCallback((project: IdeaOriginProject) => {
     setConvertedProjects(prev => [...prev, project]);
@@ -74,6 +76,7 @@ export default function App() {
 
   const handleHeaderNavigate = useCallback((view: string) => {
     if (view === 'system-admin' || view === 'ideas-platform' || view === 'sandbox-platform') {
+      if (view === 'sandbox-platform') setInitialSandboxPage('home');
       setCurrentView(view as typeof currentView);
       updateBreadcrumbsForView(view as typeof currentView);
     }
@@ -85,9 +88,11 @@ export default function App() {
     updateBreadcrumbsForView('home');
   }, [updateBreadcrumbsForView]);
 
-  const navigateToPortfolio = useCallback(() => {
-    setCurrentView('portfolio');
-    updateBreadcrumbsForView('portfolio');
+  // "View in Portfolio" from the Ideas pipeline opens the Sandbox Platform's Innovation projects list
+  const navigateToSandboxProjects = useCallback(() => {
+    setInitialSandboxPage('innovation');
+    setCurrentView('sandbox-platform');
+    updateBreadcrumbsForView('sandbox-platform');
   }, [updateBreadcrumbsForView]);
 
   return (
@@ -107,6 +112,7 @@ export default function App() {
         <main className="flex-1 overflow-hidden">
           {currentView === 'home' ? (
             <HomeView onNavigate={(view) => {
+              if (view === 'sandbox-platform') setInitialSandboxPage('home');
               setCurrentView(view as typeof currentView);
               updateBreadcrumbsForView(view as typeof currentView);
             }} />
@@ -116,13 +122,15 @@ export default function App() {
               setBreadcrumbs={handleSetBreadcrumbs}
               onBack={goHome}
               onConvertToProject={handleConvertToProject}
-              onNavigateToPortfolio={navigateToPortfolio}
+              onNavigateToPortfolio={navigateToSandboxProjects}
               initialPage={initialIdeasPage}
             />
           ) : currentView === 'sandbox-platform' ? (
             <SandboxPlatformShell
+              key={initialSandboxPage}
               onBack={goHome}
               setBreadcrumbs={handleSetBreadcrumbs}
+              initialPage={initialSandboxPage}
             />
           ) : currentView === 'strategy' ? (
             <StrategyDashboard onNavigateToIdeas={navigateToIdeasPage} />

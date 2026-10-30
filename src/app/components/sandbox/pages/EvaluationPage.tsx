@@ -89,10 +89,10 @@ export function EvaluationPage({ store }: PageProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-start text-sm uppercase tracking-wide text-muted-foreground bg-muted/30">
-                <th className="px-4 py-2.5 font-semibold">{tr('Project', 'المشروع')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Type', 'النوع')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Evaluator', 'المقيّم')}</th>
-                <th className="px-4 py-2.5 font-semibold">{tr('Score', 'الدرجة')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Project', 'المشروع')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Type', 'النوع')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Evaluator', 'المقيّم')}</th>
+                <th className="px-4 py-2.5 font-semibold text-start">{tr('Score', 'الدرجة')}</th>
               </tr>
             </thead>
             <tbody>

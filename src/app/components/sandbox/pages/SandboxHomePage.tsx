@@ -384,8 +384,8 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
             return (
               <div key={s} className="flex-1 text-center relative px-1">
                 <div className={cn(
-                  'h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-2.5 text-lg font-["Dubai:Medium",_sans-serif]',
-                  i === 0 ? 'bg-gradient-to-br from-[#00a869] to-[#005844] text-white' : 'bg-[#008755]/10 text-[#008755] border border-[#c3e6d6]'
+                  'h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-2.5 text-lg font-["Dubai:Medium",_sans-serif] bg-[#008755]/10 text-[#008755] border border-[#c3e6d6]',
+                  i === 0 ? '' : 'bg-[#008755]/10 text-[#008755] border border-[#c3e6d6]'
                 )}>
                   {n}
                 </div>

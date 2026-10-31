@@ -26,7 +26,7 @@ function readStoredLanguage(): Language {
   } catch {
     /* storage unavailable */
   }
-  return 'en';
+  return 'ar';
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {

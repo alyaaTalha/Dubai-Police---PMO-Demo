@@ -5,7 +5,10 @@ import {
   List,
   Building2,
   ArrowUp,
+  Plus,
+  X,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
@@ -13,6 +16,7 @@ import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { useState } from "react";
 import { useLanguage } from "../../i18n/LanguageContext";
+import { cn } from "../ui/utils";
 
 // Arabic display values for the mock KPI data (keys stay English for filtering).
 const AR: Record<string, string> = {
@@ -38,8 +42,19 @@ const AR: Record<string, string> = {
   "Draft": "مسودة",
 };
 
+const DEPARTMENTS = [
+  "Administration Affairs",
+  "Director General Division",
+  "Statistics Department",
+  "Organizational Development",
+  "Client Happiness Management",
+  "External Relations Department",
+];
+const PERSPECTIVES = ["Outcomes", "Internal Processes", "Customer", "Learning & Growth"];
+const EMPTY_FORM = { name: "", department: "", perspective: "", target: "", actual: "", status: "Active" };
+
 export function KPIsTab() {
-  const { tr } = useLanguage();
+  const { tr, isRTL } = useLanguage();
   const ta = (value: string) => tr(value, AR[value]);
   const [view, setView] = useState<"table" | "grid">("table");
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,8 +62,11 @@ export function KPIsTab() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedPerspective, setSelectedPerspective] = useState("all");
 
+  const [showAddPanel, setShowAddPanel] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+
   // Mock KPI data
-  const kpis = [
+  const [kpis, setKpis] = useState([
     {
       id: "kpi-1",
       name: "Procurement from SMEs Rate",
@@ -133,7 +151,31 @@ export function KPIsTab() {
       trend: "up",
       status: "Active"
     }
-  ];
+  ]);
+
+  const canSave = form.name.trim() !== "" && form.department !== "" && form.perspective !== "" && form.target !== "";
+
+  const handleAddKpi = () => {
+    if (!canSave) return;
+    const target = parseFloat(form.target) || 0;
+    const actual = parseFloat(form.actual) || 0;
+    const next = kpis.length + 1;
+    setKpis(prev => [...prev, {
+      id: `kpi-${Date.now()}`,
+      name: form.name.trim(),
+      code: `KPI-${String(next).padStart(3, "0")}`,
+      department: form.department,
+      perspective: form.perspective,
+      achievement: target ? (actual / target) * 100 : 0,
+      target,
+      actual,
+      trend: "up",
+      status: form.status,
+    }]);
+    toast.success(tr("KPI added", "تمت إضافة المؤشر"));
+    setForm(EMPTY_FORM);
+    setShowAddPanel(false);
+  };
 
   // Filter KPIs based on search and filters
   const filteredKpis = kpis.filter(kpi => {
@@ -225,6 +267,12 @@ export function KPIsTab() {
               <Button variant="outline" size="default" className="gap-2">
                 <CalendarIcon className="h-4 w-4" />
                 {tr("dd/mm/yyyy", "يوم/شهر/سنة")}
+              </Button>
+
+              {/* Add KPI */}
+              <Button className="gap-2 bg-[#008755] hover:bg-[#006644] text-white" onClick={() => setShowAddPanel(true)}>
+                <Plus className="h-4 w-4" />
+                {tr("Add KPI", "إضافة مؤشر")}
               </Button>
 
               {/* View Toggle Buttons */}
@@ -344,7 +392,7 @@ export function KPIsTab() {
                         <td className="py-3 px-3 text-sm text-[#1f2937]">{kpi.target.toFixed(2)} %</td>
                         <td className="py-3 px-3 text-sm text-[#008755] font-['Dubai:Medium',_'Dubai']">{kpi.actual.toFixed(2)} %</td>
                         <td className="py-3 px-3">
-                          <div className="flex items-center gap-1 text-xs text-[#357743]">
+                          <div className="flex items-center gap-1 text-sm text-[#357743]">
                             <ArrowUp className="h-3 w-3" />
                             <span className="font-['Dubai:Medium',_'Dubai']">{tr("Up", "صعود")}</span>
                           </div>
@@ -455,6 +503,71 @@ export function KPIsTab() {
             ))
           )}
         </div>
+      )}
+      {/* Add KPI Panel */}
+      {showAddPanel && (
+        <>
+          <div className="fixed inset-0 bg-black/20 z-40" onClick={() => setShowAddPanel(false)} />
+          <div className={cn("fixed end-0 top-0 h-full w-[480px] max-w-[94vw] bg-white shadow-2xl z-50 flex flex-col animate-in duration-300", isRTL ? "slide-in-from-left" : "slide-in-from-right")}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+              <h2 className="text-lg text-[#008755]">{tr("Add KPI", "إضافة مؤشر")}</h2>
+              <button onClick={() => setShowAddPanel(false)} className="h-8 w-8 rounded-lg hover:bg-muted flex items-center justify-center transition-colors">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+              <div>
+                <label className="text-sm text-foreground mb-2 block">{tr("KPI Name", "اسم المؤشر")} <span className="text-[#D83731]">*</span></label>
+                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tr("Enter KPI name", "أدخل اسم المؤشر")} />
+              </div>
+              <div>
+                <label className="text-sm text-foreground mb-2 block">{tr("Department", "الإدارة")} <span className="text-[#D83731]">*</span></label>
+                <Select value={form.department} onValueChange={(v) => setForm({ ...form, department: v })}>
+                  <SelectTrigger><SelectValue placeholder={tr("Select department", "اختر الإدارة")} /></SelectTrigger>
+                  <SelectContent>
+                    {DEPARTMENTS.map(d => <SelectItem key={d} value={d}>{ta(d)}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm text-foreground mb-2 block">{tr("Perspective", "المحور")} <span className="text-[#D83731]">*</span></label>
+                <Select value={form.perspective} onValueChange={(v) => setForm({ ...form, perspective: v })}>
+                  <SelectTrigger><SelectValue placeholder={tr("Select perspective", "اختر المحور")} /></SelectTrigger>
+                  <SelectContent>
+                    {PERSPECTIVES.map(p => <SelectItem key={p} value={p}>{ta(p)}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-foreground mb-2 block">{tr("Target (%)", "المستهدف (%)")} <span className="text-[#D83731]">*</span></label>
+                  <Input type="number" min={0} value={form.target} onChange={(e) => setForm({ ...form, target: e.target.value })} placeholder="100" />
+                </div>
+                <div>
+                  <label className="text-sm text-foreground mb-2 block">{tr("Actual (%)", "الفعلي (%)")}</label>
+                  <Input type="number" min={0} value={form.actual} onChange={(e) => setForm({ ...form, actual: e.target.value })} placeholder="0" />
+                </div>
+              </div>
+              <div>
+                <label className="text-sm text-foreground mb-2 block">{tr("Status", "الحالة")}</label>
+                <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {["Active", "Inactive", "Draft"].map(s => <SelectItem key={s} value={s}>{ta(s)}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 px-6 py-4 border-t border-border">
+              <Button variant="outline" onClick={() => setShowAddPanel(false)}>{tr("Cancel", "إلغاء")}</Button>
+              <Button className="bg-[#008755] hover:bg-[#006644] text-white" disabled={!canSave} onClick={handleAddKpi}>
+                {tr("Save KPI", "حفظ المؤشر")}
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

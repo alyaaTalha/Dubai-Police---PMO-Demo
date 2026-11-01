@@ -27,6 +27,7 @@ import { BiWeeklyStatusTab } from '../../portfolio/BiWeeklyStatusTab';
 import { AddTaskPanel } from '../../portfolio/AddTaskPanel';
 import { AddMilestonePanel } from '../../portfolio/AddMilestonePanel';
 import { ProjectCardTab } from './ProjectCardTab';
+import { FinancialImpactTab } from './FinancialImpactTab';
 import { useLanguage } from '../../../i18n/LanguageContext';
 import { SANDBOX_AR, useSandboxTr } from '../sandboxI18n';
 
@@ -39,7 +40,7 @@ interface PageProps {
 
 type DetailTab =
   | 'overview' | 'card' | 'biweekly' | 'milestones' | 'risk' | 'stakeholders' | 'goals'
-  | 'evaluation' | 'kpis' | 'partners' | 'ip' | 'change-management' | 'closure' | 'documents';
+  | 'evaluation' | 'kpis' | 'financial' | 'partners' | 'ip' | 'change-management' | 'closure' | 'documents';
 
 const TABS: Array<{ key: DetailTab; label: string; labelAr: string; icon: React.ElementType }> = [
   { key: 'overview', label: 'Overview', labelAr: 'نظرة عامة', icon: CheckCircle2 },
@@ -51,6 +52,7 @@ const TABS: Array<{ key: DetailTab; label: string; labelAr: string; icon: React.
   { key: 'goals', label: 'Goals & Benefits', labelAr: 'الأهداف والفوائد', icon: Trophy },
   // { key: 'evaluation', label: 'Evaluation', labelAr: 'التقييم', icon: ClipboardCheck },
   { key: 'kpis', label: 'KPIs', labelAr: 'مؤشرات الأداء', icon: BarChart3 },
+  { key: 'financial', label: 'Financial Impact', labelAr: 'الأثر المالي', icon: Wallet },
   // { key: 'partners', label: 'Partners', labelAr: 'الشركاء', icon: Handshake },
   // { key: 'ip', label: 'Intellectual Property', labelAr: 'الملكية الفكرية', icon: Shield },
   { key: 'change-management', label: 'Change Management', labelAr: 'إدارة التغيير', icon: RefreshCw },
@@ -628,6 +630,7 @@ export function SandboxProjectDetailsPage({ project, store, onBack, onNavigate }
         )}
 
         {activeTab === 'kpis' && <KPIsTab />}
+        {activeTab === 'financial' && <FinancialImpactTab project={project} />}
 
         {activeTab === 'partners' && (
           linkedPartners.length ? (

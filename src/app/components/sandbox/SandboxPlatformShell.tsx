@@ -65,7 +65,7 @@ export function SandboxPlatformShell({ onBack, setBreadcrumbs, initialPage = 'ho
   useEffect(() => {
     if (!crumbSpec || !setBreadcrumbs) return;
     const goHomeCrumb = { label: tr('Home', 'الرئيسية'), onClick: onBack };
-    const platformLabel = tr('Sandbox Platform', 'منصة البيئة التجريبية');
+    const platformLabel = tr('Sandbox Platform', 'منصة المشاريع');
     const platformCrumb = {
       label: platformLabel,
       onClick: () => { setActivePage('home'); setCrumbSpec({ kind: 'platform' }); },
@@ -133,7 +133,7 @@ export function SandboxPlatformShell({ onBack, setBreadcrumbs, initialPage = 'ho
               <FlaskConical className="h-4 w-4 text-white" />
             </div>
             <div>
-              <p className="text-sm   text-foreground leading-tight">{tr('Sandbox Platform', 'منصة البيئة التجريبية')}</p>
+              <p className="text-sm   text-foreground leading-tight">{tr('Sandbox Platform', 'منصة المشاريع')}</p>
               <p className="text-[11px] text-muted-foreground leading-tight">{tr('R&D · Innovation · Knowledge', 'البحث والتطوير · الابتكار · المعرفة')}</p>
             </div>
           </div>

@@ -166,7 +166,7 @@ export const SANDBOX_AR: Record<string, string> = {
   'Automated Complaint Routing Method': 'طريقة التوجيه الآلي للشكاوى',
   'Dynamic Queue Allocation System': 'نظام التخصيص الديناميكي للطوابير',
   'Predictive Patrol Routing Method': 'طريقة التوجيه التنبؤي للدوريات',
-  'Sandbox Platform Wordmark': 'العلامة النصية لمنصة البيئة التجريبية',
+  'Sandbox Platform Wordmark': 'العلامة النصية لمنصة المشاريع',
   'Innovation Programme Emblem': 'شعار برنامج الابتكار',
   'Smart Policing Identity Suite': 'حزمة هوية الشرطة الذكية',
   'Field Operations Handbook': 'دليل العمليات الميدانية',

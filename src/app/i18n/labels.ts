@@ -12,7 +12,7 @@ export const COMMON_LABELS_AR: Record<string, string> = {
   'Portfolio': 'المحفظة',
   'System Administration': 'إدارة النظام',
   'Ideas Platform': 'منصة الأفكار',
-  'Sandbox Platform': 'منصة البيئة التجريبية',
+  'Sandbox Platform': 'منصة المشاريع',
   'Sandbox': 'البيئة التجريبية',
 };
 

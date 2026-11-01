@@ -198,7 +198,7 @@ export function SandboxHomePage({ store, onNavigate }: PageProps) {
               <Layers className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-2xl   tracking-tight">{tr('Sandbox Platform', 'منصة البيئة التجريبية')}</h1>
+              <h1 className="text-2xl   tracking-tight">{tr('Sandbox Platform', 'منصة المشاريع')}</h1>
               <p className="text-white/80 text-sm mt-1 max-w-md">
                 {tr('Institutional overview of research, innovation and knowledge output — from first idea through to sandbox pilot.', 'نظرة مؤسسية شاملة على مخرجات البحث والابتكار والمعرفة — من الفكرة الأولى وحتى التجربة في البيئة التجريبية.')}
               </p>

@@ -174,7 +174,7 @@ export const UPCOMING_EVENTS = [
   { id: 1, day: '05', time: '10:00', title: 'Innovation Evaluation Committee', titleAr: 'لجنة تقييم الابتكار', place: 'HQ · Meeting Room 3', placeAr: 'القيادة العامة · قاعة الاجتماعات 3', kind: 'meeting' },
   { id: 2, day: '12', time: '09:30', title: 'Sandbox Demo Day: Digital Twin — Traffic Network', titleAr: 'يوم العرض التجريبي: التوأم الرقمي لشبكة المرور', place: 'Innovation Lab', placeAr: 'مختبر الابتكار', kind: 'demo' },
   { id: 3, day: '19', time: '13:00', title: 'Khalifa University R&D Partnership Workshop', titleAr: 'ورشة شراكة البحث والتطوير مع جامعة خليفة', place: 'Online', placeAr: 'عن بُعد', kind: 'workshop' },
-  { id: 4, day: '30', time: '23:59', title: 'Q1 2027 Sandbox Intake Closes', titleAr: 'إغلاق باب التقديم للربع الأول 2027', place: 'Sandbox Platform', placeAr: 'منصة البيئة التجريبية', kind: 'deadline' },
+  { id: 4, day: '30', time: '23:59', title: 'Q1 2027 Sandbox Intake Closes', titleAr: 'إغلاق باب التقديم للربع الأول 2027', place: 'Sandbox Platform', placeAr: 'منصة المشاريع', kind: 'deadline' },
 ];
 
 export const EVENT_KIND: Record<string, { label: string; labelAr: string; className: string }> = {
@@ -318,7 +318,7 @@ export function HomeBanner({ onNavigate }: HomePageProps) {
                   {tr('Good Morning, User', 'صباح الخير، المستخدم')}
                 </h1>
                 <p className="text-white/90 text-sm">
-                  {tr('Innovation Sandbox Platform — R&D, Innovation & Knowledge', 'منصة البيئة التجريبية للابتكار — البحث والتطوير والابتكار والمعرفة')}
+                  {tr('Innovation Sandbox Platform — R&D, Innovation & Knowledge', 'منصة المشاريع للابتكار — البحث والتطوير والابتكار والمعرفة')}
                 </p>
               </div>
             </div>
@@ -329,7 +329,7 @@ export function HomeBanner({ onNavigate }: HomePageProps) {
     {
 page: 'sandbox-platform' as const,
 icon: FlaskConical,
-label: tr('Sandbox Platform', 'منصة البيئة التجريبية'),
+label: tr('Sandbox Platform', 'منصة المشاريع'),
 primary: true,
     },
     {
